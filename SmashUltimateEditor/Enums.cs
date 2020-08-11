@@ -410,21 +410,21 @@ namespace SmashUltimateEditor
             ui_mii_body_ninjara_m
         }
 
-        // Define colors(?)
+        // Colors may be defined wrong(?)
         public enum mii_color_opt
         {
-            c0,
-            c1,
-            c2,
-            c3,
-            c4,
-            c5,
-            c6,
-            c7,
-            c8,
-            c9,
-            c10,
-            c11
+            Red,
+            Orange,
+            Yellow,
+            LightGreen,
+            Green,
+            Blue,
+            LightBlue,
+            Pink,
+            Purple,
+            Brown,
+            White,
+            Black
         }
 
         public enum mii_hat_id

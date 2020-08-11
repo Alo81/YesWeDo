@@ -1,4 +1,8 @@
-﻿namespace SmashUltimateEditor
+﻿using System;
+using static SmashUltimateEditor.Enums;
+using static SmashUltimateEditor.Extensions;
+
+namespace SmashUltimateEditor
 {
     partial class Form1
     {
@@ -28,13 +32,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.fighterData = new System.Windows.Forms.ComboBox();
+            this.SuspendLayout();
+            // 
+            // fighterData
+            // 
+            this.fighterData.FormattingEnabled = true;
+            this.fighterData.Location = new System.Drawing.Point(13, 13);
+            this.fighterData.Name = "fighterData";
+            this.fighterData.Size = new System.Drawing.Size(121, 23);
+            this.fighterData.TabIndex = 0;
+            this.fighterData.DataSource = EnumUtil<spirit_name_opt>.GetValuesSorted();
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.fighterData);
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.ComboBox fighterData;
     }
 }
 

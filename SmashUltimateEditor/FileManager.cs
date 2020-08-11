@@ -59,8 +59,6 @@ namespace SmashUltimateEditor
                 }
             }
             Console.WriteLine("List Built.");
-            GetFieldsValues(battleDataList);
-            GetFieldsValues(fightDataList);
         }
 
         public static List<KeyValuePair<string, string>> GetFieldsValues(List<BattleDataTbl> dataTbl)

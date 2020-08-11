@@ -16,7 +16,7 @@ namespace SmashUltimateEditor
         [STAThread]
         static void Main()
         {
-            EnumUtil<sub_rule_opt>.Contains("metal_rules");
+            //EnumUtil<sub_rule_opt>.Contains("metal_rule");
             string xml = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
             FileManager.ReadXML(xml);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);

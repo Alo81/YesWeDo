@@ -1,0 +1,2 @@
+# SmashUltimateEditor
+Spirit Editor

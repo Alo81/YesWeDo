@@ -9,16 +9,23 @@ namespace SmashUltimateEditor
 {
     class FighterDataTbls
     {
+        public List<FighterDataTbl> GetBattleFighters(string battle_id)
+        {
+            return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
+        }
+
         public List<FighterDataTbl> fighterDataList;
 
         public List<string> spirit_name
         {
-            get { return fighterDataList.Select(x => x.spirit_name).OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.spirit_name).Distinct().OrderBy(x => x).ToList(); }
         }
+
         public List<string> battle_id
         {
-            get { return fighterDataList.Select(x => x.battle_id).OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }
         }
+
         public List<string> entry_type
         {
             get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
@@ -141,7 +148,7 @@ namespace SmashUltimateEditor
         }
         public List<string> attr
         {
-            get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.attr).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> ability1
         {
@@ -157,8 +164,10 @@ namespace SmashUltimateEditor
         }
         public List<string> ability_personal
         {
-            get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.ability_personal).Distinct().OrderBy(x => x).ToList(); }
         }
+        
+        
 
     }
 }

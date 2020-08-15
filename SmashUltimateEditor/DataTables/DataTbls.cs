@@ -11,6 +11,7 @@ namespace SmashUltimateEditor
     {
         public BattleDataTbls battleData;
         public FighterDataTbls fighterData;
+        public FighterDataTbls selectedFighters;
         public BattleDataTbl selectedBattle;
         public FighterDataTbl selectedFighter;
 
@@ -18,10 +19,21 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataTbls();
             fighterData = new FighterDataTbls();
+            selectedFighters = new FighterDataTbls();
             selectedBattle = new BattleDataTbl();
             selectedFighter = new FighterDataTbl();
 
             ReadXML(Defs.FILE_LOCATION);
+        }
+
+        public void SetSelectedFighters(string battle_id)
+        {
+            selectedFighters.fighterDataList = fighterData.GetBattleFighters(battle_id);
+        }
+
+        public void SetSelectedFighter()
+        {
+
         }
 
 

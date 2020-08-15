@@ -10,6 +10,7 @@ namespace SmashUltimateEditor
     {
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
+        public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
 
         #region FighterDataTbl
         public static ushort APPEAR_RULE_TIME_MIN = 0;

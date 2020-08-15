@@ -66,91 +66,46 @@ namespace SmashUltimateEditor
             }
             return;
         }
-
+        // No primary key.
+        // Battle id is unique identifier.  Main type and sub type fighters.  
+        // Battle id should be selectable drop down.  All fighters should be selectable based off battle_id.  
         public string battle_id;
-
         public string entry_type;
-
         public bool first_appear;
-
         public ushort appear_rule_time;
-
         public ushort appear_rule_count;
-
         public string fighter_kind;
-
         public byte color;
-
         public string mii_hat_id;
-
         public string mii_body_id;
-
         public byte mii_color;
-
         public string mii_voice;
-
         public byte mii_sp_n;
-
-
         public byte mii_sp_s;
-
         public byte mii_sp_hi;
-
         public byte mii_sp_lw;
-
         public byte cpu_lv;
-
         public string cpu_type;
-
         public string cpu_sub_type;
-
-
         public bool cpu_item_pick_up;
-
-        // Lives
-        // 1 - 99
         public byte stock;
-        public static byte STOCK_MAX = 99;
-        public static byte STOCK_MIN = 1;
-
         public bool corps;
-
-
         public bool _0x0f2077926c;
         public ushort hp;
-
         public ushort init_damage;
-
-        // Additional rules(?)
         public string sub_rule;
-
-        // Size of fighter. 
-        //0.3 - 2.75.  
         public float scale;
-        public static float SCALE_MAX = 2.75F;
-        public static float SCALE_MIN = 0.3F;
-
         public float fly_rate;
-
         public bool invalid_drop;
-
         public bool enable_charge_final;
-
         // Primary spirit identifier
         public string spirit_name;
-
         public short attack;
-
         public short defense;
-
         public string attr;
-
         public string ability1;
-
         public string ability2;
-
         public string ability3;
-
         public string ability_personal;
     }
 }

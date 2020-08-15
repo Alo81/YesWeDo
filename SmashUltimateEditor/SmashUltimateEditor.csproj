@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="BattleDataTbl.txt" />
+    <None Remove="DataTables\BattleDataTblValues.txt" />
     <None Remove="FighterDataTblValues.txt" />
   </ItemGroup>
 

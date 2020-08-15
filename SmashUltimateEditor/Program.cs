@@ -17,10 +17,6 @@ namespace SmashUltimateEditor
         static void Main()
         {
             //EnumUtil<sub_rule_opt>.Contains("metal_rule");
-            List<string> skills = EnumUtil<ability_opt>.GetValuesSorted();
-            skills.Distinct();
-            //string xml = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
-            //FileManager.ReadXML(xml);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

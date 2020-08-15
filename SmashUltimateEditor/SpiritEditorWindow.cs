@@ -27,7 +27,6 @@ namespace SmashUltimateEditor
         {
             //EnumUtil<sub_rule_opt>.Contains("metal_rule");
             buildFighterDataTab();
-
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)

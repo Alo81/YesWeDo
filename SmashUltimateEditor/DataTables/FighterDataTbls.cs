@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static SmashUltimateEditor.Enums;
+using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
@@ -143,15 +145,15 @@ namespace SmashUltimateEditor
         }
         public List<string> ability1
         {
-            get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<ability_opt>.GetValuesSorted(); }
         }
         public List<string> ability2
         {
-            get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<ability_opt>.GetValuesSorted(); }
         }
         public List<string> ability3
         {
-            get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<ability_opt>.GetValuesSorted(); }
         }
         public List<string> ability_personal
         {

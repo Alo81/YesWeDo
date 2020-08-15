@@ -28,7 +28,6 @@ namespace SmashUltimateEditor
             //EnumUtil<sub_rule_opt>.Contains("metal_rule");
             buildFighterDataTab();
 
-            this.dropdownSpiritData.DataSource = dataTbls.battleData.battle_ids;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -38,6 +37,7 @@ namespace SmashUltimateEditor
 
         private void buildFighterDataTab()
         {
+            this.dropdownSpiritData.DataSource = dataTbls.battleData.battle_id;
             this.dropdownFighterData.DataSource = dataTbls.fighterData.spirit_name;
             this.dropdownFighterEntryType.DataSource = dataTbls.fighterData.entry_type;
             this.dropdownFighterFighterKind.DataSource = dataTbls.fighterData.fighter_kind;
@@ -53,6 +53,11 @@ namespace SmashUltimateEditor
         }
 
         private void dropdownFighterFighterKind_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

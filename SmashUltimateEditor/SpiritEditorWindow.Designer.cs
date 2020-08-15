@@ -50,17 +50,15 @@ namespace SmashUltimateEditor
             this.buttonLoadData = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabFighter.SuspendLayout();
-            this.tabSpirit.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // dropdownFighterData
             // 
             this.dropdownFighterData.FormattingEnabled = true;
-            this.dropdownFighterData.Location = new System.Drawing.Point(3, 4);
-            this.dropdownFighterData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dropdownFighterData.Location = new System.Drawing.Point(3, 3);
             this.dropdownFighterData.Name = "dropdownFighterData";
-            this.dropdownFighterData.Size = new System.Drawing.Size(876, 28);
+            this.dropdownFighterData.Size = new System.Drawing.Size(767, 23);
             this.dropdownFighterData.TabIndex = 0;
             this.dropdownFighterData.SelectedIndexChanged += new System.EventHandler(this.dropdownFighterData_SelectedIndexChanged_1);
             // 
@@ -68,10 +66,11 @@ namespace SmashUltimateEditor
             // 
             this.tabControl1.Controls.Add(this.tabFighter);
             this.tabControl1.Controls.Add(this.tabSpirit);
-            this.tabControl1.Location = new System.Drawing.Point(12, 129);
+            this.tabControl1.Location = new System.Drawing.Point(10, 238);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(890, 423);
+            this.tabControl1.Size = new System.Drawing.Size(779, 176);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -84,10 +83,11 @@ namespace SmashUltimateEditor
             this.tabFighter.Controls.Add(this.textBoxFighterHp);
             this.tabFighter.Controls.Add(this.dropdownFighterEntryType);
             this.tabFighter.Controls.Add(this.dropdownFighterData);
-            this.tabFighter.Location = new System.Drawing.Point(4, 29);
+            this.tabFighter.Location = new System.Drawing.Point(4, 24);
+            this.tabFighter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabFighter.Name = "tabFighter";
-            this.tabFighter.Padding = new System.Windows.Forms.Padding(3);
-            this.tabFighter.Size = new System.Drawing.Size(882, 390);
+            this.tabFighter.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabFighter.Size = new System.Drawing.Size(771, 148);
             this.tabFighter.TabIndex = 0;
             this.tabFighter.Text = "Fighter Data";
             this.tabFighter.UseVisualStyleBackColor = true;
@@ -95,61 +95,64 @@ namespace SmashUltimateEditor
             // labelFighterFighterKind
             // 
             this.labelFighterFighterKind.AutoSize = true;
-            this.labelFighterFighterKind.Location = new System.Drawing.Point(4, 142);
+            this.labelFighterFighterKind.Location = new System.Drawing.Point(4, 106);
             this.labelFighterFighterKind.Name = "labelFighterFighterKind";
-            this.labelFighterFighterKind.Size = new System.Drawing.Size(89, 20);
+            this.labelFighterFighterKind.Size = new System.Drawing.Size(71, 15);
             this.labelFighterFighterKind.TabIndex = 4;
             this.labelFighterFighterKind.Text = "Fighter Kind";
             // 
             // dropdownFighterFighterKind
             // 
             this.dropdownFighterFighterKind.FormattingEnabled = true;
-            this.dropdownFighterFighterKind.Location = new System.Drawing.Point(4, 165);
+            this.dropdownFighterFighterKind.Location = new System.Drawing.Point(4, 124);
+            this.dropdownFighterFighterKind.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dropdownFighterFighterKind.Name = "dropdownFighterFighterKind";
-            this.dropdownFighterFighterKind.Size = new System.Drawing.Size(349, 28);
+            this.dropdownFighterFighterKind.Size = new System.Drawing.Size(306, 23);
             this.dropdownFighterFighterKind.TabIndex = 2;
             this.dropdownFighterFighterKind.SelectedIndexChanged += new System.EventHandler(this.dropdownFighterFighterKind_SelectedIndexChanged);
             // 
             // labelFighterHp
             // 
             this.labelFighterHp.AutoSize = true;
-            this.labelFighterHp.Location = new System.Drawing.Point(4, 89);
+            this.labelFighterHp.Location = new System.Drawing.Point(4, 67);
             this.labelFighterHp.Name = "labelFighterHp";
-            this.labelFighterHp.Size = new System.Drawing.Size(28, 20);
+            this.labelFighterHp.Size = new System.Drawing.Size(23, 15);
             this.labelFighterHp.TabIndex = 4;
             this.labelFighterHp.Text = "HP";
             // 
             // labelFighterEntryType
             // 
             this.labelFighterEntryType.AutoSize = true;
-            this.labelFighterEntryType.Location = new System.Drawing.Point(4, 35);
+            this.labelFighterEntryType.Location = new System.Drawing.Point(4, 26);
             this.labelFighterEntryType.Name = "labelFighterEntryType";
-            this.labelFighterEntryType.Size = new System.Drawing.Size(77, 20);
+            this.labelFighterEntryType.Size = new System.Drawing.Size(61, 15);
             this.labelFighterEntryType.TabIndex = 4;
             this.labelFighterEntryType.Text = "Entry Type";
             // 
             // textBoxFighterHp
             // 
-            this.textBoxFighterHp.Location = new System.Drawing.Point(4, 112);
+            this.textBoxFighterHp.Location = new System.Drawing.Point(4, 84);
+            this.textBoxFighterHp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxFighterHp.Name = "textBoxFighterHp";
-            this.textBoxFighterHp.Size = new System.Drawing.Size(125, 27);
+            this.textBoxFighterHp.Size = new System.Drawing.Size(110, 23);
             this.textBoxFighterHp.TabIndex = 3;
             // 
             // dropdownFighterEntryType
             // 
             this.dropdownFighterEntryType.FormattingEnabled = true;
-            this.dropdownFighterEntryType.Location = new System.Drawing.Point(4, 58);
+            this.dropdownFighterEntryType.Location = new System.Drawing.Point(4, 44);
+            this.dropdownFighterEntryType.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dropdownFighterEntryType.Name = "dropdownFighterEntryType";
-            this.dropdownFighterEntryType.Size = new System.Drawing.Size(349, 28);
+            this.dropdownFighterEntryType.Size = new System.Drawing.Size(306, 23);
             this.dropdownFighterEntryType.TabIndex = 2;
             // 
             // tabSpirit
             // 
-            this.tabSpirit.Controls.Add(this.dropdownSpiritData);
-            this.tabSpirit.Location = new System.Drawing.Point(4, 29);
+            this.tabSpirit.Location = new System.Drawing.Point(4, 24);
+            this.tabSpirit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabSpirit.Name = "tabSpirit";
-            this.tabSpirit.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSpirit.Size = new System.Drawing.Size(882, 390);
+            this.tabSpirit.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabSpirit.Size = new System.Drawing.Size(771, 148);
             this.tabSpirit.TabIndex = 1;
             this.tabSpirit.Text = "Spirit Data";
             this.tabSpirit.UseVisualStyleBackColor = true;
@@ -157,10 +160,12 @@ namespace SmashUltimateEditor
             // dropdownSpiritData
             // 
             this.dropdownSpiritData.FormattingEnabled = true;
-            this.dropdownSpiritData.Location = new System.Drawing.Point(3, 3);
+            this.dropdownSpiritData.Location = new System.Drawing.Point(10, 50);
+            this.dropdownSpiritData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dropdownSpiritData.Name = "dropdownSpiritData";
-            this.dropdownSpiritData.Size = new System.Drawing.Size(876, 28);
+            this.dropdownSpiritData.Size = new System.Drawing.Size(767, 23);
             this.dropdownSpiritData.TabIndex = 4;
+            this.dropdownSpiritData.SelectedIndexChanged += new System.EventHandler(this.dropdownSpiritData_SelectedIndexChanged);
             // 
             // openFileDialog1
             // 
@@ -173,21 +178,23 @@ namespace SmashUltimateEditor
             this.fileMenu});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(914, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileMenu
             // 
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(46, 24);
+            this.fileMenu.Size = new System.Drawing.Size(37, 20);
             this.fileMenu.Text = "File";
             // 
             // buttonLoadData
             // 
-            this.buttonLoadData.Location = new System.Drawing.Point(13, 32);
+            this.buttonLoadData.Location = new System.Drawing.Point(11, 24);
+            this.buttonLoadData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonLoadData.Name = "buttonLoadData";
-            this.buttonLoadData.Size = new System.Drawing.Size(94, 29);
+            this.buttonLoadData.Size = new System.Drawing.Size(82, 22);
             this.buttonLoadData.TabIndex = 3;
             this.buttonLoadData.Text = "L O A D";
             this.buttonLoadData.UseVisualStyleBackColor = true;
@@ -195,20 +202,19 @@ namespace SmashUltimateEditor
             // 
             // SpiritEditorWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(914, 600);
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.dropdownSpiritData);
             this.Controls.Add(this.buttonLoadData);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "SpiritEditorWindow";
             this.Text = "Smash Spirits Editor";
             this.tabControl1.ResumeLayout(false);
             this.tabFighter.ResumeLayout(false);
             this.tabFighter.PerformLayout();
-            this.tabSpirit.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

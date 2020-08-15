@@ -17,13 +17,13 @@ namespace SmashUltimateEditor
 
                 return Enum.IsDefined(typeof(T), value);
             }
-            public static List<T> GetValuesSorted()
+            public static List<string> GetValuesSorted()
             {
                 if (!typeof(T).IsEnum)
                     throw new ArgumentException("T must be an enumerated type");
 
                 var sorted = (T[]) Enum.GetValues(typeof(T));
-                return sorted.OrderBy(x => x.ToString()).ToList();
+                return sorted.OrderBy(x => x.ToString()).Select(x => x.ToString()).ToList();
 
             }
         }

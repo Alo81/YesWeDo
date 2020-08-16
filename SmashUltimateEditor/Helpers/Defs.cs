@@ -12,6 +12,14 @@ namespace SmashUltimateEditor
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
         public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
 
+        public const int LABEL_HEIGHT = 20;
+        public const int LABEL_WIDTH = 160;
+        public const int PADDING = 5;
+        public const int BOX_HEIGHT = 20;
+        public const int BOX_WIDTH = 160;
+        public const int ROWS = 26;
+        public const int COLUMNS = 4;
+
         public static List<string> RANGE_VALUES = new List<string>()
         {
             "APPEAR_RULE_TIME",

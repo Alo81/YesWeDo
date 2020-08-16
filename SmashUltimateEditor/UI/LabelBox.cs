@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -15,10 +16,31 @@ namespace SmashUltimateEditor.UI
         public LabelBox()
         {
             label = new Label();
-            //combo = new ComboBox();
-            //text = new TextBox();
         }
-        
+
+        public void SetLabel(string name, Point pos)
+        {
+            SetLabelValue(String.Format("{0}", name));
+            label.Width = Defs.LABEL_WIDTH;
+            label.Height = Defs.LABEL_HEIGHT;
+            label.Location = pos;
+        }
+        public void SetTextBox(string value, Point pos)
+        {
+            SetTextBoxValue(value);
+            text.Width = Defs.BOX_WIDTH;
+            text.Height = Defs.BOX_HEIGHT;
+            text.Location = pos;
+        }
+        public void SetComboBox(string value, List<string> opts, Point pos)
+        {
+            SetComboBoxDataSource(opts);
+            SetComboBoxValue(value);
+            combo.Width = Defs.BOX_WIDTH;
+            combo.Height = Defs.BOX_HEIGHT;
+            combo.Location = pos;
+        }
+
         public string GetTextBoxValue()
         {
             return this?.text?.Text ?? "";
@@ -47,7 +69,7 @@ namespace SmashUltimateEditor.UI
             {
                 combo = new ComboBox();
             }
-            this.combo.SelectedItem = newValue;
+            combo.SelectedIndex = combo.FindStringExact(newValue.ToString());
         }
         public void SetComboBoxDataSource(List<string>newValue)
         {
@@ -55,11 +77,8 @@ namespace SmashUltimateEditor.UI
             {
                 combo = new ComboBox();
             }
-            if(newValue.Where(x => x == null).ToList().Count > 0)
-            {
-                string x = "";
-            }
-            this.combo.DataSource = newValue.Where(x => x != null).ToList();
+            combo.DataSource = newValue.Where(x => x != null).ToList();
+            combo.BindingContext = new BindingContext();
         }
         public void SetComboBoxDataSource(object newValue)
         {
@@ -69,13 +88,13 @@ namespace SmashUltimateEditor.UI
             }
             this.combo.DataSource = newValue;
         }
-        public void AddComboBoxValue(object newValue)
+        public void AddComboBoxValue(object[] newValue)
         {
             if (!IsComboSet())
             {
                 combo = new ComboBox();
             }
-            this.combo.Items.Add(newValue);
+            this.combo.Items.AddRange(newValue);
         }
 
         public void SetLabelValue(string newText)

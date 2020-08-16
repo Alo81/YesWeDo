@@ -1,6 +1,7 @@
 ﻿using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,9 +18,9 @@ namespace SmashUltimateEditor.Helpers
             {
                 Location = new System.Drawing.Point(4, 24),
                 Padding = new System.Windows.Forms.Padding(3),
-                Size = new System.Drawing.Size(768, 150),
                 TabIndex = page,
-                UseVisualStyleBackColor = true
+                UseVisualStyleBackColor = true, 
+                AutoScroll = true
             };
             return tabPage;
         }
@@ -48,28 +49,49 @@ namespace SmashUltimateEditor.Helpers
             return BuildPage(ref dataTbls, dataTbl, dataTbl.spirit_name);
         }
 
+        private static Point IncrementPoint(ref Point current, int rowCount)
+        {
+            if (rowCount == 0 && current.X == 0)
+            {
+                current.X = Defs.PADDING;
+            }
+            else if (rowCount > 0 && current.Y != 0 && rowCount % Defs.ROWS == 0)
+            {
+                current.X += Defs.BOX_WIDTH > Defs.LABEL_WIDTH ? Defs.BOX_WIDTH : Defs.LABEL_WIDTH;
+                current.X += Defs.PADDING;
+                current.Y = 0;
+            }
+            else
+            {
+                current.Y += Defs.LABEL_HEIGHT + Defs.PADDING;
+            }
+            return current;
+        }
 
         public static TabPage BuildPage(ref DataTbls dataTbls, IDataTbl dataTbl, string name)
         {
             TabPage page = GetEmptyTabPage();
+            Point currentPos = new Point(0, 0);
+            int rowCounter = 0;
+
             page.Name = name;
             page.Text = name;
             LabelBox lb;
 
             Type tableType = dataTbl.GetType();
-            foreach(FieldInfo field in tableType.GetFields())
+            foreach(FieldInfo field in tableType.GetFields().OrderBy(x=>x.Name))
             {
                 lb = new LabelBox();
 
                 // Range values?  Use a textbox.
                 if(Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
-                    lb.SetLabelValue(String.Format("{0}", field.Name));
-                    lb.SetTextBoxValue(dataTbl.GetValueFromName(field.Name));
+                    lb.SetLabel(field.Name, IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetTextBox(dataTbl.GetValueFromName(field.Name), IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 else if (Defs.MII_MOVES.Contains(field.Name.ToUpper()))
                 {
-                    lb.SetLabelValue(String.Format("{0})", field.Name));
+                    lb.SetLabel(field.Name, IncrementPoint(ref currentPos, page.Controls.Count));
                     List<String> miiFighterMoves = new List<String>();
                     string fighter = dataTbl.GetValueFromName("fighter_kind");
                     // Is this a mii fighter?  If so, use his moves.  Otherwise, just use default moves.  
@@ -79,34 +101,28 @@ namespace SmashUltimateEditor.Helpers
                     {
                         // THIS IS HARDCODED.  FIX.  (?)
                         miiFighterMoves.Add(Extensions.EnumUtil<Enums.mii_sp_n_opt>.GetByValue(i + mod));
-                        lb.AddComboBoxValue(miiFighterMoves.Last());
                     }
-                    lb.SetComboBoxDataSource(miiFighterMoves);
-                    lb.SetComboBoxValue(dataTbl.GetValueFromName(field.Name));
+                    lb.SetComboBox(dataTbl.GetValueFromName(field.Name), miiFighterMoves, IncrementPoint(ref currentPos, page.Controls.Count));
+                    //lb.AddComboBoxValue(miiFighterMoves));
+                    //lb.SetComboBoxDataSource(miiFighterMoves);
+                    //lb.SetComboBoxValue(dataTbl.GetValueFromName(field.Name));
                 }
                 // If boolean, our range can be true/false. 
                 else if(field.FieldType == typeof(bool))
                 {
+                    lb.SetLabel(field.Name, IncrementPoint(ref currentPos, page.Controls.Count));
                     List<String> boolNames = new List<String>()
                     {
-                    "false",
-                    "true"
+                        "false",
+                        "true"
                     };
-
-                    lb.SetLabelValue(field.Name);
-                    foreach(string val in boolNames)
-                    {
-                        lb.AddComboBoxValue(val);
-                    }
-                    lb.SetComboBoxDataSource(boolNames);
-                    lb.SetComboBoxValue(dataTbl.GetValueFromName(field.Name).Equals("true") ? true : false);
+                    lb.SetComboBox(dataTbl.GetValueFromName(field.Name).Equals("true") ? "true" : "false", boolNames, IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
-                    lb.SetLabelValue(field.Name);
-                    lb.SetComboBoxDataSource(dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name));
-                    lb.SetComboBoxValue(dataTbl.GetValueFromName(field.Name));
+                    lb.SetLabel(field.Name, IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(dataTbl.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), IncrementPoint(ref currentPos, page.Controls.Count));
                 }
 
                 page.Controls.Add(lb.label);

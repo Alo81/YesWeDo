@@ -12,6 +12,52 @@ namespace SmashUltimateEditor
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
         public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
 
+        public static List<string> RANGE_VALUES = new List<string>()
+        {
+            "APPEAR_RULE_TIME",
+            "APPEAR_RULE_COUNT",
+            "CPU_LV",
+            "STOCK",
+            "HP",
+            "INIT_DAMAGE",
+            "SCALE",
+            "FLY_RATE",
+            "ATTACK",
+            "DEFENSE",
+            "BATTLE_TIME_SEC",
+            "BASIC_INIT_DAMAGE",
+            "BASIC_INIT_HP",
+            "BASIC_STOCK",
+            "EVENT1_START_TIME",
+            "EVENT1_RANGE_TIME",
+            "EVENT1_COUNT",
+            "EVENT1_DAMAGE",
+            "EVENT2_START_TIME",
+            "EVENT2_RANGE_TIME",
+            "EVENT2_COUNT",
+            "EVENT2_DAMAGE",
+            "EVENT3_START_TIME",
+            "EVENT3_RANGE_TIME",
+            "EVENT3_COUNT",
+            "EVENT3_DAMAGE",
+            "BATTLE_POWER"
+        };
+
+        public static List<string> MII_MOVES = new List<string>()
+        {
+            "MII_SP_N",
+            "MII_SP_S",
+            "MII_SP_HI",
+            "MII_SP_LW"
+        };
+
+        public static Dictionary<string, int> miiFighterMod = new Dictionary<string, int>()
+        {
+            { "ui_chara_miifighter", (int)Enums.mii_brawler_mod.Fighter },
+            { "ui_chara_miiswordsman", (int)Enums.mii_brawler_mod.SwordFighter },
+            { "ui_chara_miigunner", (int)Enums.mii_brawler_mod.Gunner },
+        };
+
         #region FighterDataTbl
         public static ushort APPEAR_RULE_TIME_MIN = 0;
         public static ushort APPEAR_RULE_TIME_MAX = 60;
@@ -59,9 +105,6 @@ namespace SmashUltimateEditor
 
         public static byte BASIC_STOCK_MIN = 1;
         public static byte BASIC_STOCK_MAX = 99;
-
-        public static string event1_type;
-        public static string event1_label;
 
         public static int EVENT_START_TIME_MIN = 0;
         public static int EVENT_START_TIME_MAX = 80;

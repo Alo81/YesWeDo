@@ -26,14 +26,31 @@ namespace SmashUltimateEditor
             ReadXML(Defs.FILE_LOCATION);
         }
 
+        public void SetSelectedBattle(string battle_id)
+        {
+            selectedBattle = battleData.GetBattle(battle_id);
+        }
         public void SetSelectedFighters(string battle_id)
         {
-            selectedFighters.fighterDataList = fighterData.GetBattleFighters(battle_id);
+            selectedFighters.fighterDataList = fighterData.GetFightersByBattleId(battle_id);
         }
 
         public void SetSelectedFighter()
         {
 
+        }
+
+        public List<string> GetOptionsFromTypeAndName(string type, string name)
+        {
+            switch (type)
+            {
+                case "FighterDataTbl":
+                    return (List<string>)fighterData.GetType().GetProperty(name).GetValue(fighterData) ?? new List<string>();
+                case "BattleDataTbl":
+                    return (List<string>)battleData.GetType().GetProperty(name).GetValue(battleData) ?? new List<string>();
+                default:
+                    return null;
+            }
         }
 
 

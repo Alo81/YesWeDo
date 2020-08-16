@@ -17,6 +17,7 @@ namespace SmashUltimateEditor
         {
             InitializeComponent();
             dataTbls = new DataTbls();
+            buildFighterDataTab();
         }
 
         private void dropdownFighterData_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -27,12 +28,6 @@ namespace SmashUltimateEditor
             this.dropdownFighterFighterKind.SelectedItem = dataTbls.selectedFighters[0].fighter_kind;
             this.textBoxFighterHp.Text = dataTbls.selectedFighters[0].hp.ToString();
             */
-        }
-
-        private void buttonLoadData_Click(object sender, EventArgs e)
-        {
-            //EnumUtil<sub_rule_opt>.Contains("metal_rule");
-            buildFighterDataTab();
         }
 
         private void buildFighterDataTab()
@@ -51,28 +46,14 @@ namespace SmashUltimateEditor
 
         private void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
+            dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
-            listBoxFighterSpirit.DataSource = dataTbls.selectedFighters.spirit_name;
-
             // Empty tab pages and control.
             tabControlData.TabPages.Clear();
             tabPages = new List<TabPage>();
 
-            TabPage fighterPage;
-            int i = 0;
-            foreach (FighterDataTbl fighter in dataTbls.selectedFighters.fighterDataList)
-            {
-                fighterPage = TabPageHelper.GetEmptyTabPage(i++);
-                fighterPage.Name = fighter.spirit_name;
-                fighterPage.Text = fighterPage.Name;
-                tabPages.Add(fighterPage);
-            }
+            tabPages = UiHelper.BuildTabs(ref dataTbls);
             tabControlData.TabPages.AddRange(tabPages.ToArray());
-        }
-
-        private void listBoxFighterSpirit_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

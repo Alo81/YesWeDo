@@ -66,6 +66,12 @@ namespace SmashUltimateEditor
             }
             return;
         }
+
+        public string GetValueFromName(string name)
+        {
+            return this.GetType().GetField(name).GetValue(this).ToString();
+        }
+
         // No primary key.
         // Battle id is unique identifier.  Main type and sub type fighters.  
         // Battle id should be selectable drop down.  All fighters should be selectable based off battle_id.  

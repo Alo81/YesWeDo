@@ -6,7 +6,7 @@ namespace SmashUltimateEditor
 {
     class Enums
     {
-#region FighterDataTbl
+    #region FighterDataTbl
 
         public enum entry_type_opt
         {
@@ -224,7 +224,7 @@ namespace SmashUltimateEditor
             tail_rule
         }
 
-#region Mii
+        #region Mii
         // Are there more options that can be defined from the full list (?)
         public enum mii_body_id_opt
         {
@@ -351,7 +351,7 @@ namespace SmashUltimateEditor
         // To be used with fighter_kind to determine moves.  
         public enum mii_brawler_mod
         {
-            Brawler = 0*Mod,
+            Fighter = 0*Mod,
             SwordFighter = 1*Mod,
             Gunner = 2*Mod,
             Mod = 3
@@ -4476,6 +4476,6 @@ namespace SmashUltimateEditor
             final_stage2,
             final_stage3
         }
-#endregion
+        #endregion
     }
 }

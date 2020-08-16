@@ -10,5 +10,7 @@ namespace SmashUltimateEditor
     public interface IDataTbl
     {
         abstract void BuildFromXml(XmlReader reader);
+
+        abstract string GetValueFromName(string name);
     }
 }

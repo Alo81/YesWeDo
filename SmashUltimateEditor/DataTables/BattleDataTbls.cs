@@ -11,6 +11,12 @@ namespace SmashUltimateEditor
     {
         public List<BattleDataTbl> battleDataList;
 
+        public BattleDataTbl GetBattle(string battle_id)
+        {
+
+            return battleDataList.FirstOrDefault(x => x.battle_id == battle_id);
+        }
+
         public List<string> battle_id
         {
             get { return battleDataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }
@@ -50,9 +56,10 @@ namespace SmashUltimateEditor
             get { return battleDataList.Select(x => x.stage_type).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<sbyte>_0x18e536d4f7
+        // ORIGINALLY AN SBYTE.  (?)
+        public List<string>_0x18e536d4f7
         {
-            get { return battleDataList.Select(x => x._0x18e536d4f7).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x._0x18e536d4f7.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_bgm
@@ -89,46 +96,132 @@ namespace SmashUltimateEditor
         {
             get { return battleDataList.Select(x => x.result_type).Distinct().OrderBy(x => x).ToList(); }
         }
-
-        public List<string>event_type
+        public List<string> event_type
         {
-            get { return battleDataList.Select(x => x.event1_type).Distinct().OrderBy(x => x).ToList(); 
-            }
+            get { return EnumUtil<event_type_opt>.GetValuesSorted(); }
         }
 
-        public List<string>event_label
+        public List<string> event_label
         {
-            get { return battleDataList.Select(x => x.event1_label).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<event_label_opt>.GetValuesSorted(); }
         }
 
-        public List<int>event_start_time
+        public List<int> event_start_time
         {
             get { return battleDataList.Select(x => x.event1_start_time).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<int>event_range_time
+        public List<int> event_range_time
         {
             get { return battleDataList.Select(x => x.event1_range_time).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<byte>event_count
+        public List<byte> event_count
         {
             get { return battleDataList.Select(x => x.event1_count).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<ushort>event_damage
+        public List<ushort> event_damage
         {
             get { return battleDataList.Select(x => x.event1_damage).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<bool>_0x0d41ef8328
+        public List<string> event1_type
         {
-            get { return battleDataList.Select(x => x._0x0d41ef8328).Distinct().OrderBy(x => x).ToList(); }
+            get { return event_type; }
+        }
+
+        public List<string> event1_label
+        {
+            get { return event_label;  }
+        }
+
+        public List<int> event1_start_time
+        {
+            get { return event_start_time;  }
+        }
+
+        public List<int> event1_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event1_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event1_damage
+        {
+            get { return event_damage; }
+        }
+        public List<string> event2_type
+        {
+            get { return event_type; }
+        }
+
+        public List<string> event2_label
+        {
+            get { return event_label;  }
+        }
+
+        public List<int> event2_start_time
+        {
+            get { return event_start_time; }
+        }
+
+        public List<int> event2_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event2_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event2_damage
+        {
+            get { return event_damage; }
+        }
+        public List<string> event3_type
+        {
+            get { return event_type; }
+        }
+
+        public List<string> event3_label
+        {
+            get { return event_label; }
+        }
+
+        public List<int> event3_start_time
+        {
+            get { return event_start_time; }
+        }
+
+        public List<int> event3_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event3_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event3_damage
+        {
+            get { return event_damage; }
         }
 
         public List<bool>aw_flap_delay
         {
             get { return battleDataList.Select(x => x.aw_flap_delay).Distinct().OrderBy(x => x).ToList(); }
+        }
+
+        public List<bool> _0x0d41ef8328
+        {
+            get { return battleDataList.Select(x => x._0x0d41ef8328).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<bool>_0x0d6f19abae
@@ -138,7 +231,7 @@ namespace SmashUltimateEditor
 
         public List<string>_0x18d9441f71
         {
-            get { return battleDataList.Select(x => x._0x18d9441f71).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x._0x18d9441f71).Distinct().OrderBy(x => x).ToList();  }
         }
 
         public List<string> _0x18404d4ecb
@@ -150,10 +243,82 @@ namespace SmashUltimateEditor
         {
             get { return EnumUtil<ability_opt>.GetValuesSorted(); }
         }
+        public List<string> recommended_skill1
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill2
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill3
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill4
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill5
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill6
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill7
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill8
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill9
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill10
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill11
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill12
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill13
+        {
+            get { return recommended_skill; }
+        }
 
-        public List<string>un_recommended_skill
+        public List<string> un_recommended_skill
         {
             get { return EnumUtil<ability_opt>.GetValuesSorted(); }
+        }
+        public List<string> un_recommended_skill1
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill2
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill3
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill4
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill5
+        {
+            get { return un_recommended_skill; }
         }
 
         public List<string>_0x0ff8afd14f

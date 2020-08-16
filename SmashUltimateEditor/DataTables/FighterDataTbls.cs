@@ -7,11 +7,15 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    class FighterDataTbls
+    public class FighterDataTbls
     {
-        public List<FighterDataTbl> GetBattleFighters(string battle_id)
+        public List<FighterDataTbl> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
+        }
+        public List<FighterDataTbl> GetFighters()
+        {
+            return fighterDataList;
         }
 
         public List<FighterDataTbl> fighterDataList;
@@ -46,9 +50,10 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.fighter_kind).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<byte> color
+        // THIS WAS ORIGINALLY A BYTE (?)
+        public List<string> color
         {
-            get { return fighterDataList.Select(x => x.color).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.color.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> mii_hat_id
         {
@@ -58,29 +63,30 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.mii_body_id).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<byte> mii_color
+        public List<string> mii_color
         {
-            get { return fighterDataList.Select(x => x.mii_color).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<mii_color_opt>.GetValuesSorted(); }
         }
         public List<string> mii_voice
         {
             get { return fighterDataList.Select(x => x.mii_voice).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<byte> mii_sp_n
+        // NOT ORIGINAL TYPE.  Changed from BYTE tp string (?)
+        public List<string> mii_sp_n
         {
-            get { return fighterDataList.Select(x => x.mii_sp_n).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<mii_sp_n_opt>.GetValuesSorted(); }
         }
-        public List<byte> mii_sp_s
+        public List<string> mii_sp_s
         {
-            get { return fighterDataList.Select(x => x.mii_sp_s).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<mii_sp_s_opt>.GetValuesSorted(); }
         }
-        public List<byte> mii_sp_hi
+        public List<string> mii_sp_hi
         {
-            get { return fighterDataList.Select(x => x.mii_sp_hi).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<mii_sp_hi_opt>.GetValuesSorted(); }
         }
-        public List<byte> mii_sp_lw
+        public List<string> mii_sp_lw
         {
-            get { return fighterDataList.Select(x => x.mii_sp_lw).Distinct().OrderBy(x => x).ToList(); }
+            get { return EnumUtil<mii_sp_lw_opt>.GetValuesSorted(); }
         }
         public List<byte> cpu_lv
         {

@@ -17,6 +17,14 @@ namespace SmashUltimateEditor
 
                 return Enum.IsDefined(typeof(T), value);
             }
+            public static string GetByValue(int value)
+            {
+                if (!typeof(T).IsEnum)
+                    throw new ArgumentException("T must be an enumerated type");
+
+                var values = (T[])Enum.GetValues(typeof(T));
+                return values[value].ToString();
+            }
             public static List<string> GetValuesSorted()
             {
                 if (!typeof(T).IsEnum)
@@ -24,7 +32,6 @@ namespace SmashUltimateEditor
 
                 var sorted = (T[]) Enum.GetValues(typeof(T));
                 return sorted.OrderBy(x => x.ToString()).Select(x => x.ToString()).ToList();
-
             }
         }
     }

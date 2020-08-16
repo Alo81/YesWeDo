@@ -7,7 +7,7 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    class BattleDataTbls
+    public class BattleDataTbls
     {
         public List<BattleDataTbl> battleDataList;
 

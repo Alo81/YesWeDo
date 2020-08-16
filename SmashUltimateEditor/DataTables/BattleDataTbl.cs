@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SmashUltimateEditor.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using static SmashUltimateEditor.Extensions;
 
@@ -12,6 +14,13 @@ namespace SmashUltimateEditor
 {
     public class BattleDataTbl : IDataTbl
     {
+        internal TabPage page;
+        internal int pageCount { get { return page == null ? 0 : 1; } }
+        public void BuildPage(DataTbls dataTbls)
+        {
+            page = UiHelper.BuildPage(dataTbls, this, battle_id);
+        }
+
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;
@@ -100,6 +109,10 @@ namespace SmashUltimateEditor
                 return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
             }
             return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
+        }
+        public void SetValueFromName(string name,  object val)
+        {
+            this.GetType().GetField(name).SetValue(this, val);
         }
 
         public string battle_id;

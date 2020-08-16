@@ -44,7 +44,7 @@ namespace SmashUltimateEditor
             */
         }
 
-        private void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
+        private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
@@ -52,8 +52,8 @@ namespace SmashUltimateEditor
             tabControlData.TabPages.Clear();
             tabPages = new List<TabPage>();
 
-            tabPages = UiHelper.BuildTabs(ref dataTbls);
-            tabControlData.TabPages.AddRange(tabPages.ToArray());
+            await UiHelper.BuildTabs(dataTbls);
+            UiHelper.SetTabs(ref dataTbls, ref tabControlData);
         }
     }
 }

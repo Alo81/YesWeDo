@@ -5,12 +5,19 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SmashUltimateEditor.Helpers
 {
     class UiHelper
     {
+        public static void SetValueFromName(IDataTbl tbl, string name, object val)
+        {
+            // use TabIndex - 1?
+            tbl.SetValueFromName(name, val);
+        }
+
         public static TabPage GetEmptyTabPage(int page = 0)
         {
         
@@ -25,28 +32,34 @@ namespace SmashUltimateEditor.Helpers
             return tabPage;
         }
 
-        public static List<TabPage> BuildTabs(ref DataTbls dataTbls)
+        public static void SetTabs(ref DataTbls dataTbls, ref TabControl tab)
         {
-            BattleDataTbl battleDataTbl = dataTbls.selectedBattle;
-            FighterDataTbls fightersTbl = dataTbls.selectedFighters;
+            tab.TabPages.Add(dataTbls.selectedBattle.page);
 
-            List<TabPage> tabPages = new List<TabPage>();
-            tabPages.Add(BuildPage(ref dataTbls, dataTbls.selectedBattle));
-
-            foreach (FighterDataTbl fighter in dataTbls.selectedFighters.GetFighters())
+            for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
             {
-                tabPages.Add(BuildPage(ref dataTbls, fighter));
+                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls);
+                tab.TabPages.Add(dataTbls.selectedFighters.fighterDataList[i].page);
             }
-            return tabPages;
         }
 
-        public static TabPage BuildPage(ref DataTbls dataTbls, BattleDataTbl dataTbl)
+        public static async Task BuildTabs(DataTbls dataTbls)
         {
-            return BuildPage(ref dataTbls, dataTbl, dataTbl.battle_id);
+            dataTbls.selectedBattle.BuildPage(dataTbls);
+
+            for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
+            {
+                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls);
+            }
+        }
+
+        public static TabPage BuildPage(DataTbls dataTbls, BattleDataTbl dataTbl)
+        {
+            return BuildPage(dataTbls, dataTbl, dataTbl.battle_id);
         }
         public static TabPage BuildPage(ref DataTbls dataTbls, FighterDataTbl dataTbl)
         {
-            return BuildPage(ref dataTbls, dataTbl, dataTbl.spirit_name);
+            return BuildPage(dataTbls, dataTbl, dataTbl.spirit_name);
         }
 
         private static Point IncrementPoint(ref Point current, int rowCount)
@@ -68,11 +81,10 @@ namespace SmashUltimateEditor.Helpers
             return current;
         }
 
-        public static TabPage BuildPage(ref DataTbls dataTbls, IDataTbl dataTbl, string name)
+        public static TabPage BuildPage(DataTbls dataTbls, IDataTbl dataTbl, string name)
         {
-            TabPage page = GetEmptyTabPage();
+            TabPage page = GetEmptyTabPage(dataTbls.pageCount);
             Point currentPos = new Point(0, 0);
-            int rowCounter = 0;
 
             page.Name = name;
             page.Text = name;

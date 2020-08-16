@@ -31,6 +31,7 @@ namespace SmashUltimateEditor.UI
             text.Width = Defs.BOX_WIDTH;
             text.Height = Defs.BOX_HEIGHT;
             text.Location = pos;
+            //text.TextChanged += DataTbls;
         }
         public void SetComboBox(string value, List<string> opts, Point pos)
         {

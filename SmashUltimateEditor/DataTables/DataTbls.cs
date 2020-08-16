@@ -7,13 +7,15 @@ using System.Xml;
 
 namespace SmashUltimateEditor
 {
-    class DataTbls
+    public class DataTbls
     {
         public BattleDataTbls battleData;
         public FighterDataTbls fighterData;
         public FighterDataTbls selectedFighters;
         public BattleDataTbl selectedBattle;
         public FighterDataTbl selectedFighter;
+
+        public int pageCount { get { return selectedFighters.pageCount + selectedBattle.pageCount; } }
 
         public DataTbls()
         {

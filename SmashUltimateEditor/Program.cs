@@ -16,7 +16,6 @@ namespace SmashUltimateEditor
         [STAThread]
         static void Main()
         {
-            //EnumUtil<sub_rule_opt>.Contains("metal_rule");
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

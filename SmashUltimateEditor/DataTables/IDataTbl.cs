@@ -12,5 +12,9 @@ namespace SmashUltimateEditor
         abstract void BuildFromXml(XmlReader reader);
 
         abstract string GetValueFromName(string name);
+
+        abstract void BuildPage(DataTbls dataTbls);
+
+        abstract void SetValueFromName(string name, object val);
     }
 }

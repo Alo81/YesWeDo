@@ -9,6 +9,7 @@ namespace SmashUltimateEditor
 {
     public class FighterDataTbls
     {
+        internal int pageCount { get { return fighterDataList.Sum(x=>x.pageCount); } }
         public List<FighterDataTbl> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();

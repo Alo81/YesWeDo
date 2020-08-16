@@ -1,4 +1,5 @@
-﻿using SmashUltimateEditor.Helpers;
+﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,13 +9,16 @@ using System.Xml;
 namespace SmashUltimateEditor
 {
 
-    public class FighterDataTbl : IDataTbl
+    public class FighterDataTbl : DataTbl, IDataTbl
     {
-        internal TabPage page;
-        internal int pageCount { get { return page == null ? 0 : 1; } }
+        public void Save(object sender, EventArgs e)
+        {
+
+        }
+
         public void BuildPage(DataTbls dataTbls)
         {
-            page = UiHelper.BuildPage(dataTbls, this, spirit_name);
+            BuildPage(dataTbls, spirit_name);
         }
         public void BuildFromXml(XmlReader reader)
         {
@@ -73,15 +77,6 @@ namespace SmashUltimateEditor
                 }
             }
             return;
-        }
-
-        public string GetValueFromName(string name)
-        {
-            return this.GetType().GetField(name).GetValue(this).ToString();
-        }
-        public void SetValueFromName(string name, object val)
-        {
-            this.GetType().GetField(name).SetValue(this, val);
         }
 
         // No primary key.

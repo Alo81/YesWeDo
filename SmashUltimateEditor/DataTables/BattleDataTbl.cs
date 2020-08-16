@@ -1,4 +1,5 @@
-﻿using SmashUltimateEditor.Helpers;
+﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,13 +13,11 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    public class BattleDataTbl : IDataTbl
+    public class BattleDataTbl : DataTbl, IDataTbl
     {
-        internal TabPage page;
-        internal int pageCount { get { return page == null ? 0 : 1; } }
         public void BuildPage(DataTbls dataTbls)
         {
-            page = UiHelper.BuildPage(dataTbls, this, battle_id);
+            BuildPage(dataTbls, battle_id);
         }
 
         public void BuildFromXml(XmlReader reader)

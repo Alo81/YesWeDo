@@ -1,8 +1,13 @@
-﻿using System;
+﻿using SmashUltimateEditor.Helpers;
+using SmashUltimateEditor.UI;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace SmashUltimateEditor
@@ -11,10 +16,6 @@ namespace SmashUltimateEditor
     {
         abstract void BuildFromXml(XmlReader reader);
 
-        abstract string GetValueFromName(string name);
-
         abstract void BuildPage(DataTbls dataTbls);
-
-        abstract void SetValueFromName(string name, object val);
     }
 }

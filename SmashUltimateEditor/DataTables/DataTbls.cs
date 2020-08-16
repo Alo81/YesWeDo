@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace SmashUltimateEditor
@@ -28,6 +29,16 @@ namespace SmashUltimateEditor
             ReadXML(Defs.FILE_LOCATION);
         }
 
+        public void Save(object sender, EventArgs e)
+        {
+            int index = battleData.battleDataList.FindIndex(x => x == selectedBattle);
+            battleData.battleDataList[index] = selectedBattle;
+        }
+
+        public void SetSaveButtonMethod(ref Button b)
+        {
+            b.Click += new System.EventHandler(Save);
+        }
         public void SetSelectedBattle(string battle_id)
         {
             selectedBattle = battleData.GetBattle(battle_id);

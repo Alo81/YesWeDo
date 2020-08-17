@@ -11,11 +11,6 @@ namespace SmashUltimateEditor
 
     public class FighterDataTbl : DataTbl, IDataTbl
     {
-        public void Save(object sender, EventArgs e)
-        {
-
-        }
-
         public void BuildPage(DataTbls dataTbls)
         {
             BuildPage(dataTbls, spirit_name);

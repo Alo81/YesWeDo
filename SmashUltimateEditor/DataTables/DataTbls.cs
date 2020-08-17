@@ -31,8 +31,25 @@ namespace SmashUltimateEditor
 
         public void Save(object sender, EventArgs e)
         {
+            SaveBattle();
+            SaveFighters();
+        }
+
+        private void SaveBattle()
+        {
+            selectedBattle.UpdateValues();
             int index = battleData.battleDataList.FindIndex(x => x == selectedBattle);
             battleData.battleDataList[index] = selectedBattle;
+        }
+
+        private void SaveFighters()
+        {
+            foreach(FighterDataTbl fighter in selectedFighters.GetFighters())
+            {
+                fighter.UpdateValues();
+                int index = fighterData.fighterDataList.FindIndex(x => x == fighter);
+                fighterData.fighterDataList[index] = fighter;
+            }
         }
 
         public void SetSaveButtonMethod(ref Button b)

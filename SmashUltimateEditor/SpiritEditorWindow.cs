@@ -48,9 +48,6 @@ namespace SmashUltimateEditor
         {
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
-            // Empty tab pages and control.
-            tabControlData.TabPages.Clear();
-            tabPages = new List<TabPage>();
 
             await UiHelper.BuildTabs(dataTbls);
             UiHelper.SetTabs(ref dataTbls, ref tabControlData);

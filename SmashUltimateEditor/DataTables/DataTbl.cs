@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor.DataTables
 {
@@ -14,6 +15,53 @@ namespace SmashUltimateEditor.DataTables
     {
         internal TabPage page;
         internal int pageCount { get { return page == null ? 0 : 1; } }
+
+        public void UpdateValues()
+        {
+            foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
+            {
+                if(combo.Name == "mii_color")
+                {
+                    var color = (int)EnumUtil<Enums.mii_color_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
+                    SetValueFromName(combo.Name, color.ToString());
+                    continue;
+                }
+                /*  mii_sp_n_opt
+                    mii_sp_s_opt
+                    mii_sp_hi_opt
+                    mii_sp_lw_opt
+                */
+                else if(combo.Name == "mii_sp_n")
+                {
+                    var move = (int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
+                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
+                    continue;
+                }
+                else if (combo.Name == "mii_sp_s")
+                {
+                    var move = (int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
+                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
+                    continue;
+                }
+                else if (combo.Name == "mii_sp_hi")
+                {
+                    var move = (int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
+                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
+                    continue;
+                }
+                else if (combo.Name == "mii_sp_lw")
+                {
+                    var move = (int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
+                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
+                    continue;
+                }
+                SetValueFromName(combo.Name, combo?.SelectedItem?.ToString() ?? "");
+            }
+            foreach (TextBox text in page.Controls.OfType<TextBox>())
+            {
+                SetValueFromName(text.Name, text.Text);
+            }
+        }
 
         public void BuildPage(DataTbls dataTbls, string name)
         {
@@ -37,7 +85,7 @@ namespace SmashUltimateEditor.DataTables
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(this.GetValueFromName(field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetTextBox(field.Name, this.GetValueFromName(field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 else if (Defs.MII_MOVES.Contains(field.Name.ToUpper()))
                 {
@@ -52,7 +100,7 @@ namespace SmashUltimateEditor.DataTables
                         // THIS IS HARDCODED.  FIX.  (?)
                         miiFighterMoves.Add(Extensions.EnumUtil<Enums.mii_sp_n_opt>.GetByValue(i + mod));
                     }
-                    lb.SetComboBox(this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 // If boolean, our range can be true/false. 
                 else if (field.FieldType == typeof(bool))
@@ -63,13 +111,13 @@ namespace SmashUltimateEditor.DataTables
                         "false",
                         "true"
                     };
-                    lb.SetComboBox(this.GetValueFromName(field.Name).Equals("true") ? "true" : "false", boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(this.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                 }
 
                 page.Controls.Add(lb.label);
@@ -89,9 +137,44 @@ namespace SmashUltimateEditor.DataTables
         {
             return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
         }
-        public void SetValueFromName(string name, object val)
+        public void SetValueFromName(string name, string val)
         {
-            this.GetType().GetField(name).SetValue(this, val);
+            FieldInfo field = this.GetType().GetField(name);
+            Type type = field.FieldType;
+
+            //this.GetType().GetFields().Select(x => x.FieldType).Distinct();
+
+            // I don't wanna use strings.  Probably a better way (?)
+            switch (type.ToString())
+            {
+                case "System.Boolean":
+                    field.SetValue(this, Boolean.Parse(val));
+                    break;
+                case "System.Byte":
+                    field.SetValue(this, Byte.Parse(val));
+                    break;
+                case "System.SByte":
+                    field.SetValue(this, SByte.Parse(val));
+                    break;
+                case "System.UInt16":
+                    field.SetValue(this, UInt16.Parse(val));
+                    break;
+                case "System.Int16":
+                    field.SetValue(this, Int16.Parse(val));
+                    break;
+                case "System.UInt32":
+                    field.SetValue(this, UInt32.Parse(val));
+                    break;
+                case "System.Int32":
+                    field.SetValue(this, Int32.Parse(val));
+                    break;
+                case "System.String":
+                    field.SetValue(this, val);
+                    break;
+                case "System.Single":
+                    field.SetValue(this, Single.Parse(val));
+                    break;
+            }
         }
     }
 }

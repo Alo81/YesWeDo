@@ -109,7 +109,6 @@ namespace SmashUltimateEditor
         private System.Windows.Forms.ToolStripMenuItem fileMenu;
         private System.Windows.Forms.ComboBox dropdownSpiritData;
         DataTbls dataTbls;
-        private List<TabPage> tabPages = new List<TabPage>(8);
         private TabControl tabControlData;
     }
 }

@@ -101,19 +101,6 @@ namespace SmashUltimateEditor
             return;
         }
 
-        public string GetValueFromName(string name)
-        {
-            if(name == "_0x18d9441f71")
-            {
-                return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
-            }
-            return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
-        }
-        public void SetValueFromName(string name,  object val)
-        {
-            this.GetType().GetField(name).SetValue(this, val);
-        }
-
         public string battle_id;
         public string	battle_type;
         public ushort	battle_time_sec;

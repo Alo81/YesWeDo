@@ -56,11 +56,12 @@ namespace SmashUltimateEditor.Helpers
 
         public static void SetTabs(ref DataTbls dataTbls, ref TabControl tab)
         {
+            // Empty tab pages and control.
+            tab.TabPages.Clear();
             tab.TabPages.Add(dataTbls.selectedBattle.page);
 
             for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
             {
-                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls);
                 tab.TabPages.Add(dataTbls.selectedFighters.fighterDataList[i].page);
             }
         }

@@ -25,6 +25,14 @@ namespace SmashUltimateEditor
                 var values = (T[])Enum.GetValues(typeof(T));
                 return values[value].ToString();
             }
+            public static T GetByName(string name)
+            {
+                if (!typeof(T).IsEnum)
+                    throw new ArgumentException("T must be an enumerated type");
+
+                var values = (T[])Enum.GetValues(typeof(T));
+                return values.FirstOrDefault(x => x.ToString().Equals(name));
+            }
             public static List<string> GetValuesSorted()
             {
                 if (!typeof(T).IsEnum)

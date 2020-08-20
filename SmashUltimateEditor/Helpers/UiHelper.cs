@@ -72,7 +72,7 @@ namespace SmashUltimateEditor.Helpers
 
             for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
             {
-                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls, dataTbls.selectedFighters.fighterDataList[i].spirit_name);
+                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls, dataTbls.selectedFighters.fighterDataList[i].fighter_kind);
             }
         }
     }

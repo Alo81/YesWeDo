@@ -148,11 +148,6 @@ namespace SmashUltimateEditor
             var type = fighterData.GetFighters().GetType().Name;
             type = type.Remove(type.Length - 2);
 
-            List<string> list = new List<string>
-            {
-                "Data1", "Data2", "Data3"
-            };
-
             XDocument doc =
                 new XDocument(new XDeclaration("1.0", "utf-8", ""),
                     new XElement("struct",
@@ -191,7 +186,7 @@ namespace SmashUltimateEditor
                     )
                 );
 
-            writer.Write(DataParse.ReplaceTypes(doc.ToString()).ToLower());
+            writer.Write(doc.Declaration.ToString() + "\r\n" + DataParse.ReplaceTypes(doc.ToString()).ToLower());
             writer.Close();
             writer.Dispose();
         }

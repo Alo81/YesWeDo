@@ -40,7 +40,7 @@ namespace SmashUltimateEditor
                     case "basic_stock": basic_stock = Convert.ToByte(reader.Value); break;
                     case "ui_stage_id": ui_stage_id = reader.Value; break;
                     case "stage_type": stage_type = reader.Value; break;
-                    case "x018e536d4f7": _0x18e536d4f7 = Convert.ToSByte(reader.Value); break;
+                    case "0x18e536d4f7": _0x18e536d4f7 = Convert.ToSByte(reader.Value); break;
                     case "stage_bgm": stage_bgm = reader.Value; break;
                     case "stage_gimmick": stage_gimmick = Convert.ToBoolean(reader.Value); break;
                     case "stage_attr": stage_attr = reader.Value; break;
@@ -66,11 +66,11 @@ namespace SmashUltimateEditor
                     case "event3_range_time": event3_range_time = Convert.ToInt32(reader.Value); break;
                     case "event3_count": event3_count = Convert.ToByte(reader.Value); break;
                     case "event3_damage": event3_damage = Convert.ToUInt16(reader.Value); break;
-                    case "x00d41ef8328": _0x0d41ef8328 = Convert.ToBoolean(reader.Value); break;
+                    case "0x0d41ef8328": _0x0d41ef8328 = Convert.ToBoolean(reader.Value); break;
                     case "aw_flap_delay": aw_flap_delay = Convert.ToBoolean(reader.Value); break;
-                    case "x00d6f19abae": _0x0d6f19abae = Convert.ToBoolean(reader.Value); break;
-                    case "x018d9441f71": _0x18d9441f71 = reader.Value; break;
-                    case "x018404d4ecb": _0x18404d4ecb = reader.Value; break;
+                    case "0x0d6f19abae": _0x0d6f19abae = Convert.ToBoolean(reader.Value); break;
+                    case "0x18d9441f71": _0x18d9441f71 = reader.Value; break;
+                    case "0x18404d4ecb": _0x18404d4ecb = reader.Value; break;
                     case "recommended_skill1": recommended_skill1 = reader.Value; break;
                     case "recommended_skill2": recommended_skill2 = reader.Value; break;
                     case "recommended_skill3": recommended_skill3 = reader.Value; break;
@@ -89,7 +89,7 @@ namespace SmashUltimateEditor
                     case "un_recommended_skill3": un_recommended_skill3 = reader.Value; break;
                     case "un_recommended_skill4": un_recommended_skill4 = reader.Value; break;
                     case "un_recommended_skill5": un_recommended_skill5 = reader.Value; break;
-                    case "x00ff8afd14f": _0x0ff8afd14f = reader.Value; break;
+                    case "0x0ff8afd14f": _0x0ff8afd14f = reader.Value; break;
                     case "battle_power": battle_power = Convert.ToUInt32(reader.Value); break;
                 }
             }
@@ -112,6 +112,8 @@ namespace SmashUltimateEditor
         public string	ui_stage_id { get; set; }
         [Order]
         public string	stage_type { get; set; }
+        [Order]
+        public sbyte _0x18e536d4f7 { get; set; }
         [Order]
         public string	stage_bgm { get; set; }
         [Order]
@@ -162,8 +164,6 @@ namespace SmashUltimateEditor
         public byte	    event3_count { get; set; }
         [Order]
         public ushort	event3_damage { get; set; }
-        [Order]
-        public sbyte    _0x18e536d4f7 { get; set; }
         [Order]
         public bool	    _0x0d41ef8328 { get; set; }
         [Order]

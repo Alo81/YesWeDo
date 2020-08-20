@@ -45,10 +45,9 @@ namespace SmashUltimateEditor
             // dropdownSpiritData
             // 
             this.dropdownSpiritData.FormattingEnabled = true;
-            this.dropdownSpiritData.Location = new System.Drawing.Point(10, 26);
-            this.dropdownSpiritData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dropdownSpiritData.Location = new System.Drawing.Point(11, 35);
             this.dropdownSpiritData.Name = "dropdownSpiritData";
-            this.dropdownSpiritData.Size = new System.Drawing.Size(767, 23);
+            this.dropdownSpiritData.Size = new System.Drawing.Size(876, 28);
             this.dropdownSpiritData.TabIndex = 4;
             this.dropdownSpiritData.SelectedIndexChanged += new System.EventHandler(this.dropdownSpiritData_SelectedIndexChanged);
             // 
@@ -63,15 +62,15 @@ namespace SmashUltimateEditor
             this.fileMenu});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(944, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
+            this.menuStrip1.Size = new System.Drawing.Size(1079, 30);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileMenu
             // 
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(37, 20);
+            this.fileMenu.Size = new System.Drawing.Size(46, 24);
             this.fileMenu.Text = "File";
             // 
             // tabControlData
@@ -79,21 +78,23 @@ namespace SmashUltimateEditor
             this.tabControlData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlData.Location = new System.Drawing.Point(13, 55);
+            this.tabControlData.Location = new System.Drawing.Point(15, 73);
+            this.tabControlData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(919, 854);
+            this.tabControlData.Size = new System.Drawing.Size(1050, 1139);
             this.tabControlData.TabIndex = 5;
             // 
             // SpiritEditorWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(944, 921);
+            this.ClientSize = new System.Drawing.Size(1079, 1228);
             this.Controls.Add(this.tabControlData);
             this.Controls.Add(this.dropdownSpiritData);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "SpiritEditorWindow";
             this.Text = "Smash Spirits Editor";
             this.menuStrip1.ResumeLayout(false);

@@ -149,7 +149,7 @@ namespace SmashUltimateEditor
             type = type.Remove(type.Length - 2);
 
             XDocument doc =
-                new XDocument(new XDeclaration("1.0", "utf-8", ""),
+                new XDocument(new XDeclaration("1.0", "utf-8", null),
                     new XElement("struct",
                         // <list hash="battle_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
                         new XElement(type, 

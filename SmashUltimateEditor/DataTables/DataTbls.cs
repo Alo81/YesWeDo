@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using static SmashUltimateEditor.DataTables.DataTbl;
 
 namespace SmashUltimateEditor
 {
@@ -164,9 +165,9 @@ namespace SmashUltimateEditor
                             new XAttribute("index", 
                             battleData.GetBattles().FindIndex(ind => ind.battle_id == battle.battle_id)),
                                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                                battle.GetType().GetFields().Select( field => 
-                                new XElement(field.FieldType.Name, 
-                                new XAttribute("hash", DataParse.NameFixer(field.Name)), battle.GetValueFromName(field.Name))
+                                battle.GetType().GetProperties().OrderBy(x=> ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select( property => 
+                                new XElement(property.PropertyType.Name, 
+                                new XAttribute("hash", DataParse.NameFixer(property.Name)), battle.GetValueFromName(property.Name))
                                     )
                                 )
                             )
@@ -180,9 +181,9 @@ namespace SmashUltimateEditor
                             new XAttribute("index",
                             fighterData.GetFighters().FindIndex(ind => ind == fighter)),
                                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                                fighter.GetType().GetFields().Select(field =>
-                               new XElement(field.FieldType.Name,
-                               new XAttribute("hash", DataParse.NameFixer(field.Name)), fighter.GetValueFromName(field.Name))
+                                fighter.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
+                               new XElement(property.PropertyType.Name,
+                               new XAttribute("hash", DataParse.NameFixer(property.Name)), fighter.GetValueFromName(property.Name))
                                     )
                                 )
                             )
@@ -191,68 +192,8 @@ namespace SmashUltimateEditor
                 );
 
             writer.Write(DataParse.ReplaceTypes(doc.ToString()).ToLower());
-        }
-
-        public static List<KeyValuePair<string, string>> GetFieldsValues(List<BattleDataTbl> dataTbl)
-        {
-            List<string> fields = new List<string>(typeof(BattleDataTbl).GetFields().Select(x => x.Name));
-            var storage = new List<KeyValuePair<string, string>>();
-
-            foreach (BattleDataTbl tbl in dataTbl)
-            {
-                foreach (string field in fields)
-                {
-                    var val = tbl.GetType().GetField(field).GetValue(tbl);
-                    var kvp = new KeyValuePair<string, string>(field, val?.ToString() ?? "");
-                    if (!storage.Contains(kvp))
-                    {
-                        storage.Add(kvp);
-                        if (DataParse.BattleDataTblDupes.ContainsKey(kvp.Key))
-                        {
-                            var dupeField = DataParse.BattleDataTblDupes[kvp.Key];
-                            var dupeKvp = new KeyValuePair<string, string>(dupeField, val?.ToString() ?? "");
-                            if (!storage.Contains(dupeKvp))
-                            {
-                                storage.Add(dupeKvp);
-                            }
-                        }
-                    }
-                }
-            }
-
-            storage.OrderBy(x => x.Key);
-            return storage;
-        }
-
-        public static List<KeyValuePair<string, string>> GetFieldsValues(List<FighterDataTbl> dataTbl)
-        {
-            List<string> fields = new List<string>(typeof(FighterDataTbl).GetFields().Select(x => x.Name));
-            var storage = new List<KeyValuePair<string, string>>();
-
-            foreach (FighterDataTbl tbl in dataTbl)
-            {
-                foreach (string field in fields)
-                {
-                    var val = tbl.GetType().GetField(field).GetValue(tbl);
-                    var kvp = new KeyValuePair<string, string>(field, val?.ToString() ?? "");
-                    if (!storage.Contains(kvp))
-                    {
-                        storage.Add(kvp);
-                        if (DataParse.FighterDataTblDupes.ContainsKey(kvp.Key))
-                        {
-                            var dupeField = DataParse.FighterDataTblDupes[kvp.Key];
-                            var dupeKvp = new KeyValuePair<string, string>(dupeField, val?.ToString() ?? "");
-                            if (!storage.Contains(dupeKvp))
-                            {
-                                storage.Add(dupeKvp);
-                            }
-                        }
-                    }
-                }
-            }
-
-            storage.OrderBy(x => x.Key);
-            return storage;
+            writer.Close();
+            writer.Dispose();
         }
 
         // Maybe use a list of tuples for string/Node pairs?  

@@ -76,7 +76,7 @@ namespace SmashUltimateEditor.DataTables
             LabelBox lb;
 
             Type tableType = this.GetType();
-            foreach (FieldInfo field in tableType.GetFields().OrderBy(x => x.Name))
+            foreach (PropertyInfo field in tableType.GetProperties().OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
 
@@ -102,7 +102,7 @@ namespace SmashUltimateEditor.DataTables
                     lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                 }
                 // If boolean, our range can be true/false. 
-                else if (field.FieldType == typeof(bool))
+                else if (field.PropertyType == typeof(bool))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                     List<String> boolNames = new List<String>()
@@ -134,13 +134,13 @@ namespace SmashUltimateEditor.DataTables
         }
         public string GetValueFromName(string name)
         {
-            return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
+            return this.GetType().GetProperty(name).GetValue(this)?.ToString() ?? "";
         }
 
         public void SetValueFromName(string name, string val)
         {
-            FieldInfo field = this.GetType().GetField(name);
-            Type type = field.FieldType;
+            PropertyInfo field = this.GetType().GetProperty(name);
+            Type type = field.PropertyType;
             // If val is null, interpret as empty string for our purposes.  
             val = val ?? "";
 

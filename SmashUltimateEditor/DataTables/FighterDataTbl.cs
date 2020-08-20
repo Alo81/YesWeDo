@@ -73,43 +73,80 @@ namespace SmashUltimateEditor
         // No primary key.
         // Battle id is unique identifier.  Main type and sub type fighters.  
         // Battle id should be selectable drop down.  All fighters should be selectable based off battle_id.  
-        public string battle_id;
-        public string entry_type;
-        public bool first_appear;
-        public ushort appear_rule_time;
-        public ushort appear_rule_count;
-        public string fighter_kind;
-        public byte color;
-        public string mii_hat_id;
-        public string mii_body_id;
-        public byte mii_color;
-        public string mii_voice;
-        public byte mii_sp_n;
-        public byte mii_sp_s;
-        public byte mii_sp_hi;
-        public byte mii_sp_lw;
-        public byte cpu_lv;
-        public string cpu_type;
-        public string cpu_sub_type;
-        public bool cpu_item_pick_up;
-        public byte stock;
-        public bool corps;
-        public bool _0x0f2077926c;
-        public ushort hp;
-        public ushort init_damage;
-        public string sub_rule;
-        public float scale;
-        public float fly_rate;
-        public bool invalid_drop;
-        public bool enable_charge_final;
+        [Order]
+        public string battle_id { get; set; }
+        [Order]
+        public string entry_type { get; set; }
+        [Order]
+        public bool first_appear { get; set; }
+        [Order]
+        public ushort appear_rule_time { get; set; }
+        [Order]
+        public ushort appear_rule_count { get; set; }
+        [Order]
+        public string fighter_kind { get; set; }
+        [Order]
+        public byte color { get; set; }
+        [Order]
+        public string mii_hat_id { get; set; }
+        [Order]
+        public string mii_body_id { get; set; }
+        [Order]
+        public byte mii_color { get; set; }
+        [Order]
+        public string mii_voice { get; set; }
+        [Order]
+        public byte mii_sp_n { get; set; }
+        [Order]
+        public byte mii_sp_s { get; set; }
+        [Order]
+        public byte mii_sp_hi { get; set; }
+        [Order]
+        public byte mii_sp_lw { get; set; }
+        [Order]
+        public byte cpu_lv { get; set; }
+        [Order]
+        public string cpu_type { get; set; }
+        [Order]
+        public string cpu_sub_type { get; set; }
+        [Order]
+        public bool cpu_item_pick_up { get; set; }
+        [Order]
+        public byte stock { get; set; }
+        [Order]
+        public bool corps { get; set; }
+        [Order]
+        public bool _0x0f2077926c { get; set; }
+        [Order]
+        public ushort hp { get; set; }
+        [Order]
+        public ushort init_damage { get; set; }
+        [Order]
+        public string sub_rule { get; set; }
+        [Order]
+        public float scale { get; set; }
+        [Order]
+        public float fly_rate { get; set; }
+        [Order]
+        public bool invalid_drop { get; set; }
+        [Order]
+        public bool enable_charge_final { get; set; }
+        [Order]
         // Primary spirit identifier
-        public string spirit_name;
-        public short attack;
-        public short defense;
-        public string attr;
-        public string ability1;
-        public string ability2;
-        public string ability3;
-        public string ability_personal;
+        public string spirit_name { get; set; }
+        [Order]
+        public short attack { get; set; }
+        [Order]
+        public short defense { get; set; }
+        [Order]
+        public string attr { get; set; }
+        [Order]
+        public string ability1 { get; set; }
+        [Order]
+        public string ability2 { get; set; }
+        [Order]
+        public string ability3 { get; set; }
+        [Order]
+        public string ability_personal { get; set; }
     }
 }

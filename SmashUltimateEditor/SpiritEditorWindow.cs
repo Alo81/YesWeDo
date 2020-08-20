@@ -20,28 +20,9 @@ namespace SmashUltimateEditor
             buildFighterDataTab();
         }
 
-        private void dropdownFighterData_SelectedIndexChanged(object sender, System.EventArgs e)
-        {
-            /*
-            dataTbls.selectedFighters = dataTbls.fighterData.fighterDataList.First(x => x.spirit_name == (string)dropdownFighterData.SelectedValue);
-            this.dropdownFighterEntryType.SelectedItem = dataTbls.selectedFighters[0].entry_type;
-            this.dropdownFighterFighterKind.SelectedItem = dataTbls.selectedFighters[0].fighter_kind;
-            this.textBoxFighterHp.Text = dataTbls.selectedFighters[0].hp.ToString();
-            */
-        }
-
         private void buildFighterDataTab()
         {
             this.dropdownSpiritData.DataSource = dataTbls.battleData.battle_id;
-
-            /*
-            dataTbls.selectedFighters = dataTbls.fighterData.GetBattleFighters((string)dropdownSpiritData.SelectedItem);
-
-            this.dropdownFighterData.DataSource = dataTbls.fighterData.GetBattleFighters((string)dropdownSpiritData.SelectedItem);
-            this.dropdownFighterEntryType.DataSource = dataTbls.fighterData.entry_type;
-            this.dropdownFighterFighterKind.DataSource = dataTbls.fighterData.fighter_kind;
-            this.labelFighterHp.Text += String.Format(" | ({0} - {1})", Defs.HP_MIN, Defs.HP_MAX); 
-            */
         }
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)

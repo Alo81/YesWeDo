@@ -15,7 +15,5 @@ namespace SmashUltimateEditor
     public interface IDataTbl
     {
         abstract void BuildFromXml(XmlReader reader);
-
-        abstract void BuildPage(DataTbls dataTbls);
     }
 }

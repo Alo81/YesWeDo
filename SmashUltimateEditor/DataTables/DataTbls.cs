@@ -1,10 +1,14 @@
-﻿using System;
+﻿using SmashUltimateEditor.DataTables;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace SmashUltimateEditor
 {
@@ -33,6 +37,7 @@ namespace SmashUltimateEditor
         {
             SaveBattle();
             SaveFighters();
+            WriteXML(Defs.FILE_LOCATION + "progout.prc");
         }
 
         private void SaveBattle()
@@ -134,6 +139,58 @@ namespace SmashUltimateEditor
                 }
             }
             Console.WriteLine("List Built.");
+        }
+        public void WriteXML(string fileName)
+        {
+            using StreamWriter writer = new StreamWriter(fileName);
+
+            var type = fighterData.GetFighters().GetType().Name;
+            type = type.Remove(type.Length - 2);
+
+            List<string> list = new List<string>
+            {
+                "Data1", "Data2", "Data3"
+            };
+
+            XDocument doc =
+                new XDocument(new XDeclaration("1.0", "utf-8", ""),
+                    new XElement("struct",
+                        // <list hash="battle_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement(type, 
+                        new XAttribute("hash", battleData.GetXmlName()),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            battleData.GetBattles().Select(battle =>
+                            new XElement("struct",
+                            new XAttribute("index", 
+                            battleData.GetBattles().FindIndex(ind => ind.battle_id == battle.battle_id)),
+                                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
+                                battle.GetType().GetFields().Select( field => 
+                                new XElement(field.FieldType.Name, 
+                                new XAttribute("hash", DataParse.NameFixer(field.Name)), battle.GetValueFromName(field.Name))
+                                    )
+                                )
+                            )
+                        ),
+                        // <list hash="fighter_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement(type,
+                        new XAttribute("hash", fighterData.GetXmlName()),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            fighterData.GetFighters().Select(fighter =>
+                            new XElement("struct",
+                            new XAttribute("index",
+                            fighterData.GetFighters().FindIndex(ind => ind == fighter)),
+                                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
+                                fighter.GetType().GetFields().Select(field =>
+                               new XElement(field.FieldType.Name,
+                               new XAttribute("hash", DataParse.NameFixer(field.Name)), fighter.GetValueFromName(field.Name))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+
+            writer.Write(DataParse.ReplaceTypes(doc.ToString()).ToLower());
         }
 
         public static List<KeyValuePair<string, string>> GetFieldsValues(List<BattleDataTbl> dataTbl)

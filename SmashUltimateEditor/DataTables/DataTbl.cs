@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Extensions;
@@ -13,6 +14,18 @@ namespace SmashUltimateEditor.DataTables
 {
     public class DataTbl
     {
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class OrderAttribute : Attribute
+        {
+            private readonly int order_;
+            public OrderAttribute([CallerLineNumber] int order = 0)
+            {
+                order_ = order;
+            }
+
+            public int Order { get { return order_; } }
+        }
+
         internal TabPage page;
         internal int pageCount { get { return page == null ? 0 : 1; } }
 
@@ -20,42 +33,28 @@ namespace SmashUltimateEditor.DataTables
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
-                if(combo.Name == "mii_color")
+                var value = combo?.SelectedItem?.ToString() ?? "";
+                if (combo.Name == "mii_color")
                 {
-                    var color = (int)EnumUtil<Enums.mii_color_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
-                    SetValueFromName(combo.Name, color.ToString());
-                    continue;
+                    value = ((int)EnumUtil<Enums.mii_color_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
                 }
-                /*  mii_sp_n_opt
-                    mii_sp_s_opt
-                    mii_sp_hi_opt
-                    mii_sp_lw_opt
-                */
                 else if(combo.Name == "mii_sp_n")
                 {
-                    var move = (int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
-                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
-                    continue;
+                    value = ((int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
                 }
                 else if (combo.Name == "mii_sp_s")
                 {
-                    var move = (int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
-                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
-                    continue;
+                    value = ((int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
                 }
                 else if (combo.Name == "mii_sp_hi")
                 {
-                    var move = (int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
-                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
-                    continue;
+                    value = ((int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
                 }
                 else if (combo.Name == "mii_sp_lw")
                 {
-                    var move = (int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "");
-                    SetValueFromName(combo.Name, move.Equals("") ? "0" : move.ToString());
-                    continue;
+                    value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
                 }
-                SetValueFromName(combo.Name, combo?.SelectedItem?.ToString() ?? "");
+                SetValueFromName(combo.Name, value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
@@ -137,10 +136,13 @@ namespace SmashUltimateEditor.DataTables
         {
             return this.GetType().GetField(name).GetValue(this)?.ToString() ?? "";
         }
+
         public void SetValueFromName(string name, string val)
         {
             FieldInfo field = this.GetType().GetField(name);
             Type type = field.FieldType;
+            // If val is null, interpret as empty string for our purposes.  
+            val = val ?? "";
 
             //this.GetType().GetFields().Select(x => x.FieldType).Distinct();
 

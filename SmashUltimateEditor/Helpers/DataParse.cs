@@ -52,5 +52,31 @@ namespace SmashUltimateEditor
             ["ability2"] = "ability",
             ["ability3"] = "ability"
         };
+
+        public static Dictionary<string, string> XmlReplacements = new Dictionary<string, string>()
+        {
+            { "Boolean", "bool" },
+            { "Int16", "short" },
+            { "UInt16", "ushort" },
+            { "Int32", "int"},
+            { "UInt32", "uint"},
+            { "Single", "float" },
+            { "String", "hash40" }
+        };
+
+        public static string ReplaceTypes(string xml)
+        {
+            foreach(KeyValuePair<string, string> type in XmlReplacements)
+            {
+                xml = xml.Replace(type.Key, type.Value);
+            }
+
+            return xml;
+        }
+
+        public static string NameFixer(string name)
+        {
+            return name[0] == '_' ? name.Remove(0, 1) : name;
+        }
     }
 }

@@ -17,6 +17,15 @@ namespace SmashUltimateEditor
             return battleDataList.FirstOrDefault(x => x.battle_id == battle_id);
         }
 
+        public List<BattleDataTbl> GetBattles()
+        {
+
+            return battleDataList;
+        }
+        public string GetXmlName()
+        {
+            return "battle_data_tbl";
+        }
         public List<string> battle_id
         {
             get { return battleDataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }

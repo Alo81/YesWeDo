@@ -68,11 +68,11 @@ namespace SmashUltimateEditor.Helpers
 
         public static async Task BuildTabs(DataTbls dataTbls)
         {
-            dataTbls.selectedBattle.BuildPage(dataTbls);
+            dataTbls.selectedBattle.BuildPage(dataTbls, dataTbls.selectedBattle.battle_id);
 
             for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
             {
-                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls);
+                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls, dataTbls.selectedFighters.fighterDataList[i].spirit_name);
             }
         }
     }

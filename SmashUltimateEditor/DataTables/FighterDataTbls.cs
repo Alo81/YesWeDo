@@ -18,6 +18,10 @@ namespace SmashUltimateEditor
         {
             return fighterDataList;
         }
+        public string GetXmlName()
+        {
+            return "fighter_data_tbl";
+        }
 
         public List<FighterDataTbl> fighterDataList;
 

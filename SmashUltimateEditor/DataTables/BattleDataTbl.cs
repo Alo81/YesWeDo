@@ -15,11 +15,6 @@ namespace SmashUltimateEditor
 {
     public class BattleDataTbl : DataTbl, IDataTbl
     {
-        public void BuildPage(DataTbls dataTbls)
-        {
-            BuildPage(dataTbls, battle_id);
-        }
-
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;
@@ -101,7 +96,7 @@ namespace SmashUltimateEditor
             return;
         }
 
-        public string battle_id;
+        public string   battle_id;
         public string	battle_type;
         public ushort	battle_time_sec;
         public ushort	basic_init_damage;

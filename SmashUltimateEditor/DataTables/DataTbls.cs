@@ -38,7 +38,7 @@ namespace SmashUltimateEditor
         {
             SaveBattle();
             SaveFighters();
-            WriteXML(Defs.FILE_LOCATION + "progout.prc");
+            WriteXML(Defs.FILE_LOCATION);
         }
 
         private void SaveBattle()

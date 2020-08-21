@@ -10,13 +10,13 @@ namespace SmashUltimateEditor
     {
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
-        public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\out_ui_spirits_battle_db.prc";
+        public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\ui_spirits_battle_db_mod_unencr.prc";
 
         public const int LABEL_HEIGHT = 20;
-        public const int LABEL_WIDTH = 160;
+        public const int LABEL_WIDTH = 200;
         public const int PADDING = 5;
         public const int BOX_HEIGHT = 20;
-        public const int BOX_WIDTH = 160;
+        public const int BOX_WIDTH = 200;
         public const int ROWS = 26;
         public const int COLUMNS = 4;
 

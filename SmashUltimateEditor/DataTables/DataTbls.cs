@@ -17,19 +17,19 @@ namespace SmashUltimateEditor
     {
         public BattleDataTbls battleData;
         public FighterDataTbls fighterData;
-        public FighterDataTbls selectedFighters;
-        public BattleDataTbl selectedBattle;
-        public FighterDataTbl selectedFighter;
+        public List<Fighter> selectedFighters;
+        public Battle selectedBattle;
+        public Fighter selectedFighter;
 
-        public int pageCount { get { return selectedFighters.pageCount + selectedBattle.pageCount; } }
+        public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
 
         public DataTbls()
         {
             battleData = new BattleDataTbls();
             fighterData = new FighterDataTbls();
-            selectedFighters = new FighterDataTbls();
-            selectedBattle = new BattleDataTbl();
-            selectedFighter = new FighterDataTbl();
+            selectedFighters = new List<Fighter>();
+            selectedBattle = new Battle();
+            selectedFighter = new Fighter();
 
             ReadXML(Defs.FILE_LOCATION);
         }
@@ -43,16 +43,16 @@ namespace SmashUltimateEditor
 
         private void SaveBattle()
         {
-            selectedBattle.UpdateValues();
+            selectedBattle.UpdateTblValues();
             int index = battleData.battleDataList.FindIndex(x => x == selectedBattle);
             battleData.battleDataList[index] = selectedBattle;
         }
 
         private void SaveFighters()
         {
-            foreach(FighterDataTbl fighter in selectedFighters.GetFighters())
+            foreach(Fighter fighter in selectedFighters)
             {
-                fighter.UpdateValues();
+                fighter.UpdateTblValues();
                 int index = fighterData.fighterDataList.FindIndex(x => x == fighter);
                 fighterData.fighterDataList[index] = fighter;
             }
@@ -68,21 +68,16 @@ namespace SmashUltimateEditor
         }
         public void SetSelectedFighters(string battle_id)
         {
-            selectedFighters.fighterDataList = fighterData.GetFightersByBattleId(battle_id);
-        }
-
-        public void SetSelectedFighter()
-        {
-
+            selectedFighters = fighterData.GetFightersByBattleId(battle_id);
         }
 
         public List<string> GetOptionsFromTypeAndName(string type, string name)
         {
             switch (type)
             {
-                case "FighterDataTbl":
+                case "Fighter":
                     return (List<string>)fighterData.GetType().GetProperty(name).GetValue(fighterData) ?? new List<string>();
-                case "BattleDataTbl":
+                case "Battle":
                     return (List<string>)battleData.GetType().GetProperty(name).GetValue(battleData) ?? new List<string>();
                 default:
                     return null;
@@ -94,10 +89,10 @@ namespace SmashUltimateEditor
         // Methods
         public void ReadXML(string fileName)
         {
-            battleData.battleDataList = new List<BattleDataTbl>();
-            fighterData.fighterDataList = new List<FighterDataTbl>();
+            battleData.battleDataList = new List<Battle>();
+            fighterData.fighterDataList = new List<Fighter>();
             bool parseData = false;
-            IDataTbl dataTable = new BattleDataTbl();
+            IDataTbl dataTable = new Battle();
 
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
@@ -108,11 +103,11 @@ namespace SmashUltimateEditor
                 switch (reader?.GetAttribute("hash"))
                 {
                     case Defs.SPIRIT_BATTLE_DATA_XML:
-                        dataTable = new BattleDataTbl();
+                        dataTable = new Battle();
                         parseData = true;
                         break;
                     case Defs.FIGHTER_DATA_XML:
-                        dataTable = new FighterDataTbl();
+                        dataTable = new Fighter();
                         parseData = true;
                         break;
                 }
@@ -126,9 +121,9 @@ namespace SmashUltimateEditor
                     {
                         dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
                         dataTable.BuildFromXml(reader);
-                        if (dataTable is BattleDataTbl battleTbl)
+                        if (dataTable is Battle battleTbl)
                             battleData.battleDataList.Add(battleTbl);
-                        else if (dataTable is FighterDataTbl fighterTbl)
+                        else if (dataTable is Fighter fighterTbl)
                             fighterData.fighterDataList.Add(fighterTbl);
                         reader.Read();
                         reader.Read();

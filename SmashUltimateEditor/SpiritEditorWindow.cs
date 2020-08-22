@@ -30,7 +30,7 @@ namespace SmashUltimateEditor
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
 
-            await UiHelper.BuildTabs(dataTbls);
+            List<TabPage> pages = await UiHelper.BuildTabs(dataTbls);
             UiHelper.SetTabs(ref dataTbls, ref tabControlData);
         }
     }

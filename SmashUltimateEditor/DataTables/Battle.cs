@@ -13,7 +13,7 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    public class BattleDataTbl : DataTbl, IDataTbl
+    public class Battle : DataTbl, IDataTbl
     {
         public void BuildFromXml(XmlReader reader)
         {

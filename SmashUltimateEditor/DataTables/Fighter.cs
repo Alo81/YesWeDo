@@ -9,7 +9,7 @@ using System.Xml;
 namespace SmashUltimateEditor
 {
 
-    public class FighterDataTbl : DataTbl, IDataTbl
+    public class Fighter : DataTbl, IDataTbl
     {
         public void BuildFromXml(XmlReader reader)
         {

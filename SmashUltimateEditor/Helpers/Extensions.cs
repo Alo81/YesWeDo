@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static SmashUltimateEditor.FighterDataTbl;
+using static SmashUltimateEditor.Fighter;
 
 namespace SmashUltimateEditor
 {

@@ -60,20 +60,29 @@ namespace SmashUltimateEditor.Helpers
             tab.TabPages.Clear();
             tab.TabPages.Add(dataTbls.selectedBattle.page);
 
-            for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
+            for (int i = 0; i < dataTbls.selectedFighters.Count; i++)
             {
-                tab.TabPages.Add(dataTbls.selectedFighters.fighterDataList[i].page);
+                tab.TabPages.Add(dataTbls.selectedFighters[i].page);
             }
         }
 
-        public static async Task BuildTabs(DataTbls dataTbls)
+        public static async Task<List<TabPage>> BuildTabs(DataTbls dataTbls)
         {
-            dataTbls.selectedBattle.BuildPage(dataTbls, dataTbls.selectedBattle.battle_id);
+            var tasks = new List<Task<TabPage>>();
+            var pages = new List<TabPage>();
+            tasks.Add(dataTbls.selectedBattle.BuildPageAsync(dataTbls, dataTbls.selectedBattle.battle_id));
 
-            for (int i = 0; i < dataTbls.selectedFighters.fighterDataList.Count; i++)
+            for (int i = 0; i < dataTbls.selectedFighters.Count; i++)
             {
-                dataTbls.selectedFighters.fighterDataList[i].BuildPage(dataTbls, dataTbls.selectedFighters.fighterDataList[i].fighter_kind);
+                tasks.Add(dataTbls.selectedFighters[i].BuildPageAsync(dataTbls, dataTbls.selectedFighters[i].fighter_kind));
             }
+
+            foreach (var task in tasks)
+            {
+                pages.Add(task.Result);
+            }
+
+            return pages;
         }
     }
 }

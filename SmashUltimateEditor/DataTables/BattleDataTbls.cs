@@ -9,15 +9,19 @@ namespace SmashUltimateEditor
 {
     public class BattleDataTbls
     {
-        public List<BattleDataTbl> battleDataList;
+        public List<Battle> battleDataList;
 
-        public BattleDataTbl GetBattle(string battle_id)
+        public Battle GetBattle(string battle_id)
         {
 
             return battleDataList.FirstOrDefault(x => x.battle_id == battle_id);
         }
 
-        public List<BattleDataTbl> GetBattles()
+        public int GetBattleIndex(string battle_id)
+        {
+            return battleDataList.FindIndex(x => x.battle_id == battle_id);
+        }
+        public List<Battle> GetBattles()
         {
 
             return battleDataList;

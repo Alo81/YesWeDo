@@ -10,11 +10,11 @@ namespace SmashUltimateEditor
     public class FighterDataTbls
     {
         internal int pageCount { get { return fighterDataList.Sum(x=>x.pageCount); } }
-        public List<FighterDataTbl> GetFightersByBattleId(string battle_id)
+        public List<Fighter> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
         }
-        public List<FighterDataTbl> GetFighters()
+        public List<Fighter> GetFighters()
         {
             return fighterDataList;
         }
@@ -23,7 +23,7 @@ namespace SmashUltimateEditor
             return "fighter_data_tbl";
         }
 
-        public List<FighterDataTbl> fighterDataList;
+        public List<Fighter> fighterDataList;
 
         public List<string> spirit_name
         {
@@ -177,8 +177,5 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.ability_personal).Distinct().OrderBy(x => x).ToList(); }
         }
-        
-        
-
     }
 }

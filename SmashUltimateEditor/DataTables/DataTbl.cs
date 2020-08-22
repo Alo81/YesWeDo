@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Extensions;
 
@@ -29,7 +30,7 @@ namespace SmashUltimateEditor.DataTables
         internal TabPage page;
         internal int pageCount { get { return page == null ? 0 : 1; } }
 
-        public void UpdateValues()
+        public void UpdateTblValues()
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
@@ -62,20 +63,31 @@ namespace SmashUltimateEditor.DataTables
             }
         }
 
-        public void BuildPage(DataTbls dataTbls, string name)
+        public async Task<TabPage> BuildPageAsync(DataTbls dataTbls, string name)
         {
             TabPage page = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
             Point currentPos = new Point(0, 0);
             Button b = UiHelper.GetEmptySaveButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
             dataTbls.SetSaveButtonMethod(ref b);
+            LabelBox lb;
+            Type tableType = this.GetType();
 
             page.Controls.Add(b);
 
             page.Name = name;
-            page.Text = name;
-            LabelBox lb;
 
-            Type tableType = this.GetType();
+            if (tableType.Name == "Battle")
+            {
+                page.Text = String.Format("{0}[{1}] - {2}", name,dataTbls.battleData.GetBattleIndex(name), tableType.Name);
+            }
+            else
+            {
+                page.Text = String.Format("{0} - {1}", name, tableType.Name);
+            }
+
+
+            // GetBattleIndex
+
             foreach (PropertyInfo field in tableType.GetProperties().OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
@@ -129,8 +141,9 @@ namespace SmashUltimateEditor.DataTables
                     page.Controls.Add(lb.text);
                 }
             }
-
             this.page = page;
+
+            return page;
         }
         public string GetValueFromName(string name)
         {

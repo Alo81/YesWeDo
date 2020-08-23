@@ -5,6 +5,10 @@ TODO:
   
   Manually set load (with a saved default)
   
+  Automatically Encrypt after save
+  
+  Add individual fighters to battles
+  
   Export/import individual battles
   
   Export/import individual fighters

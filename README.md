@@ -1,4 +1,9 @@
 # SmashUltimateEditor
 Spirit Editor
 
-Notes: Make Battle ID main window.  Battle ID is the spirit itself.  Fighters wil be main and subtype within battle.  
+TODO:
+  Manually set load (with a saved default)
+  Export/import individual battles
+  Export/import individual fighters
+  Genericize table import(?) (Could i check for first XML tag with as hash?)
+  Edit Item Tables

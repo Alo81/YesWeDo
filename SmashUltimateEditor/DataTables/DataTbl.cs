@@ -68,12 +68,8 @@ namespace SmashUltimateEditor.DataTables
         {
             TabPage page = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
             Point currentPos = new Point(0, 0);
-            Button b = UiHelper.GetEmptySaveButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-            dataTbls.SetSaveButtonMethod(ref b);
             LabelBox lb;
             Type tableType = this.GetType();
-
-            page.Controls.Add(b);
 
             page.Name = name;
 
@@ -84,6 +80,14 @@ namespace SmashUltimateEditor.DataTables
             else
             {
                 page.Text = String.Format("{0} - {1}", name, tableType.Name);
+
+                Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                b.Name = dataTbls.fighterData.GetFighterIndex((Fighter)this).ToString();
+                dataTbls.SetRemoveFighterButtonMethod(ref b);
+                page.Controls.Add(b);
+                Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count) };
+
+                page.Controls.Add(spacer);
             }
 
 
@@ -97,7 +101,7 @@ namespace SmashUltimateEditor.DataTables
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(field.Name, this.GetValueFromName(field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetTextBox(field.Name, this.GetValueFromName(field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
                 }
                 else if (Defs.MII_MOVES.Contains(field.Name.ToUpper()))
                 {
@@ -112,7 +116,7 @@ namespace SmashUltimateEditor.DataTables
                         // THIS IS HARDCODED.  FIX.  (?)
                         miiFighterMoves.Add(Extensions.EnumUtil<Enums.mii_sp_n_opt>.GetByValue(i + mod));
                     }
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
                 }
                 // If boolean, our range can be true/false. 
                 else if (field.PropertyType == typeof(bool))
@@ -123,13 +127,13 @@ namespace SmashUltimateEditor.DataTables
                         "false",
                         "true"
                     };
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
                 }
 
                 page.Controls.Add(lb.label);

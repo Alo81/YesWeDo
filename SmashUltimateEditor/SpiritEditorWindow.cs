@@ -17,6 +17,7 @@ namespace SmashUltimateEditor
         {
             InitializeComponent();
             dataTbls = new DataTbls();
+            dataTbls.tabs = tabControlData;
             buildFighterDataTab();
         }
 
@@ -29,9 +30,25 @@ namespace SmashUltimateEditor
         {
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
+            dataTbls.BuildTabs();
+            dataTbls.UpdateTabs();
+        }
 
-            await UiHelper.BuildTabs(dataTbls);
-            UiHelper.SetTabs(ref dataTbls, ref tabControlData);
+        private async void btnAddFighter_Click(object sender, EventArgs e)
+        {
+            string battleId = dataTbls.selectedBattle.battle_id;
+
+            Fighter newFighter = dataTbls.selectedFighters[0].ShallowCopy();
+            //newFighter.scale += (float)0.01;
+            await newFighter.BuildPageAsync(dataTbls, newFighter.fighter_kind);
+            dataTbls.fighterData.AddFighter(newFighter);
+            dataTbls.selectedFighters.Add(newFighter);
+            dataTbls.UpdateTabs();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            dataTbls.Save();
         }
     }
 }

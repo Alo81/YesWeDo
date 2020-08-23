@@ -1,10 +1,12 @@
 ﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -21,6 +23,8 @@ namespace SmashUltimateEditor
         public Battle selectedBattle;
         public Fighter selectedFighter;
 
+        public TabControl tabs;
+
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
 
         public DataTbls()
@@ -34,7 +38,7 @@ namespace SmashUltimateEditor
             ReadXML(Defs.FILE_LOCATION);
         }
 
-        public void Save(object sender, EventArgs e)
+        public void Save()
         {
             SaveBattle();
             SaveFighters();
@@ -58,10 +62,20 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void SetSaveButtonMethod(ref Button b)
+        public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
         {
-            b.Click += new System.EventHandler(Save);
+            int index = Int32.Parse(((Button)sender).Name);
+            selectedFighters.Remove(fighterData.fighterDataList[index]);
+            fighterData.fighterDataList.RemoveAt(index);
+            BuildTabs();
+            UpdateTabs();
         }
+
+        public void SetRemoveFighterButtonMethod(ref Button b)
+        {
+            b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
+        }
+
         public void SetSelectedBattle(string battle_id)
         {
             selectedBattle = battleData.GetBattle(battle_id);
@@ -84,7 +98,15 @@ namespace SmashUltimateEditor
             }
         }
 
+        public void BuildTabs()
+        {
+            UiHelper.BuildTabs(this);
+        }
 
+        public void UpdateTabs()
+        {
+            UiHelper.SetTabs(this, ref tabs);
+        }
 
         // Methods
         public void ReadXML(string fileName)

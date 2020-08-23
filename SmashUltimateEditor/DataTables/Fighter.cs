@@ -61,13 +61,18 @@ namespace SmashUltimateEditor
                     case "attack": attack = Convert.ToInt16(reader.Value); break;
                     case "defense": defense = Convert.ToInt16(reader.Value); break;
                     case "attr": attr = reader.Value; break;
-                    case "ability1": ability1 = reader.Value; break;
-                    case "ability2": ability2 = reader.Value; break;
-                    case "ability3": ability3 = reader.Value; break;
-                    case "ability_personal": ability_personal = reader.Value; break;
+                    case "ability1": ability1 = ValuableValue(reader.Value); break;
+                    case "ability2": ability2 = ValuableValue(reader.Value); break;
+                    case "ability3": ability3 = ValuableValue(reader.Value); break;
+                    case "ability_personal": ability_personal = ValuableValue(reader.Value); break;
                 }
             }
             return;
+        }
+
+        public Fighter ShallowCopy()
+        {
+            return (Fighter)this.MemberwiseClone();
         }
 
         // No primary key.

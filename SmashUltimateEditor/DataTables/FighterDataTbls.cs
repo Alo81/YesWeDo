@@ -18,6 +18,15 @@ namespace SmashUltimateEditor
         {
             return fighterDataList;
         }
+        public int GetFighterIndex(Fighter fighter)
+        {
+            return fighterDataList.FindIndex(x => x == fighter);
+        }
+
+        public void AddFighter(Fighter fighter)
+        {
+            fighterDataList.Add(fighter);
+        }
         public string GetXmlName()
         {
             return "fighter_data_tbl";

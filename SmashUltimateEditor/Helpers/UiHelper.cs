@@ -14,8 +14,7 @@ namespace SmashUltimateEditor.Helpers
     {
         public static Point IncrementPoint(ref Point current, int rowCount)
         {
-            rowCount -= 1;
-            if (rowCount+1 == 0 && current.X == 0)
+            if (rowCount == 0 && current.X == 0)
             {
                 current.X = Defs.PADDING;
             }
@@ -45,16 +44,16 @@ namespace SmashUltimateEditor.Helpers
             };
             return tabPage;
         }
-        public static Button GetEmptySaveButton(Point pos)
+        public static Button GetEmptyRemoveFighterButton(Point pos)
         {
             Button b = new Button();
             b.Location = pos;
-            b.Text = "Save";
+            b.Text = "Remove Fighter";
 
             return b;
         }
 
-        public static void SetTabs(ref DataTbls dataTbls, ref TabControl tab)
+        public static void SetTabs(DataTbls dataTbls, ref TabControl tab)
         {
             // Empty tab pages and control.
             tab.TabPages.Clear();
@@ -66,7 +65,7 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
-        public static async Task<List<TabPage>> BuildTabs(DataTbls dataTbls)
+        public static void BuildTabs(DataTbls dataTbls)
         {
             var tasks = new List<Task<TabPage>>();
             var pages = new List<TabPage>();
@@ -81,8 +80,6 @@ namespace SmashUltimateEditor.Helpers
             {
                 pages.Add(task.Result);
             }
-
-            return pages;
         }
     }
 }

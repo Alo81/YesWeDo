@@ -39,6 +39,8 @@ namespace SmashUltimateEditor
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlData = new System.Windows.Forms.TabControl();
+            this.btnAddFighter = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,7 +49,7 @@ namespace SmashUltimateEditor
             this.dropdownSpiritData.FormattingEnabled = true;
             this.dropdownSpiritData.Location = new System.Drawing.Point(11, 35);
             this.dropdownSpiritData.Name = "dropdownSpiritData";
-            this.dropdownSpiritData.Size = new System.Drawing.Size(876, 28);
+            this.dropdownSpiritData.Size = new System.Drawing.Size(457, 28);
             this.dropdownSpiritData.TabIndex = 4;
             this.dropdownSpiritData.SelectedIndexChanged += new System.EventHandler(this.dropdownSpiritData_SelectedIndexChanged);
             // 
@@ -63,7 +65,7 @@ namespace SmashUltimateEditor
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1083, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1129, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -82,14 +84,36 @@ namespace SmashUltimateEditor
             this.tabControlData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1054, 1155);
+            this.tabControlData.Size = new System.Drawing.Size(1100, 1339);
             this.tabControlData.TabIndex = 5;
+            // 
+            // btnAddFighter
+            // 
+            this.btnAddFighter.Location = new System.Drawing.Point(475, 35);
+            this.btnAddFighter.Name = "btnAddFighter";
+            this.btnAddFighter.Size = new System.Drawing.Size(108, 29);
+            this.btnAddFighter.TabIndex = 6;
+            this.btnAddFighter.Text = "Add Fighter";
+            this.btnAddFighter.UseVisualStyleBackColor = true;
+            this.btnAddFighter.Click += new System.EventHandler(this.btnAddFighter_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(986, 35);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(94, 29);
+            this.btnSave.TabIndex = 7;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1083, 1244);
+            this.ClientSize = new System.Drawing.Size(1129, 1428);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnAddFighter);
             this.Controls.Add(this.tabControlData);
             this.Controls.Add(this.dropdownSpiritData);
             this.Controls.Add(this.menuStrip1);
@@ -111,6 +135,8 @@ namespace SmashUltimateEditor
         private System.Windows.Forms.ComboBox dropdownSpiritData;
         DataTbls dataTbls;
         private TabControl tabControlData;
+        private Button btnAddFighter;
+        private Button btnSave;
     }
 }
 

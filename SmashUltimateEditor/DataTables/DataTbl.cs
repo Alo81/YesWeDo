@@ -13,6 +13,7 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor.DataTables
 {
+    // IF YOU'RE GRABBING EMPTY VALUES, JUST SET THEM TO NULL?
     public class DataTbl
     {
         [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
@@ -190,6 +191,11 @@ namespace SmashUltimateEditor.DataTables
                     field.SetValue(this, Single.Parse(val));
                     break;
             }
+        }
+
+        public string ValuableValue (string val)
+        {
+            return val == "none" ? "" : val;
         }
     }
 }

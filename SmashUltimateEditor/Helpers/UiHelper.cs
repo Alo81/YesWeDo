@@ -33,7 +33,7 @@ namespace SmashUltimateEditor.Helpers
 
         public static TabPage GetEmptyTabPage(int page = 0)
         {
-        
+
             TabPage tabPage = new TabPage()
             {
                 Location = new System.Drawing.Point(4, 24),
@@ -51,35 +51,6 @@ namespace SmashUltimateEditor.Helpers
             b.Text = "Remove Fighter";
 
             return b;
-        }
-
-        public static void SetTabs(DataTbls dataTbls, ref TabControl tab)
-        {
-            // Empty tab pages and control.
-            tab.TabPages.Clear();
-            tab.TabPages.Add(dataTbls.selectedBattle.page);
-
-            for (int i = 0; i < dataTbls.selectedFighters.Count; i++)
-            {
-                tab.TabPages.Add(dataTbls.selectedFighters[i].page);
-            }
-        }
-
-        public static void BuildTabs(DataTbls dataTbls)
-        {
-            var tasks = new List<Task<TabPage>>();
-            var pages = new List<TabPage>();
-            tasks.Add(dataTbls.selectedBattle.BuildPageAsync(dataTbls, dataTbls.selectedBattle.battle_id));
-
-            for (int i = 0; i < dataTbls.selectedFighters.Count; i++)
-            {
-                tasks.Add(dataTbls.selectedFighters[i].BuildPageAsync(dataTbls, dataTbls.selectedFighters[i].fighter_kind));
-            }
-
-            foreach (var task in tasks)
-            {
-                pages.Add(task.Result);
-            }
         }
     }
 }

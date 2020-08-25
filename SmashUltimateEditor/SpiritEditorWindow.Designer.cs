@@ -65,7 +65,7 @@ namespace SmashUltimateEditor
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1129, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1251, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -84,7 +84,7 @@ namespace SmashUltimateEditor
             this.tabControlData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1100, 1339);
+            this.tabControlData.Size = new System.Drawing.Size(1222, 1827);
             this.tabControlData.TabIndex = 5;
             // 
             // btnAddFighter
@@ -111,7 +111,7 @@ namespace SmashUltimateEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1129, 1428);
+            this.ClientSize = new System.Drawing.Size(1251, 1916);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAddFighter);
             this.Controls.Add(this.tabControlData);

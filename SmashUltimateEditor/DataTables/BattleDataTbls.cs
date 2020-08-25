@@ -21,6 +21,10 @@ namespace SmashUltimateEditor
         {
             return battleDataList.FindIndex(x => x.battle_id == battle_id);
         }
+        public int GetBattleIndex(Battle battle)
+        {
+            return battleDataList.FindIndex(x => x == battle);
+        }
         public List<Battle> GetBattles()
         {
 

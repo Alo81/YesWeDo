@@ -12,6 +12,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using static SmashUltimateEditor.DataTables.DataTbl;
+using static System.Windows.Forms.TabControl;
 
 namespace SmashUltimateEditor
 {
@@ -22,10 +23,29 @@ namespace SmashUltimateEditor
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
+        public Queue<TabPage> tabStorage = new Queue<TabPage>();
 
         public TabControl tabs;
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
+        public int tabCount { get { return tabs.TabPages.Count; } }
+        public TabPage EmptyBattlePage
+        {
+            get
+            {
+                return BuildEmptyPage(this, typeof(Battle));
+            } 
+        }
+
+        public TabPage EmptyFighterPage
+        {
+            get
+            {
+                return BuildEmptyPage(this, typeof(Fighter));
+            }
+        }
+
+    public bool HasEnoughPages { get { return tabs.TabPages.Count >= pageCount; } }
 
         public DataTbls()
         {
@@ -45,20 +65,34 @@ namespace SmashUltimateEditor
             WriteXML(Defs.FILE_LOCATION);
         }
 
-        private void SaveBattle()
+        public void SaveBattle()
         {
-            selectedBattle.UpdateTblValues();
+            TabPage battlePage = tabs.TabPages.Count > 0 ? tabs.TabPages[0] : null;
+            // No battle?
+            if(battlePage is null)
+            {
+                return;
+            }
+            selectedBattle.UpdateTblValues(battlePage);
             int index = battleData.battleDataList.FindIndex(x => x == selectedBattle);
             battleData.battleDataList[index] = selectedBattle;
         }
 
-        private void SaveFighters()
+        public void SaveFighters()
         {
-            foreach(Fighter fighter in selectedFighters)
+            TabPageCollection fighterPages = tabs.TabPages;
+            // No fighters?
+            if (fighterPages.Count <= 1)
             {
-                fighter.UpdateTblValues();
-                int index = fighterData.fighterDataList.FindIndex(x => x == fighter);
-                fighterData.fighterDataList[index] = fighter;
+                return;
+            }
+
+            for (int i = 0; i< fighterPages.Count-1; i++)
+            {
+                // Match on tab index, which is assigned to Fighter when it updates page values.  
+                selectedFighters[i].UpdateTblValues(fighterPages[i+1]);
+                int index = fighterData.fighterDataList.FindIndex(x => x == selectedFighters[i]);
+                fighterData.fighterDataList[index] = selectedFighters[i];
             }
         }
 
@@ -68,13 +102,79 @@ namespace SmashUltimateEditor
             selectedFighters.Remove(fighterData.fighterDataList[index]);
             fighterData.fighterDataList.RemoveAt(index);
             BuildTabs();
-            UpdateTabs();
         }
-
+        
         public void SetRemoveFighterButtonMethod(ref Button b)
         {
             b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
         }
+        
+        public void BuildTabs()
+        {
+            //var tasks = new List<Task<TabPage>>();
+            TabPage page;
+            if(tabs is null)
+            {
+                tabs = new TabControl();
+            }
+            ShowTabs();
+            BuildEmptyTabs();
+
+            for (int i = 0; i < pageCount; i++)
+            {
+                page = tabs.TabPages[i];
+                // Battle
+                if (i == 0)
+                {
+                    var collectionIndex = battleData.GetBattleIndex(selectedBattle);
+                    selectedBattle.UpdatePageValues(ref page, i, selectedBattle.battle_id, collectionIndex);
+                }
+                else
+                {
+                    var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
+                    selectedFighters[i - 1].UpdatePageValues(ref page, i, selectedFighters[i - 1].fighter_kind, collectionIndex);
+                }
+                //tabs.TabPages.Add(page);
+            }
+
+            HideTabs();
+        }
+
+        public void BuildEmptyTabs()
+        {
+            TabPage page;
+
+            if (tabCount == 0)
+            {
+                page = EmptyBattlePage;
+                tabs.TabPages.Add(page);
+            }
+
+            while (!HasEnoughPages)
+            {
+                page = EmptyFighterPage;
+                tabs.TabPages.Add(page);
+            }
+        }
+
+        public void HideTabs()
+        {
+            for (int i = pageCount; i < tabCount;)
+            {
+                tabStorage.Enqueue(tabs.TabPages[i]);
+                tabs.TabPages.RemoveAt(i);
+            }
+        }
+
+        public void ShowTabs()
+        {
+            while(tabStorage.Count > 0 && !HasEnoughPages)
+            {
+                tabs.TabPages.Add(tabStorage.Dequeue());
+            }
+        }
+
+
 
         public void SetSelectedBattle(string battle_id)
         {
@@ -96,16 +196,6 @@ namespace SmashUltimateEditor
                 default:
                     return null;
             }
-        }
-
-        public void BuildTabs()
-        {
-            UiHelper.BuildTabs(this);
-        }
-
-        public void UpdateTabs()
-        {
-            UiHelper.SetTabs(this, ref tabs);
         }
 
         // Methods
@@ -173,15 +263,8 @@ namespace SmashUltimateEditor
                         new XAttribute("hash", battleData.GetXmlName()),
                             //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
                             battleData.GetBattles().Select(battle =>
-                            new XElement("struct",
-                            new XAttribute("index", 
-                            battleData.GetBattles().FindIndex(ind => ind.battle_id == battle.battle_id)),
-                                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                                battle.GetType().GetProperties().OrderBy(x=> ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select( property => 
-                                new XElement(property.PropertyType.Name, 
-                                new XAttribute("hash", DataParse.NameFixer(property.Name)), battle.GetValueFromName(property.Name))
-                                    )
-                                )
+                            battle.GetAsXElement(battleData.GetBattleIndex(battle)
+                            )
                             )
                         ),
                         // <list hash="fighter_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
@@ -189,15 +272,8 @@ namespace SmashUltimateEditor
                         new XAttribute("hash", fighterData.GetXmlName()),
                             //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
                             fighterData.GetFighters().Select(fighter =>
-                            new XElement("struct",
-                            new XAttribute("index",
-                            fighterData.GetFighters().FindIndex(ind => ind == fighter)),
-                                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                                fighter.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
-                               new XElement(property.PropertyType.Name,
-                               new XAttribute("hash", DataParse.NameFixer(property.Name)), fighter.GetValueFromName(property.Name))
-                                    )
-                                )
+                            fighter.GetAsXElement(fighterData.GetFighterIndex(fighter)
+                            )
                             )
                         )
                     )

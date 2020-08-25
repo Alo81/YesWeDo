@@ -1,16 +1,33 @@
 ﻿using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
+using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SmashUltimateEditor
 {
 
     public class Fighter : DataTbl, IDataTbl
     {
+        public XElement GetAsXElement(int index)
+        {
+            return new XElement("struct",
+            new XAttribute("index", index),
+                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
+                this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
+               new XElement(property.PropertyType.Name,
+               new XAttribute("hash", DataParse.NameFixer(property.Name)), this.GetValueFromName(property.Name))
+                    )
+                );
+        }
+
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;

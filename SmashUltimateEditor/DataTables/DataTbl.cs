@@ -28,10 +28,10 @@ namespace SmashUltimateEditor.DataTables
             public int Order { get { return order_; } }
         }
 
-        internal TabPage page;
-        internal int pageCount { get { return page == null ? 0 : 1; } }
+        internal int pageIndex = 0;
+        internal int pageCount { get { return 1; } }
 
-        public void UpdateTblValues()
+        public void UpdateTblValues(TabPage page)
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
@@ -64,36 +64,65 @@ namespace SmashUltimateEditor.DataTables
             }
         }
 
-        public async Task<TabPage> BuildPageAsync(DataTbls dataTbls, string name)
+        public void UpdatePageValues(ref TabPage page, int pageIndex, string tabName, int collectionIndex)
+        {
+            foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
+            {
+                var value = GetValueFromName(combo.Name);
+                if (combo.Name == "mii_color")
+                {
+                    value = ((int)EnumUtil<Enums.mii_color_opt>.GetByName(value ?? "")).ToString();
+                }
+                else if (combo.Name == "mii_sp_n")
+                {
+                    value = ((int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(value ?? "")).ToString();
+                }
+                else if (combo.Name == "mii_sp_s")
+                {
+                    value = ((int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(value ?? "")).ToString();
+                }
+                else if (combo.Name == "mii_sp_hi")
+                {
+                    value = ((int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(value ?? "")).ToString();
+                }
+                else if (combo.Name == "mii_sp_lw")
+                {
+                    value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(value ?? "")).ToString();
+                }
+                combo.SelectedIndex = combo.Items.IndexOf(value);
+            }
+            foreach (TextBox text in page.Controls.OfType<TextBox>())
+            {
+                text.Text = GetValueFromName(text.Name);
+            }
+            if(GetType().Name == "Fighter")
+            {
+                Button b = page.Controls.OfType<Button>().Single();
+                b.Name = collectionIndex.ToString();
+            }
+            this.pageIndex = pageIndex;
+            page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
+        }
+
+        public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)
         {
             TabPage page = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
             Point currentPos = new Point(0, 0);
             LabelBox lb;
-            Type tableType = this.GetType();
 
-            page.Name = name;
+            Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
 
-            if (tableType.Name == "Battle")
+            /* We need to set the button name for real though.  */
+            if (type.Name == "Fighter")
             {
-                page.Text = String.Format("{0}[{1}] - {2}", name,dataTbls.battleData.GetBattleIndex(name), tableType.Name);
-            }
-            else
-            {
-                page.Text = String.Format("{0} - {1}", name, tableType.Name);
-
-                Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                b.Name = dataTbls.fighterData.GetFighterIndex((Fighter)this).ToString();
                 dataTbls.SetRemoveFighterButtonMethod(ref b);
                 page.Controls.Add(b);
                 Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count) };
-
                 page.Controls.Add(spacer);
             }
 
-
             // GetBattleIndex
-
-            foreach (PropertyInfo field in tableType.GetProperties().OrderBy(x => x.Name))
+            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
 
@@ -101,39 +130,40 @@ namespace SmashUltimateEditor.DataTables
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(field.Name, this.GetValueFromName(field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
                 else if (Defs.MII_MOVES.Contains(field.Name.ToUpper()))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                     List<String> miiFighterMoves = new List<String>();
-                    string fighter = this.GetValueFromName("fighter_kind");
+                    //string fighter = this.GetValueFromName("fighter_kind");
                     // Is this a mii fighter?  If so, use his moves.  Otherwise, just use default moves.  
-                    int mod = Defs.miiFighterMod.ContainsKey(fighter) ? Defs.miiFighterMod[fighter] : 0;
+                    // int mod = Defs.miiFighterMod.ContainsKey(fighter) ? Defs.miiFighterMod[fighter] : 0;
+                    int mod = 0;
 
                     for (int i = 0; i < 3; i++)
                     {
                         // THIS IS HARDCODED.  FIX.  (?)
                         miiFighterMoves.Add(Extensions.EnumUtil<Enums.mii_sp_n_opt>.GetByValue(i + mod));
                     }
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
+                    lb.SetComboBox(field.Name, miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
                 // If boolean, our range can be true/false. 
                 else if (field.PropertyType == typeof(bool))
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                     List<String> boolNames = new List<String>()
-                    {
-                        "false",
-                        "true"
-                    };
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
+                {
+                    "false",
+                    "true"
+                };
+                    lb.SetComboBox(field.Name, boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, this.GetValueFromName(field.Name), dataTbls.GetOptionsFromTypeAndName(tableType.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count+1));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
 
                 page.Controls.Add(lb.label);
@@ -146,13 +176,12 @@ namespace SmashUltimateEditor.DataTables
                     page.Controls.Add(lb.text);
                 }
             }
-            this.page = page;
 
             return page;
         }
         public string GetValueFromName(string name)
         {
-            return this.GetType().GetProperty(name).GetValue(this)?.ToString() ?? "";
+            return this.GetType().GetProperty(name).GetValue(this)?.ToString().ToLower() ?? "";
         }
 
         public void SetValueFromName(string name, string val)

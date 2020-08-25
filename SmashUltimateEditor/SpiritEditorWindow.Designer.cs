@@ -41,6 +41,7 @@ namespace SmashUltimateEditor
             this.tabControlData = new System.Windows.Forms.TabControl();
             this.btnAddFighter = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.btnRandomize = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,14 +66,14 @@ namespace SmashUltimateEditor
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1251, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1251, 30);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileMenu
             // 
             this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(33, 18);
+            this.fileMenu.Size = new System.Drawing.Size(46, 24);
             this.fileMenu.Text = "File";
             // 
             // tabControlData
@@ -107,11 +108,22 @@ namespace SmashUltimateEditor
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // btnRandomize
+            // 
+            this.btnRandomize.Location = new System.Drawing.Point(1143, 33);
+            this.btnRandomize.Name = "btnRandomize";
+            this.btnRandomize.Size = new System.Drawing.Size(94, 29);
+            this.btnRandomize.TabIndex = 8;
+            this.btnRandomize.Text = "Randomize";
+            this.btnRandomize.UseVisualStyleBackColor = true;
+            this.btnRandomize.Click += new System.EventHandler(this.btnRandomize_Click);
+            // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1251, 1916);
+            this.Controls.Add(this.btnRandomize);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAddFighter);
             this.Controls.Add(this.tabControlData);
@@ -137,6 +149,7 @@ namespace SmashUltimateEditor
         private TabControl tabControlData;
         private Button btnAddFighter;
         private Button btnSave;
+        private Button btnRandomize;
     }
 }
 

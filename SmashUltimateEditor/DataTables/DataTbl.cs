@@ -31,6 +31,88 @@ namespace SmashUltimateEditor.DataTables
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
+        public void Randomize(Random rnd, DataTbls dataTbls)
+        {
+            Type type = GetType();
+
+            foreach (PropertyInfo field in type.GetProperties())
+            {
+                if (Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
+                {
+                    continue;
+                }
+
+
+                // Range values?  Use a textbox.
+                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                {
+                    var range = GetRangeFromName(field.Name.ToUpper());
+                    string value;
+                    string fieldType = field.PropertyType.Name;
+                    switch (fieldType)
+                    {
+                        case "Single":
+                            value = (Single.Parse((rnd.Next((int)(range.Item1 * 100), (int)(range.Item2 * 100))).ToString()) / 100).ToString();
+                            break;
+                        default:
+                            value = rnd.Next((int)range.Item1, (int)range.Item2).ToString();
+                            break;
+                    }
+                    value = EnumChecker(value, field.Name);
+                    SetValueFromName(field.Name, value);
+                }
+                else
+                {
+                    var options = dataTbls.GetOptionsFromTypeAndName(type.Name, field.Name);
+                    var value = options[rnd.Next(options.Count)];
+                    value = EnumChecker(value.ToString(), field.Name);
+
+                    if (field.Name == "fighter_kind")
+                    {
+                        while (Defs.EXCLUDED_BOSSES.Contains(value))
+                        {
+                            value = options[rnd.Next(options.Count)];
+                            value = EnumChecker(value.ToString(), field.Name);
+                        }
+                    }
+                    SetValueFromName(field.Name, value);
+                }
+            }
+        }
+
+        public string EnumChecker(string value, string name)
+        {
+            if (name == "mii_color")
+            {
+                value = ((int)EnumUtil<Enums.mii_color_opt>.GetByName(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_n")
+            {
+                value = ((int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_s")
+            {
+                value = ((int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_hi")
+            {
+                value = ((int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_lw")
+            {
+                value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(value ?? "")).ToString();
+            }
+            else if (name == "battle_type")
+            {
+                value = value == "boss" ? "stock" : value;
+            }
+            else if (name == "result_type")
+            {
+                value = value == "lose_escort" ? "normal_rule" : value;
+            }
+            return value;
+        }
+
         public void UpdateTblValues(TabPage page)
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
@@ -182,6 +264,12 @@ namespace SmashUltimateEditor.DataTables
         public string GetValueFromName(string name)
         {
             return this.GetType().GetProperty(name).GetValue(this)?.ToString().ToLower() ?? "";
+        }
+        public Tuple<float, float> GetRangeFromName(string name)
+        {
+            float min = float.Parse(typeof(Defs).GetProperty(name.ToUpper()+"_MIN").GetValue(this).ToString());
+            float max = float.Parse(typeof(Defs).GetProperty(name.ToUpper() + "_MAX").GetValue(this).ToString());
+            return new Tuple<float, float>(min, max);
         }
 
         public void SetValueFromName(string name, string val)

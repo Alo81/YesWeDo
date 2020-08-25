@@ -50,7 +50,12 @@ namespace SmashUltimateEditor
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            dataTbls.Save();
+            dataTbls.Save(dataTbls.battleData, dataTbls.fighterData);
+        }
+
+        private void btnRandomize_Click(object sender, EventArgs e)
+        {
+            dataTbls.RandomizeAll();
         }
     }
 }

@@ -11,6 +11,8 @@ namespace SmashUltimateEditor
     {
         public List<Battle> battleDataList;
 
+        private List<Tuple<string, string, int, int, byte, ushort>> _events;
+
         public Battle GetBattle(string battle_id)
         {
 
@@ -84,9 +86,9 @@ namespace SmashUltimateEditor
             get { return battleDataList.Select(x => x.stage_bgm).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<bool>stage_gimmick
+        public List<string>stage_gimmick
         {
-            get { return battleDataList.Select(x => x.stage_gimmick).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.stage_gimmick.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_attr
@@ -131,6 +133,50 @@ namespace SmashUltimateEditor
         public List<int> event_range_time
         {
             get { return battleDataList.Select(x => x.event1_range_time).Distinct().OrderBy(x => x).ToList(); }
+        }
+
+        public List<Tuple<string, string, int, int, byte, ushort>> events
+        {
+            get { 
+                if(_events is null)
+                {
+                    _events = new List<Tuple<string, string, int, int, byte, ushort>>();
+
+                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    (
+                        x.event1_type, 
+                        x.event1_label, 
+                        x.event1_start_time, 
+                        x.event1_range_time, 
+                        x.event1_count, 
+                        x.event1_damage
+                    )).Distinct()));
+
+                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    (
+                        x.event2_type,
+                        x.event2_label,
+                        x.event2_start_time,
+                        x.event2_range_time,
+                        x.event2_count,
+                        x.event2_damage
+                    )).Distinct()));
+
+                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    (
+                        x.event3_type,
+                        x.event3_label,
+                        x.event3_start_time,
+                        x.event3_range_time,
+                        x.event3_count,
+                        x.event3_damage
+                    )).Distinct()));
+
+                    _events = _events.Distinct().ToList();
+                    //
+                }
+                return _events; 
+                }
         }
 
         public List<byte> event_count
@@ -231,19 +277,19 @@ namespace SmashUltimateEditor
             get { return event_damage; }
         }
 
-        public List<bool>aw_flap_delay
+        public List<string>aw_flap_delay
         {
-            get { return battleDataList.Select(x => x.aw_flap_delay).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.aw_flap_delay.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<bool> _0x0d41ef8328
+        public List<string> _0x0d41ef8328
         {
-            get { return battleDataList.Select(x => x._0x0d41ef8328).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x._0x0d41ef8328.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<bool>_0x0d6f19abae
+        public List<string> _0x0d6f19abae
         {
-            get { return battleDataList.Select(x => x._0x0d6f19abae).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x._0x0d6f19abae.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>_0x18d9441f71

@@ -10,6 +10,14 @@ namespace SmashUltimateEditor
     public class FighterDataTbls
     {
         internal int pageCount { get { return fighterDataList.Sum(x=>x.pageCount); } }
+
+        public List<Fighter> fighterDataList;
+
+        public FighterDataTbls()
+        {
+            fighterDataList = new List<Fighter>();
+        }
+
         public List<Fighter> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
@@ -25,14 +33,16 @@ namespace SmashUltimateEditor
 
         public void AddFighter(Fighter fighter)
         {
+            if(fighterDataList is null)
+            {
+                fighterDataList = new List<Fighter>();
+            }
             fighterDataList.Add(fighter);
         }
         public string GetXmlName()
         {
             return "fighter_data_tbl";
         }
-
-        public List<Fighter> fighterDataList;
 
         public List<string> spirit_name
         {
@@ -48,9 +58,9 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> first_appear
+        public List<string> first_appear
         {
-            get { return fighterDataList.Select(x => x.first_appear).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.first_appear.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<ushort> appear_rule_time
         {
@@ -114,21 +124,21 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.cpu_sub_type).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> cpu_item_pick_up
+        public List<string> cpu_item_pick_up
         {
-            get { return fighterDataList.Select(x => x.cpu_item_pick_up).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.cpu_item_pick_up.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<byte> stock
         {
             get { return fighterDataList.Select(x => x.stock).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> corps
+        public List<string> corps
         {
-            get { return fighterDataList.Select(x => x.corps).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.corps.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> _0x0f2077926c
+        public List<string> _0x0f2077926c
         {
-            get { return fighterDataList.Select(x => x._0x0f2077926c).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x._0x0f2077926c.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<ushort> hp
         {
@@ -150,13 +160,13 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.fly_rate).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> invalid_drop
+        public List<string> invalid_drop
         {
-            get { return fighterDataList.Select(x => x.invalid_drop).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.invalid_drop.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<bool> enable_charge_final
+        public List<string> enable_charge_final
         {
-            get { return fighterDataList.Select(x => x.enable_charge_final).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.enable_charge_final.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<short> attack
         {

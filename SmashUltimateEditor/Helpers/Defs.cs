@@ -51,6 +51,32 @@ namespace SmashUltimateEditor
             "BATTLE_POWER"
         };
 
+        public static List<string> FLOAT_VALUES = new List<string>()
+        {   "SCALE",
+            "FLY_RATE",
+        };
+
+        public static List<string> EXCLUDED_RANDOMIZED = new List<string>()
+        {
+            "aw_flap_delay",
+            "battle_id",
+            "spirit_name",
+            "appear_rule_time",
+            "appear_rule_count",
+            "entry_type"
+        };
+
+        public static List<string> EXCLUDED_BOSSES = new List<string>()
+        {
+            "ui_chara_ganonboss",
+            "ui_chara_crazyhand",
+            "ui_chara_random",
+            "ui_chara_dracula",
+            "ui_chara_galleom",
+            "ui_chara_marx",
+            "ui_chara_masterhand"
+        };
+
         public static List<string> MII_MOVES = new List<string>()
         {
             "MII_SP_N",
@@ -67,67 +93,93 @@ namespace SmashUltimateEditor
         };
 
         #region FighterDataTbl
-        public static ushort APPEAR_RULE_TIME_MIN = 0;
-        public static ushort APPEAR_RULE_TIME_MAX = 60;
+        public static ushort APPEAR_RULE_TIME_MIN  { get; } = 0;
+        public static ushort APPEAR_RULE_TIME_MAX  { get; } = 60;
 
         // Technically, 7 doesn't ever get used (?)
-        public static ushort APPEAR_RULE_COUNT_MIN = 0;
-        public static ushort APPEAR_RULE_COUNT_MAX = 8;
+        public static ushort APPEAR_RULE_COUNT_MIN  { get; } = 0;
+        public static ushort APPEAR_RULE_COUNT_MAX  { get; } = 8;
 
-        public static byte CPU_LV_MIN = 1;
-        public static byte CPU_LV_MAX = 100;
+        public static byte CPU_LV_MIN  { get; } = 1;
+        public static byte CPU_LV_MAX  { get; } = 100;
 
-        public static byte STOCK_MAX = 99;
-        public static byte STOCK_MIN = 1;
+        public static byte STOCK_MAX  { get; } = 3;
+        public static byte STOCK_MIN  { get; } = 1;
         
         // 0, 500
-        public static ushort HP_MIN = 0;
-        public static ushort HP_MAX = 999;
+        public static ushort HP_MIN  { get; } = 0;
+        public static ushort HP_MAX  { get; } = 300;
 
         // 0, 300
-        public static ushort INIT_DAMAGE_MIN = 0;
-        public static ushort INIT_DAMAGE_MAX = 999;
+        public static ushort INIT_DAMAGE_MIN  { get; } = 0;
+        public static ushort INIT_DAMAGE_MAX  { get; } = 300;
 
-        public static float SCALE_MAX = 2.75f;
-        public static float SCALE_MIN = 0.3f;
+        public static float SCALE_MAX  { get; } = 2.75f;
+        public static float SCALE_MIN  { get; } = 0.2f;
 
-        public static float FLY_RATE_MIN = 0f;
-        public static float FLY_RATE_MAX = 5f;
+        public static float FLY_RATE_MIN  { get; } = 0f;
+        public static float FLY_RATE_MAX  { get; } = 5f;
 
-        public static short ATTACK_MIN = 0;
-        public static short ATTACK_MAX = 10000;
+        public static short ATTACK_MIN  { get; } = 0;
+        public static short ATTACK_MAX  { get; } = 10000;
 
-        public static short DEFENSE_MIN = 0;
-        public static short DEFENSE_MAX = 10000;
+        public static short DEFENSE_MIN  { get; } = 0;
+        public static short DEFENSE_MAX  { get; } = 10000;
         #endregion
 
         #region BattleDataTbl
-        public static ushort BATTLE_TIME_SEC_MIN = 0;
-        public static ushort BATTLE_TIME_SEC_MAX = 180;
+        public static ushort BATTLE_TIME_SEC_MIN  { get; } = 15;
+        public static ushort BATTLE_TIME_SEC_MAX  { get; } = 180;
 
-        public static ushort BASIC_INIT_DAMAGE_MIN = 0;
-        public static ushort BASIC_INIT_DAMAGE_MAX = 300;
+        public static ushort BASIC_INIT_DAMAGE_MIN  { get; } = 0;
+        public static ushort BASIC_INIT_DAMAGE_MAX  { get; } = 300;
 
-        public static ushort BASIC_INIT_HP_MIN = 0;
-        public static ushort BASIC_INIT_HP_MAX = 150;
+        public static ushort BASIC_INIT_HP_MIN  { get; } = 80;
+        public static ushort BASIC_INIT_HP_MAX  { get; } = 150;
 
-        public static byte BASIC_STOCK_MIN = 1;
-        public static byte BASIC_STOCK_MAX = 99;
+        public static byte BASIC_STOCK_MIN  { get; } = 1;
+        public static byte BASIC_STOCK_MAX  { get; } = 5;
 
-        public static int EVENT_START_TIME_MIN = 0;
-        public static int EVENT_START_TIME_MAX = 80;
+        public static int EVENT_START_TIME_MIN  { get; } = 0;
+        public static int EVENT_START_TIME_MAX  { get; } = 80;
 
-        public static int EVENT_RANGE_TIME_MIN = -1;
-        public static int EVENT_RANGE_TIME_MAX = 120;
+        public static int EVENT_RANGE_TIME_MIN  { get; } = -1;
+        public static int EVENT_RANGE_TIME_MAX  { get; } = 120;
 
-        public static byte EVENT_COUNT_MIN = 0;
-        public static byte EVENT_COUNT_MAX = 200;
+        public static byte EVENT_COUNT_MIN  { get; } = 0;
+        public static byte EVENT_COUNT_MAX  { get; } = 200;
 
-        public static ushort EVENT_DAMAGE_MIN = 0;
-        public static ushort EVENT_DAMAGE_MAX = 150;
+        public static ushort EVENT_DAMAGE_MIN  { get; } = 0;
+        public static ushort EVENT_DAMAGE_MAX  { get; } = 150;
         
-        public static uint BATTLE_POWER_MIN = 0;
-        public static uint BATTLE_POWER_MAX = 20000;
+        public static uint BATTLE_POWER_MIN  { get; } = 0;
+        public static uint BATTLE_POWER_MAX  { get; } = 20000;
+
+        
+        public static int  EVENT1_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }
+        public static int  EVENT2_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }
+        public static int  EVENT3_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }
+        public static int  EVENT1_RANGE_TIME_MIN { get { return EVENT_RANGE_TIME_MIN; } }
+        public static int  EVENT2_RANGE_TIME_MIN { get { return EVENT_RANGE_TIME_MIN; } }
+        public static int  EVENT3_RANGE_TIME_MIN { get { return EVENT_RANGE_TIME_MIN; } }
+        public static byte  EVENT1_COUNT_MIN { get { return EVENT_COUNT_MIN; } }
+        public static byte  EVENT2_COUNT_MIN { get { return EVENT_COUNT_MIN; } }
+        public static byte  EVENT3_COUNT_MIN { get { return EVENT_COUNT_MIN; } }
+        public static ushort EVENT1_DAMAGE_MIN { get { return EVENT_DAMAGE_MIN; } }
+        public static ushort EVENT2_DAMAGE_MIN { get { return EVENT_DAMAGE_MIN; } }
+        public static ushort EVENT3_DAMAGE_MIN { get { return EVENT_DAMAGE_MIN; } }
+        public static int  EVENT1_START_TIME_MAX { get { return EVENT_START_TIME_MAX; } }
+        public static int  EVENT2_START_TIME_MAX { get { return EVENT_START_TIME_MAX; } }
+        public static int  EVENT3_START_TIME_MAX { get { return EVENT_START_TIME_MAX; } }
+        public static int  EVENT1_RANGE_TIME_MAX { get { return EVENT_RANGE_TIME_MAX; } }
+        public static int  EVENT2_RANGE_TIME_MAX { get { return EVENT_RANGE_TIME_MAX; } }
+        public static int  EVENT3_RANGE_TIME_MAX { get { return EVENT_RANGE_TIME_MAX; } }
+        public static byte  EVENT1_COUNT_MAX { get { return EVENT_COUNT_MAX; } }
+        public static byte  EVENT2_COUNT_MAX { get { return EVENT_COUNT_MAX; } }
+        public static byte  EVENT3_COUNT_MAX { get { return EVENT_COUNT_MAX; } }
+        public static ushort EVENT1_DAMAGE_MAX { get { return EVENT_DAMAGE_MAX; } }
+        public static ushort EVENT2_DAMAGE_MAX { get { return EVENT_DAMAGE_MAX; } }
+        public static ushort EVENT3_DAMAGE_MAX { get { return EVENT_DAMAGE_MAX; } }
         #endregion
     }
 }

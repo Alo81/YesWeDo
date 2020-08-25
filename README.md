@@ -7,7 +7,9 @@ TODO:
   
   Automatically Encrypt after save
   
-  Add individual fighters to battles
+  More randomizer settings (battle types, bosses, make "Earn a fighters" more specific(?))
+  
+  Randomizer difficulty skewing
   
   Export/import individual battles
   

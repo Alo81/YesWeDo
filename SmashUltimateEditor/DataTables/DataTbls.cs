@@ -126,16 +126,17 @@ namespace SmashUltimateEditor
             int fighterCount;
             int eventCount;
             List<int> fighterDistribution = RandomizerHelper.BuildMinDistributionList(1, 8, 3);
+            List<int> fighterLoseEscortDistribution = RandomizerHelper.BuildMinDistributionList(2, 8, 3, 0);
             List<int> eventDistribution = RandomizerHelper.BuildMinDistributionList(1, 3, 1, 0);
 
             foreach (Battle battle in battleData.battleDataList)
             {
-                eventCount = eventDistribution[rnd.Next(eventDistribution.Count)];
-                fighterCount = fighterDistribution[rnd.Next(fighterDistribution.Count)];
 
                 battle.Randomize(rnd, this);
 
                 // Post Randomize battle modifiers
+                eventCount = eventDistribution[rnd.Next(eventDistribution.Count)];
+
                 for (int j = 1; j <= eventCount; j++)
                 {
                     var randEvent = battleData.events[rnd.Next(battleData.events.Count)];
@@ -143,17 +144,25 @@ namespace SmashUltimateEditor
                 }
                 battle.Cleanup();
 
+                // If lose escort, need at least 2 fighters.  
+                fighterCount = battle.IsLoseEscort() ? fighterLoseEscortDistribution[rnd.Next(fighterLoseEscortDistribution.Count)] :  fighterDistribution[rnd.Next(fighterDistribution.Count)];
+
                 for (int i = 0; i < fighterCount; i++)
                 {
-                    var isMain = i == 0;     // Set first fighter to main.  All the rest are subs.  
-                    randomizedFighter = battle.GetNewFighter();
+                    var isMain = i == 0;     // Set first fighter to main.  
+                    var isLoseEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
+                    var isBoss = i == 0 && battle.IsBossType();     // Set first fighter to main.  
+                    isBoss = false; // Bosses don't work.  Will need to fix better later.  
 
-                    randomizedFighter.Randomize(rnd, this);
+                    randomizedFighter = isBoss? fighterData.GetNewBoss(battle.battle_id) : battle.GetNewFighter();
+
+                    if(!isBoss)
+                        randomizedFighter.Randomize(rnd, this);
 
                     // Post Randomize fighter modifiers
-                    randomizedFighter.EntryCheck(isMain);
-                    randomizedFighter.FighterCheck(fighterData.fighter_kind, ref rnd);
-                    randomizedFighter.StockCheck(fighterCount);
+                    randomizedFighter.EntryCheck(isMain, isLoseEscort, isBoss);
+                    randomizedFighter.FighterCheck(isBoss ? Defs.BOSSES : fighterData.Fighters, ref rnd);
+                    randomizedFighter.StockCheck(fighterCount, battle.IsBossType());
                     randomizedFighter.HealthCheck();
 
                     randomizedFighters.AddFighter(randomizedFighter);

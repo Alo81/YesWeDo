@@ -82,13 +82,21 @@ namespace SmashUltimateEditor
         {
             "ui_chara_ganonboss",
             "ui_chara_crazyhand",
+            "ui_chara_darz", 
             "ui_chara_dracula",
             "ui_chara_galleom",
+            "ui_chara_kiila",
+            "ui_chara_kiila_darz",
+            "ui_chara_lioleus",
             "ui_chara_marx",
             "ui_chara_masterhand"
         };
 
-        public static List<string> EXCLUDED_FIGHTERS = new List<string>(BOSSES) {"ui_chara_random"};
+        public static List<string> EXCLUDED_FIGHTERS = new List<string>(BOSSES) {"ui_chara_random", ""};
+
+        public static List<string> UNLOCKABLE_FIGHTERS = new List<string>() 
+        { 
+        };
 
         public static List<string> MII_MOVES = new List<string>()
         {

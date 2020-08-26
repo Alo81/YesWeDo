@@ -30,17 +30,13 @@ namespace SmashUltimateEditor
 
         public void FighterCheck(List<string> options, ref Random rnd)
         {
-            options.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
-            while (Defs.EXCLUDED_FIGHTERS.Contains(fighter_kind))
-            {
-                fighter_kind = options[rnd.Next(options.Count)];
-            }
+            fighter_kind = options[rnd.Next(options.Count)];
         }
 
-        public void StockCheck(int fighterCount)
+        public void StockCheck(int fighterCount, bool isBossType)
         {
             // If there are a lot, makes multiple lives tedius
-            if (fighterCount > 3)
+            if (fighterCount > 3 || isBossType)
             {
                 stock = 1;
             }
@@ -57,10 +53,14 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void EntryCheck(bool isMain)
+        public void EntryCheck(bool isMain, bool isLoseEscort, bool isBoss)
         {
-            if(isMain || entry_type == "boss_type")
+            if (isBoss)
+                entry_type = "boss_type";
+            else if(isMain || entry_type == "boss_type")
                 entry_type = "main_type";
+            else if (isLoseEscort)
+                entry_type = "friend_type";
         }
 
         public void BuildFromXml(XmlReader reader)

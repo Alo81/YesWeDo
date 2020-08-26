@@ -42,8 +42,6 @@ namespace SmashUltimateEditor
         {
             HealthCheck();
             HazardCheck();
-            // ResultTypeCheck();
-            // BattleTypeCheck();
         }
 
         public void HealthCheck()
@@ -69,6 +67,20 @@ namespace SmashUltimateEditor
                     SetValueFromName(skill, hazardRelief);
                 }
             }
+        }
+
+        public void BossCheck(string fighter_kind)
+        {
+
+        }
+
+        public bool IsLoseEscort()
+        {
+            return result_type == "lose_escort";
+        }
+        public bool IsBossType()
+        {
+            return battle_type == "boss";
         }
 
         public void BuildFromXml(XmlReader reader)

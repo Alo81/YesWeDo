@@ -1,5 +1,6 @@
 ﻿using SmashUltimateEditor.DataTables;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -19,6 +20,57 @@ namespace SmashUltimateEditor
                     )
                 );
         }
+
+        public void BuildEvent(Tuple<string, string, int, int, byte, ushort> randEvent, int index)
+        {
+            var eventNum = String.Format("event{0}_", index);
+            // event1_type, event1_ label,  event1_ start_time, event1_ range_time, event1_ count, event1_ damage
+            SetValueFromName(eventNum + "type", randEvent.Item1);
+            SetValueFromName(eventNum + "label", randEvent.Item2);
+            SetValueFromName(eventNum + "start_time", randEvent.Item3.ToString());
+            SetValueFromName(eventNum + "range_time", randEvent.Item4.ToString());
+            SetValueFromName(eventNum + "count", randEvent.Item5.ToString());
+            SetValueFromName(eventNum + "damage", randEvent.Item6.ToString());
+        }
+
+        public Fighter GetNewFighter(bool isSub = false)
+        {
+            return new Fighter() { battle_id = battle_id, spirit_name = battle_id, entry_type = isSub ? "sub_type" : "main_type" };
+        }
+
+        public void Cleanup()
+        {
+            HealthCheck();
+            HazardCheck();
+            // ResultTypeCheck();
+            // BattleTypeCheck();
+        }
+
+        public void HealthCheck()
+        {
+            // Check if init HP is lower than init damage (?)
+            if (basic_init_hp < basic_init_damage)
+            {
+                var hold = basic_init_damage;
+                basic_init_damage = basic_init_hp;
+                basic_init_hp = hold;
+            }
+        }
+
+        public void HazardCheck()
+        {
+            // Check for hazards and set skills.
+            if (Defs.HAZARD_SKILLS.ContainsKey(stage_attr))
+            {
+                int i = 1;
+                foreach(var hazardRelief in Defs.HAZARD_SKILLS[stage_attr])
+                {
+                    var skill = String.Format("recommended_skill{0}", i++);
+                    SetValueFromName(skill, hazardRelief);
+                }
+            }
+        }
+
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;

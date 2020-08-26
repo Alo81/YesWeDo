@@ -13,10 +13,10 @@ namespace SmashUltimateEditor
         public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\ui_spirits_battle_db_mod_unencr.prc";
 
         public const int LABEL_HEIGHT = 20;
-        public const int LABEL_WIDTH = 200;
+        public const int LABEL_WIDTH = 200 ;
         public const int PADDING = 5;
-        public const int BOX_HEIGHT = 20;
-        public const int BOX_WIDTH = 200;
+        public const int BOX_HEIGHT = 20 ;
+        public const int BOX_WIDTH = 200 ;
         public const int ROWS = 26;
         public const int COLUMNS = 4;
 
@@ -51,6 +51,19 @@ namespace SmashUltimateEditor
             "BATTLE_POWER"
         };
 
+        public static Dictionary<string, List<string>> HAZARD_SKILLS = new Dictionary<string, List<string>>()
+        {
+            { "damage_floor",   new List<string>() { "damage_floor_invalid", "damage_floor_half" } },
+            { "elec_floor",     new List<string>() { "damage_floor_invalid", "damage_floor_half" } },
+            { "gum_floor",      new List<string>() { "adhesion_floor_invalid" } },
+            { "ice_floor",      new List<string>() { "slip_invalid" } },
+            { "mist_area",      new List<string>() { "fog_invalid" } },
+            { "poison_area",    new List<string>() { "poison_heal", "poison_invalid", "fog_invalid", "poison_half" } },
+            { "poison_floor",   new List<string>() { "poison_heal", "poison_invalid", "poison_half" } },
+            { "sleep_floor",    new List<string>() { "sleep_invalid" } },
+            { "wind_area",      new List<string>() { "wind_invalid", "wind_half" } }
+        };
+
         public static List<string> FLOAT_VALUES = new List<string>()
         {   "SCALE",
             "FLY_RATE",
@@ -66,16 +79,17 @@ namespace SmashUltimateEditor
             "entry_type"
         };
 
-        public static List<string> EXCLUDED_BOSSES = new List<string>()
+        public static List<string> BOSSES = new List<string>()
         {
             "ui_chara_ganonboss",
             "ui_chara_crazyhand",
-            "ui_chara_random",
             "ui_chara_dracula",
             "ui_chara_galleom",
             "ui_chara_marx",
             "ui_chara_masterhand"
         };
+
+        public static List<string> EXCLUDED_FIGHTERS = new List<string>(BOSSES) {"ui_chara_random"};
 
         public static List<string> MII_MOVES = new List<string>()
         {
@@ -103,8 +117,8 @@ namespace SmashUltimateEditor
         public static byte CPU_LV_MIN  { get; } = 1;
         public static byte CPU_LV_MAX  { get; } = 100;
 
+        public static byte STOCK_MIN { get; } = 1;
         public static byte STOCK_MAX  { get; } = 3;
-        public static byte STOCK_MIN  { get; } = 1;
         
         // 0, 500
         public static ushort HP_MIN  { get; } = 0;
@@ -114,8 +128,8 @@ namespace SmashUltimateEditor
         public static ushort INIT_DAMAGE_MIN  { get; } = 0;
         public static ushort INIT_DAMAGE_MAX  { get; } = 300;
 
-        public static float SCALE_MAX  { get; } = 2.75f;
-        public static float SCALE_MIN  { get; } = 0.2f;
+        public static float SCALE_MIN { get; } = 0.2f;
+        public static float SCALE_MAX  { get; } = 4.0f;
 
         public static float FLY_RATE_MIN  { get; } = 0f;
         public static float FLY_RATE_MAX  { get; } = 5f;

@@ -28,6 +28,35 @@ namespace SmashUltimateEditor
                 );
         }
 
+        public void FighterCheck(List<string> options, ref Random rnd)
+        {
+            options.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
+            while (Defs.EXCLUDED_FIGHTERS.Contains(fighter_kind))
+            {
+                fighter_kind = options[rnd.Next(options.Count)];
+            }
+        }
+
+        public void StockCheck(int fighterCount)
+        {
+            // If there are a lot, makes multiple lives tedius
+            if (fighterCount > 3)
+            {
+                stock = 1;
+            }
+        }
+
+        public void HealthCheck()
+        {
+            // Check if init HP is lower than init damage (?)
+            if (hp < init_damage)
+            {
+                var hold = init_damage;
+                init_damage = hp;
+                hp = hold;
+            }
+        }
+
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;

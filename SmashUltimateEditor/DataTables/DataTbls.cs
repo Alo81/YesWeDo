@@ -18,8 +18,8 @@ namespace SmashUltimateEditor
 {
     public class DataTbls
     {
-        public BattleDataTbls battleData;
-        public FighterDataTbls fighterData;
+        public BattleDataOptions battleData;
+        public FighterDataOptions fighterData;
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
@@ -49,20 +49,42 @@ namespace SmashUltimateEditor
 
         public DataTbls()
         {
-            battleData = new BattleDataTbls();
-            fighterData = new FighterDataTbls();
+            battleData = new BattleDataOptions();
+            fighterData = new FighterDataOptions();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
 
-            ReadXML(Defs.FILE_LOCATION);
+            ReadXML(Defs.FILE_LOCATION, ref battleData, ref fighterData);
         }
 
-        public void Save(BattleDataTbls battleData, FighterDataTbls fighterData, string fileLocation = Defs.FILE_LOCATION)
+        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation = Defs.FILE_LOCATION)
+        {
+            Save();
+            WriteXML(fileLocation, battleData, fighterData);
+        }
+
+        public void Save()
         {
             SaveBattle();
             SaveFighters();
-            WriteXML(fileLocation, battleData, fighterData);
+        }
+
+        public void ExportCurrentBattle()
+        {
+            Save();
+            BattleDataOptions singleBattle = new BattleDataOptions();
+            singleBattle.AddBattle(battleData.GetBattle(selectedBattle.battle_id));
+            FighterDataOptions fighters = new FighterDataOptions();
+            fighters.AddFighters(selectedFighters);
+            SaveToFile(singleBattle, fighters, String.Format("{0}_{1}", Defs.FILE_LOCATION, singleBattle.battle_id.First()));
+        }
+
+        public void ImportBattle(string file_loc)
+        {
+            BattleDataOptions impBattle = new BattleDataOptions();
+            FighterDataOptions impFighters = new FighterDataOptions();
+            ReadXML(file_loc, ref impBattle, ref impFighters);
         }
 
         public void SaveBattle()
@@ -74,8 +96,8 @@ namespace SmashUltimateEditor
                 return;
             }
             selectedBattle.UpdateTblValues(battlePage);
-            int index = battleData.battleDataList.FindIndex(x => x == selectedBattle);
-            battleData.battleDataList[index] = selectedBattle;
+            int index = battleData.GetBattleIndex(selectedBattle);
+            battleData.ReplaceBattleAtIndex(index, selectedBattle);
         }
 
         public void SaveFighters()
@@ -91,88 +113,72 @@ namespace SmashUltimateEditor
             {
                 // Match on tab index, which is assigned to Fighter when it updates page values.  
                 selectedFighters[i].UpdateTblValues(fighterPages[i+1]);
-                int index = fighterData.fighterDataList.FindIndex(x => x == selectedFighters[i]);
-                fighterData.fighterDataList[index] = selectedFighters[i];
+                int index = fighterData.GetFighterIndex(selectedFighters[i]);
+                fighterData.ReplaceFighterAtIndex(index, selectedFighters[i]);
             }
         }
 
         public void RandomizeAll(int seed = -1)
         {
-            Random rnd = new Random();
-            FighterDataTbls randomizedFighters = new FighterDataTbls();
-            Fighter randomizedFighter = new Fighter();
+            Random rnd = new Random(seed);
+            FighterDataOptions randomizedFighters = new FighterDataOptions();
+            Fighter randomizedFighter; ;
             int fighterCount;
             int eventCount;
-            List<int> fighterDistribution = BuildMinDistributionList(1, 8);
-            List<int> eventDistribution = BuildMinDistributionList(1, 3, 1, 0);
+            List<int> fighterDistribution = RandomizerHelper.BuildMinDistributionList(1, 8, 3);
+            List<int> eventDistribution = RandomizerHelper.BuildMinDistributionList(1, 3, 1, 0);
 
             foreach (Battle battle in battleData.battleDataList)
             {
-                battle.Randomize(rnd, this);
                 eventCount = eventDistribution[rnd.Next(eventDistribution.Count)];
                 fighterCount = fighterDistribution[rnd.Next(fighterDistribution.Count)];
 
+                battle.Randomize(rnd, this);
+
+                // Post Randomize battle modifiers
                 for (int j = 1; j <= eventCount; j++)
                 {
                     var randEvent = battleData.events[rnd.Next(battleData.events.Count)];
-                    var eventNum = String.Format("event{0}_", j);
-                    // event1_type, event1_ label,  event1_ start_time, event1_ range_time, event1_ count, event1_ damage
-                    battle.SetValueFromName(eventNum + "type", randEvent.Item1);
-                    battle.SetValueFromName(eventNum + "label", randEvent.Item2);
-                    battle.SetValueFromName(eventNum + "start_time", randEvent.Item3.ToString());
-                    battle.SetValueFromName(eventNum + "range_time", randEvent.Item4.ToString());
-                    battle.SetValueFromName(eventNum + "count", randEvent.Item5.ToString());
-                    battle.SetValueFromName(eventNum + "damage", randEvent.Item6.ToString());
+                    battle.BuildEvent(randEvent, j);
                 }
+                battle.Cleanup();
 
-                for(int i = 0; i < fighterCount; i++)
+                for (int i = 0; i < fighterCount; i++)
                 {
-                    randomizedFighter = new Fighter() { battle_id = battle.battle_id, spirit_name = battle.battle_id, entry_type = "main_type"};
-                    if(i!= 0)
-                    {
-                        randomizedFighter.entry_type = "sub_type";
-                    }
+                    var isSub = i == 0;     // Set first fighter to main.  All the rest are subs.  
+                    randomizedFighter = battle.GetNewFighter(isSub);
+
                     randomizedFighter.Randomize(rnd, this);
+
+                    // Post Randomize fighter modifiers
+                    randomizedFighter.FighterCheck(fighterData.fighter_kind, ref rnd);
+                    randomizedFighter.StockCheck(fighterCount);
+                    randomizedFighter.HealthCheck();
 
                     randomizedFighters.AddFighter(randomizedFighter);
                 }
 
             }
-            Save(battleData, randomizedFighters, Defs.FILE_LOCATION + "_Randomized");
+            SaveToFile(battleData, randomizedFighters, Defs.FILE_LOCATION + "_Randomized");
             BuildTabs();
-        }
-
-        public List<int> BuildMinDistributionList(int preferred, int max, double mod1 = 1.0, double mod2 = 0.5)
-        {
-            var lint = new List<int>();
-
-            for (int i = preferred; i <= max; i++)
-            {
-                for (int j = preferred; j <= i*mod1; j++)
-                {
-                    lint.Add(j);
-                }
-            }
-            // Make one fighter more likely significantly.  
-            for (int i = (int)(lint.Count * mod2); i > 0; i--)
-            {
-                lint.Add(preferred);
-            }
-
-            return lint;
         }
 
         public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
         {
             int index = Int32.Parse(((Button)sender).Name);
-            selectedFighters.Remove(fighterData.fighterDataList[index]);
-            fighterData.fighterDataList.RemoveAt(index);
+            selectedFighters.Remove(fighterData.GetFighterAtIndex(index));
+            fighterData.RemoveFighterAtIndex(index);
             BuildTabs();
         }
         
         public void SetRemoveFighterButtonMethod(ref Button b)
         {
             b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
+        }
+
+        public void SetSaveTabChange(object sender, EventArgs e)
+        {
+            Save();
         }
         
         public void BuildTabs()
@@ -240,8 +246,6 @@ namespace SmashUltimateEditor
             }
         }
 
-
-
         public void SetSelectedBattle(string battle_id)
         {
             selectedBattle = battleData.GetBattle(battle_id);
@@ -251,24 +255,25 @@ namespace SmashUltimateEditor
             selectedFighters = fighterData.GetFightersByBattleId(battle_id);
         }
 
-        public List<string> GetOptionsFromTypeAndName(string type, string name)
+        public List<string> GetOptionsFromTypeAndName(Type type, string name)
         {
-            switch (type)
+            Type fighterType = fighterData.GetContainerType();
+            Type battleType = battleData.GetContainerType();
+
+            if (type == fighterType)
             {
-                case "Fighter":
-                    return (List<string>)fighterData.GetType().GetProperty(name).GetValue(fighterData) ?? new List<string>();
-                case "Battle":
-                    return (List<string>)battleData.GetType().GetProperty(name).GetValue(battleData) ?? new List<string>();
-                default:
-                    return null;
+                return fighterData.GetOptionsFromName(name) ?? new List<string>();
             }
+            if (type == battleType)
+            {
+                return battleData.GetOptionsFromName(name) ?? new List<string>();
+            }
+            return null;
         }
 
         // Methods
-        public void ReadXML(string fileName)
+        public void ReadXML(string fileName, ref BattleDataOptions battleData, ref FighterDataOptions fighterData)
         {
-            battleData.battleDataList = new List<Battle>();
-            fighterData.fighterDataList = new List<Fighter>();
             bool parseData = false;
             IDataTbl dataTable = new Battle();
 
@@ -300,9 +305,9 @@ namespace SmashUltimateEditor
                         dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
                         dataTable.BuildFromXml(reader);
                         if (dataTable is Battle battleTbl)
-                            battleData.battleDataList.Add(battleTbl);
+                            battleData.AddBattle(battleTbl);
                         else if (dataTable is Fighter fighterTbl)
-                            fighterData.fighterDataList.Add(fighterTbl);
+                            fighterData.AddFighter(fighterTbl);
                         reader.Read();
                         reader.Read();
                     }
@@ -314,7 +319,7 @@ namespace SmashUltimateEditor
             }
             Console.WriteLine("List Built.");
         }
-        public void WriteXML(string fileName, BattleDataTbls battleData, FighterDataTbls fighterData)
+        public void WriteXML(string fileName, BattleDataOptions battleData, FighterDataOptions fighterData)
         {
             using StreamWriter writer = new StreamWriter(fileName);
 

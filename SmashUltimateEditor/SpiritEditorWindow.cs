@@ -18,6 +18,8 @@ namespace SmashUltimateEditor
             InitializeComponent();
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
+            dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
+            textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
             buildFighterDataTab();
         }
 
@@ -30,8 +32,7 @@ namespace SmashUltimateEditor
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dataTbls.SaveBattle();
-            dataTbls.SaveFighters();
+            dataTbls.Save();
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
             dataTbls.BuildTabs();
@@ -50,12 +51,28 @@ namespace SmashUltimateEditor
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            dataTbls.Save(dataTbls.battleData, dataTbls.fighterData);
+            dataTbls.SaveToFile(dataTbls.battleData, dataTbls.fighterData);
         }
 
         private void btnRandomize_Click(object sender, EventArgs e)
         {
-            dataTbls.RandomizeAll();
+            int seed;
+            try
+            {
+                seed = Int32.Parse(textboxSeed.Text);
+            }
+            catch
+            {
+                seed = -1;
+            }
+
+            // If seed isn't positive, get random one. 
+            dataTbls.RandomizeAll(seed < 0? RandomizerHelper.GetRandomInt() : seed);
+        }
+
+        private void buttonExport_Click(object sender, EventArgs e)
+        {
+            dataTbls.ExportCurrentBattle();
         }
     }
 }

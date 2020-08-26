@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmashUltimateEditor.DataTables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +8,13 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    public class FighterDataTbls
+    public class FighterDataOptions : DataOptions
     {
         internal int pageCount { get { return fighterDataList.Sum(x=>x.pageCount); } }
 
         public List<Fighter> fighterDataList;
 
-        public FighterDataTbls()
+        public FighterDataOptions()
         {
             fighterDataList = new List<Fighter>();
         }
@@ -21,6 +22,14 @@ namespace SmashUltimateEditor
         public List<Fighter> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
+        }
+        public Fighter GetFighterAtIndex(int index)
+        {
+            return fighterDataList[index];
+        }
+        public void RemoveFightersByBattleId(string battle_id)
+        {
+            fighterDataList.RemoveAll(x => x.battle_id == battle_id);
         }
         public List<Fighter> GetFighters()
         {
@@ -33,15 +42,38 @@ namespace SmashUltimateEditor
 
         public void AddFighter(Fighter fighter)
         {
-            if(fighterDataList is null)
-            {
-                fighterDataList = new List<Fighter>();
-            }
             fighterDataList.Add(fighter);
+        }
+
+        public void AddFighters(List<Fighter> fighters)
+        {
+            fighterDataList.AddRange(fighters);
+        }
+
+        public void ReplaceFighters(FighterDataOptions replacement)
+        {
+            foreach (var replBattle in replacement.GetFighters())
+            {
+                RemoveFightersByBattleId(replBattle.battle_id);
+            }
+            AddFighters(replacement.GetFighters());
+        }
+
+        public void ReplaceFighterAtIndex(int index, Fighter newFighter)
+        {
+            fighterDataList[index] = newFighter;
+        }
+        public void RemoveFighterAtIndex(int index)
+        {
+            fighterDataList.RemoveAt(index);
         }
         public string GetXmlName()
         {
             return "fighter_data_tbl";
+        }
+        public Type GetContainerType()
+        {
+            return fighterDataList[0].GetType();
         }
 
         public List<string> spirit_name

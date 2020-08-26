@@ -42,6 +42,8 @@ namespace SmashUltimateEditor
             this.btnAddFighter = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnRandomize = new System.Windows.Forms.Button();
+            this.textboxSeed = new System.Windows.Forms.TextBox();
+            this.buttonExport = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,7 +68,7 @@ namespace SmashUltimateEditor
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(1251, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(1221, 30);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -85,14 +87,14 @@ namespace SmashUltimateEditor
             this.tabControlData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1222, 1827);
+            this.tabControlData.Size = new System.Drawing.Size(1192, 1294);
             this.tabControlData.TabIndex = 5;
             // 
             // btnAddFighter
             // 
             this.btnAddFighter.Location = new System.Drawing.Point(475, 35);
             this.btnAddFighter.Name = "btnAddFighter";
-            this.btnAddFighter.Size = new System.Drawing.Size(108, 29);
+            this.btnAddFighter.Size = new System.Drawing.Size(107, 29);
             this.btnAddFighter.TabIndex = 6;
             this.btnAddFighter.Text = "Add Fighter";
             this.btnAddFighter.UseVisualStyleBackColor = true;
@@ -100,7 +102,7 @@ namespace SmashUltimateEditor
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(986, 35);
+            this.btnSave.Location = new System.Drawing.Point(817, 33);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(94, 29);
             this.btnSave.TabIndex = 7;
@@ -118,11 +120,32 @@ namespace SmashUltimateEditor
             this.btnRandomize.UseVisualStyleBackColor = true;
             this.btnRandomize.Click += new System.EventHandler(this.btnRandomize_Click);
             // 
+            // textboxSeed
+            // 
+            this.textboxSeed.Location = new System.Drawing.Point(1032, 32);
+            this.textboxSeed.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textboxSeed.Name = "textboxSeed";
+            this.textboxSeed.Size = new System.Drawing.Size(103, 27);
+            this.textboxSeed.TabIndex = 9;
+            this.textboxSeed.Text = "-1";
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Location = new System.Drawing.Point(588, 35);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(94, 29);
+            this.buttonExport.TabIndex = 10;
+            this.buttonExport.Text = "Export Battle";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1251, 1916);
+            this.ClientSize = new System.Drawing.Size(1221, 783);
+            this.Controls.Add(this.buttonExport);
+            this.Controls.Add(this.textboxSeed);
             this.Controls.Add(this.btnRandomize);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAddFighter);
@@ -150,6 +173,8 @@ namespace SmashUltimateEditor
         private Button btnAddFighter;
         private Button btnSave;
         private Button btnRandomize;
+        private TextBox textboxSeed;
+        private Button buttonExport;
     }
 }
 

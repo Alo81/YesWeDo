@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmashUltimateEditor.DataTables;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,16 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-    public class BattleDataTbls
+    public class BattleDataOptions : DataOptions
     {
         public List<Battle> battleDataList;
 
         private List<Tuple<string, string, int, int, byte, ushort>> _events;
+
+        public BattleDataOptions()
+        {
+            battleDataList = new List<Battle>();
+        }
 
         public Battle GetBattle(string battle_id)
         {
@@ -29,13 +35,35 @@ namespace SmashUltimateEditor
         }
         public List<Battle> GetBattles()
         {
-
             return battleDataList;
+        }
+
+        public void AddBattle(Battle newBattle)
+        {
+            battleDataList.Add(newBattle);
+        }
+
+        public void ReplaceBattles(BattleDataOptions replacement)
+        {
+            foreach(var replBattle in replacement.GetBattles())
+            {
+                battleDataList.RemoveAt(GetBattleIndex(replBattle.battle_id));
+                battleDataList.Add(replBattle);
+            }
+        }
+        public void ReplaceBattleAtIndex(int index, Battle newBattle)
+        {
+            battleDataList[index] = newBattle;
         }
         public string GetXmlName()
         {
             return "battle_data_tbl";
         }
+        public Type GetContainerType()
+        {
+            return battleDataList[0].GetType();
+        }
+
         public List<string> battle_id
         {
             get { return battleDataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }

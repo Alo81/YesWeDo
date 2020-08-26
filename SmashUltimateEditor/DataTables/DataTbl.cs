@@ -42,8 +42,7 @@ namespace SmashUltimateEditor.DataTables
                     continue;
                 }
 
-
-                // Range values?  Use a textbox.
+                // Range values?  Set a random value. 
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
                     var range = GetRangeFromName(field.Name.ToUpper());
@@ -63,18 +62,11 @@ namespace SmashUltimateEditor.DataTables
                 }
                 else
                 {
-                    var options = dataTbls.GetOptionsFromTypeAndName(type.Name, field.Name);
+                    var options = dataTbls.GetOptionsFromTypeAndName(type, field.Name);
                     var value = options[rnd.Next(options.Count)];
+
                     value = EnumChecker(value.ToString(), field.Name);
 
-                    if (field.Name == "fighter_kind")
-                    {
-                        while (Defs.EXCLUDED_BOSSES.Contains(value))
-                        {
-                            value = options[rnd.Next(options.Count)];
-                            value = EnumChecker(value.ToString(), field.Name);
-                        }
-                    }
                     SetValueFromName(field.Name, value);
                 }
             }
@@ -102,14 +94,6 @@ namespace SmashUltimateEditor.DataTables
             {
                 value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(value ?? "")).ToString();
             }
-            else if (name == "battle_type")
-            {
-                value = value == "boss" ? "stock" : value;
-            }
-            else if (name == "result_type")
-            {
-                value = value == "lose_escort" ? "normal_rule" : value;
-            }
             return value;
         }
 
@@ -118,26 +102,7 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = combo?.SelectedItem?.ToString() ?? "";
-                if (combo.Name == "mii_color")
-                {
-                    value = ((int)EnumUtil<Enums.mii_color_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
-                }
-                else if(combo.Name == "mii_sp_n")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_s")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_hi")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_lw")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(combo?.SelectedItem?.ToString() ?? "")).ToString();
-                }
+                value = EnumChecker(value, combo.Name);
                 SetValueFromName(combo.Name, value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
@@ -151,26 +116,7 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = GetValueFromName(combo.Name);
-                if (combo.Name == "mii_color")
-                {
-                    value = ((int)EnumUtil<Enums.mii_color_opt>.GetByName(value ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_n")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_n_opt>.GetByName(value ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_s")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_s_opt>.GetByName(value ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_hi")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_hi_opt>.GetByName(value ?? "")).ToString();
-                }
-                else if (combo.Name == "mii_sp_lw")
-                {
-                    value = ((int)EnumUtil<Enums.mii_sp_lw_opt>.GetByName(value ?? "")).ToString();
-                }
+                value = EnumChecker(value, combo.Name);
                 combo.SelectedIndex = combo.Items.IndexOf(value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
@@ -245,7 +191,7 @@ namespace SmashUltimateEditor.DataTables
                 else
                 {
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type.Name, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
 
                 page.Controls.Add(lb.label);

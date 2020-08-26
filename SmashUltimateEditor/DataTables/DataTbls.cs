@@ -145,12 +145,13 @@ namespace SmashUltimateEditor
 
                 for (int i = 0; i < fighterCount; i++)
                 {
-                    var isSub = i == 0;     // Set first fighter to main.  All the rest are subs.  
-                    randomizedFighter = battle.GetNewFighter(isSub);
+                    var isMain = i == 0;     // Set first fighter to main.  All the rest are subs.  
+                    randomizedFighter = battle.GetNewFighter();
 
                     randomizedFighter.Randomize(rnd, this);
 
                     // Post Randomize fighter modifiers
+                    randomizedFighter.EntryCheck(isMain);
                     randomizedFighter.FighterCheck(fighterData.fighter_kind, ref rnd);
                     randomizedFighter.StockCheck(fighterCount);
                     randomizedFighter.HealthCheck();

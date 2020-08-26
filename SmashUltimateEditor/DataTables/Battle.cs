@@ -33,9 +33,9 @@ namespace SmashUltimateEditor
             SetValueFromName(eventNum + "damage", randEvent.Item6.ToString());
         }
 
-        public Fighter GetNewFighter(bool isSub = false)
+        public Fighter GetNewFighter()
         {
-            return new Fighter() { battle_id = battle_id, spirit_name = battle_id, entry_type = isSub ? "sub_type" : "main_type" };
+            return new Fighter() { battle_id = battle_id, spirit_name = battle_id};
         }
 
         public void Cleanup()

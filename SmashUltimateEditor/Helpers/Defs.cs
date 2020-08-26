@@ -75,8 +75,7 @@ namespace SmashUltimateEditor
             "battle_id",
             "spirit_name",
             "appear_rule_time",
-            "appear_rule_count",
-            "entry_type"
+            "appear_rule_count"
         };
 
         public static List<string> BOSSES = new List<string>()

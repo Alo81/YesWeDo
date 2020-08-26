@@ -57,6 +57,12 @@ namespace SmashUltimateEditor
             }
         }
 
+        public void EntryCheck(bool isMain)
+        {
+            if(isMain)
+                entry_type = "main_type";
+        }
+
         public void BuildFromXml(XmlReader reader)
         {
             string attribute;

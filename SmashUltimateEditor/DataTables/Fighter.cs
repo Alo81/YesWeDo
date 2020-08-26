@@ -59,7 +59,7 @@ namespace SmashUltimateEditor
 
         public void EntryCheck(bool isMain)
         {
-            if(isMain)
+            if(isMain || entry_type == "boss_type")
                 entry_type = "main_type";
         }
 

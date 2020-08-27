@@ -58,7 +58,19 @@ namespace SmashUltimateEditor
             ReadXML(Defs.FILE_LOCATION, ref battleData, ref fighterData);
         }
 
+        public void EmptySpiritData()
+        {
+            battleData = new BattleDataOptions();
+            fighterData = new FighterDataOptions();
+        }
+
         public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation = Defs.FILE_LOCATION)
+        {
+            Save();
+            WriteXML(fileLocation, battleData, fighterData);
+        }
+
+        public void SaveToFile(string fileLocation = Defs.FILE_LOCATION)
         {
             Save();
             WriteXML(fileLocation, battleData, fighterData);
@@ -97,7 +109,10 @@ namespace SmashUltimateEditor
             }
             selectedBattle.UpdateTblValues(battlePage);
             int index = battleData.GetBattleIndex(selectedBattle);
-            battleData.ReplaceBattleAtIndex(index, selectedBattle);
+            if (index >= 0)
+            {
+                battleData.ReplaceBattleAtIndex(index, selectedBattle);
+            }
         }
 
         public void SaveFighters()
@@ -114,7 +129,10 @@ namespace SmashUltimateEditor
                 // Match on tab index, which is assigned to Fighter when it updates page values.  
                 selectedFighters[i].UpdateTblValues(fighterPages[i+1]);
                 int index = fighterData.GetFighterIndex(selectedFighters[i]);
-                fighterData.ReplaceFighterAtIndex(index, selectedFighters[i]);
+                if (index >= 0)
+                {
+                    fighterData.ReplaceFighterAtIndex(index, selectedFighters[i]);
+                }
             }
         }
 
@@ -124,53 +142,47 @@ namespace SmashUltimateEditor
             FighterDataOptions randomizedFighters = new FighterDataOptions();
             Fighter randomizedFighter; ;
             int fighterCount;
-            int eventCount;
-            List<int> fighterDistribution = RandomizerHelper.BuildMinDistributionList(1, 8, 3);
-            List<int> fighterLoseEscortDistribution = RandomizerHelper.BuildMinDistributionList(2, 8, 3, 0);
-            List<int> eventDistribution = RandomizerHelper.BuildMinDistributionList(1, 3, 1, 0);
 
             foreach (Battle battle in battleData.battleDataList)
             {
-
                 battle.Randomize(rnd, this);
-
-                // Post Randomize battle modifiers
-                eventCount = eventDistribution[rnd.Next(eventDistribution.Count)];
-
-                for (int j = 1; j <= eventCount; j++)
-                {
-                    var randEvent = battleData.events[rnd.Next(battleData.events.Count)];
-                    battle.BuildEvent(randEvent, j);
-                }
-                battle.Cleanup();
+                // Save after randomizing, as we'll be setting battle_Type to HP, and modifying fighter to make one a boss.  
+                var isBossType = battle.IsBossType();     // Set first fighter to main.  
+                battle.Cleanup(ref rnd, battleData.events);
 
                 // If lose escort, need at least 2 fighters.  
-                fighterCount = battle.IsLoseEscort() ? fighterLoseEscortDistribution[rnd.Next(fighterLoseEscortDistribution.Count)] :  fighterDistribution[rnd.Next(fighterDistribution.Count)];
+                fighterCount = battle.IsLoseEscort() ? 
+                    RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)] 
+                    : 
+                    RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
 
                 for (int i = 0; i < fighterCount; i++)
                 {
                     var isMain = i == 0;     // Set first fighter to main.  
                     var isLoseEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
-                    var isBoss = i == 0 && battle.IsBossType();     // Set first fighter to main.  
-                    isBoss = false; // Bosses don't work.  Will need to fix better later.  
+                    var isBoss = i == 0 && isBossType;     // Set first fighter to main.  
 
-                    randomizedFighter = isBoss? fighterData.GetNewBoss(battle.battle_id) : battle.GetNewFighter();
+                    randomizedFighter = battle.GetNewFighter();
+                    randomizedFighter.Randomize(rnd, this);
 
-                    if(!isBoss)
-                        randomizedFighter.Randomize(rnd, this);
-
-                    // Post Randomize fighter modifiers
-                    randomizedFighter.EntryCheck(isMain, isLoseEscort, isBoss);
-                    randomizedFighter.FighterCheck(isBoss ? Defs.BOSSES : fighterData.Fighters, ref rnd);
-                    randomizedFighter.StockCheck(fighterCount, battle.IsBossType());
-                    randomizedFighter.HealthCheck();
+                    FighterRandomizeCleanup(ref randomizedFighter, ref rnd, isMain, isLoseEscort, isBoss);
+                    randomizedFighter.StockCheck(fighterCount);
 
                     randomizedFighters.AddFighter(randomizedFighter);
                 }
 
             }
             SaveToFile(battleData, randomizedFighters, Defs.FILE_LOCATION + "_Randomized");
-            BuildTabs();
+            RefreshTabs();
+        }
+
+        public void FighterRandomizeCleanup(ref Fighter randomizedFighter, ref Random rnd, bool isMain, bool isLoseEscort, bool isBoss = false)
+        {
+            // Post Randomize fighter modifiers
+            randomizedFighter.EntryCheck(isMain, isLoseEscort);
+            randomizedFighter.FighterCheck(fighterData.Fighters, ref rnd);
+            randomizedFighter.HealthCheck();
+            randomizedFighter.BossCheck(isBoss);
         }
 
         public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
@@ -178,7 +190,7 @@ namespace SmashUltimateEditor
             int index = Int32.Parse(((Button)sender).Name);
             selectedFighters.Remove(fighterData.GetFighterAtIndex(index));
             fighterData.RemoveFighterAtIndex(index);
-            BuildTabs();
+            RefreshTabs();
         }
         
         public void SetRemoveFighterButtonMethod(ref Button b)
@@ -191,9 +203,8 @@ namespace SmashUltimateEditor
             Save();
         }
         
-        public void BuildTabs()
+        public void RefreshTabs()
         {
-            //var tasks = new List<Task<TabPage>>();
             TabPage page;
             if(tabs is null)
             {
@@ -216,7 +227,6 @@ namespace SmashUltimateEditor
                     var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
                     selectedFighters[i - 1].UpdatePageValues(ref page, i, selectedFighters[i - 1].fighter_kind, collectionIndex);
                 }
-                //tabs.TabPages.Add(page);
             }
 
             HideTabs();

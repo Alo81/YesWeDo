@@ -20,14 +20,14 @@ namespace SmashUltimateEditor
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
-            buildFighterDataTab();
+            buildFighterDataTab(dataTbls.battleData.battle_id.First());
         }
 
-        private void buildFighterDataTab()
+        private void buildFighterDataTab(string battle_id)
         {
             this.dropdownSpiritData.DataSource = dataTbls.battleData.battle_id;
-            dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
-            dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
+            dataTbls.SetSelectedBattle(battle_id);
+            dataTbls.SetSelectedFighters(battle_id);
         }
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
@@ -35,18 +35,16 @@ namespace SmashUltimateEditor
             dataTbls.Save();
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
-            dataTbls.BuildTabs();
+            dataTbls.RefreshTabs();
         }
 
         private async void btnAddFighter_Click(object sender, EventArgs e)
         {
-            string battleId = dataTbls.selectedBattle.battle_id;
-
-            Fighter newFighter = dataTbls.selectedFighters[0].ShallowCopy();
+            Fighter newFighter = dataTbls.selectedFighters[0].Copy();
 
             dataTbls.fighterData.AddFighter(newFighter);
             dataTbls.selectedFighters.Add(newFighter);
-            dataTbls.BuildTabs();
+            dataTbls.RefreshTabs();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -56,23 +54,120 @@ namespace SmashUltimateEditor
 
         private void btnRandomize_Click(object sender, EventArgs e)
         {
-            int seed;
-            try
-            {
-                seed = Int32.Parse(textboxSeed.Text);
-            }
-            catch
-            {
-                seed = -1;
-            }
+            dataTbls.Save();
+            int index = dataTbls.tabs.SelectedIndex;
+            var battle = dataTbls.selectedBattle;
+            var fighter = dataTbls.selectedFighters.First();
 
-            // If seed isn't positive, get random one. 
-            dataTbls.RandomizeAll(seed < 0? RandomizerHelper.GetRandomInt() : seed);
+            int seed = TryGetSeed();
+            Random rnd = new Random(seed);
+            if (index == 0)
+            {
+                battle.Randomize(rnd, dataTbls);
+                battle.Cleanup(ref rnd, dataTbls.battleData.events);
+            }
+            else
+            {
+                index -= 1; // We're looking at fighters now, start at index 0.
+                var isMain = index == 0;     // Set first fighter to main.  
+                var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
+                var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  
+                fighter.Randomize(rnd, dataTbls);
+                dataTbls.FighterRandomizeCleanup(ref fighter, ref rnd, isMain, isLoseEscort, isBoss);
+            }
+            dataTbls.RefreshTabs();
         }
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
             dataTbls.ExportCurrentBattle();
+        }
+
+        private void OpenFolderFile_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void OpenDbFile_Click(object sender, EventArgs e)
+        {
+            var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY};
+            openDialog.ShowDialog();
+
+            if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
+            {
+                dataTbls.EmptySpiritData();
+                dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
+
+                var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
+
+                buildFighterDataTab(battle_id);
+            }
+            dataTbls.RefreshTabs();
+        }
+
+        private void SaveFile_Click(object sender, EventArgs e)
+        {
+            dataTbls.SaveToFile();
+        }
+
+        private void SaveAsFile_Click(object sender, EventArgs e)
+        {
+            var saveDialog = new SaveFileDialog() { Title = "Save Unencrypted Spirit Battles", Filter = "PRC|*.prc*", FileName = Defs.FILE_NAME, InitialDirectory = Defs.FILE_DIRECTORY };
+
+            saveDialog.ShowDialog();
+            if(!String.IsNullOrWhiteSpace(saveDialog?.FileName))
+            {
+                dataTbls.SaveToFile(saveDialog.FileName);
+            }
+        }
+
+        // Modify this to use a dialog prompt so we can choose where to save it.  
+        private void ExportBattleFile_Click(object sender, EventArgs e)
+        {
+            dataTbls.ExportCurrentBattle();
+        }
+
+        private void ImportBattle_Click(object sender, EventArgs e)
+        {
+            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY };
+            importDialog.ShowDialog();
+
+            if (!String.IsNullOrWhiteSpace(importDialog?.FileName))
+            {
+                var battles = new BattleDataOptions();
+                var fighters = new FighterDataOptions();
+                dataTbls.ReadXML(importDialog.FileName, ref battles, ref fighters);
+
+                dataTbls.battleData.ReplaceBattles(battles);
+                dataTbls.fighterData.ReplaceFighters(fighters);
+
+                var battle_id = battles.GetBattleAtIndex(0).battle_id;
+
+                dataTbls.SetSelectedBattle(battle_id);
+                dataTbls.SetSelectedFighters(battle_id);
+            }
+            dataTbls.RefreshTabs();
+        }
+
+        private void RandomizeAllTool_Click(object sender, EventArgs e)
+        {
+            int seed = TryGetSeed();
+
+            // If seed isn't positive, get random one. 
+            dataTbls.RandomizeAll(seed);
+        }
+
+        private int TryGetSeed()
+        {
+
+            try
+            {
+                return Int32.Parse(textboxSeed.Text);
+            }
+            catch
+            {
+                return RandomizerHelper.GetRandomInt();
+            }
         }
     }
 }

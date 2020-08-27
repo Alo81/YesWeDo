@@ -1,7 +1,9 @@
 ﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -38,10 +40,21 @@ namespace SmashUltimateEditor
             return new Fighter() { battle_id = battle_id, spirit_name = battle_id};
         }
 
-        public void Cleanup()
+        // Make an event object dawg.  
+        public void Cleanup(ref Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events)
         {
+            // Post Randomize battle modifiers
+            var eventCount = RandomizerHelper.eventDistribution[rnd.Next(RandomizerHelper.eventDistribution.Count)];
+
+            for (int j = 1; j <= eventCount; j++)
+            {
+                var randEvent = events[rnd.Next(events.Count)];
+                BuildEvent(randEvent, j);
+            }
+
             HealthCheck();
             HazardCheck();
+            BossCheck();
         }
 
         public void HealthCheck()
@@ -69,9 +82,12 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void BossCheck(string fighter_kind)
+        public void BossCheck()
         {
-
+            if (IsBossType())
+            {
+                battle_type = "hp";
+            }
         }
 
         public bool IsLoseEscort()
@@ -81,6 +97,17 @@ namespace SmashUltimateEditor
         public bool IsBossType()
         {
             return battle_type == "boss";
+        }
+
+        public Battle Copy()
+        {
+            Battle newCopy = new Battle();
+            foreach (PropertyInfo property in GetType().GetProperties())
+            {
+                newCopy.SetValueFromName(property.Name, GetValueFromName(property.Name));
+            }
+
+            return newCopy;
         }
 
         public void BuildFromXml(XmlReader reader)

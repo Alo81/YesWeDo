@@ -6,10 +6,18 @@ namespace SmashUltimateEditor.Helpers
 {
     public class RandomizerHelper
     {
+        public static List<int> fighterDistribution = RandomizerHelper.BuildMinDistributionList(1, 8, 3);
+        public static List<int> fighterLoseEscortDistribution = RandomizerHelper.BuildMinDistributionList(2, 8, 3, 0);
+        public static List<int> eventDistribution = RandomizerHelper.BuildMinDistributionList(1, 3, 1, 0);
 
         public static int GetRandomInt()
         {
             return new Random().Next();
+        }
+
+        public static float GetRandomFloatInRange(ref Random rnd, float min, float max)
+        {
+            return Single.Parse((rnd.Next((int)(min * 100), (int)(max * 100))).ToString()) / 100;
         }
         public static List<int> BuildMinDistributionList(int preferred, int max, double mod1 = 1.0, double mod2 = 0.5)
         {

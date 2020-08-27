@@ -51,7 +51,7 @@ namespace SmashUltimateEditor.DataTables
                     switch (fieldType)
                     {
                         case "Single":
-                            value = (Single.Parse((rnd.Next((int)(range.Item1 * 100), (int)(range.Item2 * 100))).ToString()) / 100).ToString();
+                            value = RandomizerHelper.GetRandomFloatInRange(ref rnd, range.Item1, range.Item2).ToString();
                             break;
                         default:
                             value = rnd.Next((int)range.Item1, (int)range.Item2).ToString();

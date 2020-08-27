@@ -33,6 +33,10 @@ namespace SmashUltimateEditor
         {
             return battleDataList.FindIndex(x => x == battle);
         }
+        public Battle GetBattleAtIndex(int index)
+        {
+            return battleDataList?[index];
+        }
         public List<Battle> GetBattles()
         {
             return battleDataList;
@@ -47,8 +51,7 @@ namespace SmashUltimateEditor
         {
             foreach(var replBattle in replacement.GetBattles())
             {
-                battleDataList.RemoveAt(GetBattleIndex(replBattle.battle_id));
-                battleDataList.Add(replBattle);
+                battleDataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
             }
         }
         public void ReplaceBattleAtIndex(int index, Battle newBattle)

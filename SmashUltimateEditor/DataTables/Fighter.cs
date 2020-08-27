@@ -33,10 +33,10 @@ namespace SmashUltimateEditor
             fighter_kind = options[rnd.Next(options.Count)];
         }
 
-        public void StockCheck(int fighterCount, bool isBossType)
+        public void StockCheck(int fighterCount)
         {
             // If there are a lot, makes multiple lives tedius
-            if (fighterCount > 3 || isBossType)
+            if (fighterCount > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
             {
                 stock = 1;
             }
@@ -53,14 +53,35 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void EntryCheck(bool isMain, bool isLoseEscort, bool isBoss)
+        public void EntryCheck(bool isMain, bool isLoseEscort)
         {
-            if (isBoss)
-                entry_type = "boss_type";
-            else if(isMain || entry_type == "boss_type")
+            if(isMain || entry_type == "boss_type")
                 entry_type = "main_type";
             else if (isLoseEscort)
                 entry_type = "friend_type";
+        }
+
+        public void BossCheck(bool isBoss)
+        {
+            if (isBoss)
+            {
+                scale = scale > 1 ? scale * Defs.BOSS_SCALE_MOD : scale + Defs.BOSS_SCALE_MOD;
+                attack = (short)(attack * Defs.BOSS_ATTACK_MOD);
+                defense = (short)(defense * Defs.BOSS_DEFENSE_MOD);
+                hp = hp < Defs.BOSS_HP_CUTOFF ? (ushort)(hp * Defs.BOSS_LOW_HP_MOD) : (ushort)(hp + Defs.BOSS_HIGH_HP_MOD);
+                cpu_lv = (byte)(cpu_lv + Defs.BOSS_CPU_LVL_ADD > Defs.CPU_LV_MAX ? Defs.CPU_LV_MAX : cpu_lv + Defs.BOSS_CPU_LVL_ADD);
+            }
+        }
+
+        public Fighter Copy()
+        {
+            Fighter newCopy = new Fighter();
+            foreach(PropertyInfo property in GetType().GetProperties())
+            {
+                newCopy.SetValueFromName(property.Name, GetValueFromName(property.Name));
+            }
+
+            return newCopy;
         }
 
         public void BuildFromXml(XmlReader reader)
@@ -122,14 +143,6 @@ namespace SmashUltimateEditor
             return;
         }
 
-        public Fighter ShallowCopy()
-        {
-            return (Fighter)this.MemberwiseClone();
-        }
-
-        // No primary key.
-        // Battle id is unique identifier.  Main type and sub type fighters.  
-        // Battle id should be selectable drop down.  All fighters should be selectable based off battle_id.  
         [Order]
         public string battle_id { get; set; }
         [Order]

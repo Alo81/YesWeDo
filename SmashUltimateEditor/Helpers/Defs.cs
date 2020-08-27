@@ -10,7 +10,9 @@ namespace SmashUltimateEditor
     {
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
-        public const string FILE_LOCATION = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\ui_spirits_battle_db_mod_unencr.prc";
+        public const string FILE_NAME = "ui_spirits_battle_db_mod_unencr.prc";
+        public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\";
+        public const string FILE_LOCATION = FILE_DIRECTORY + FILE_NAME;
 
         public const int LABEL_HEIGHT = 20;
         public const int LABEL_WIDTH = 200 ;
@@ -19,6 +21,16 @@ namespace SmashUltimateEditor
         public const int BOX_WIDTH = 200 ;
         public const int ROWS = 26;
         public const int COLUMNS = 4;
+
+        public const float BOSS_SCALE_MOD = 1.5F;
+        public const float BOSS_ATTACK_MOD = 2;
+        public const float BOSS_DEFENSE_MOD = 2;
+        public const float BOSS_LOW_HP_MOD = 2;
+        public const float BOSS_HIGH_HP_MOD = 50;
+        public const float BOSS_HP_CUTOFF = 100;
+        public const int BOSS_CPU_LVL_ADD = 20;
+
+        public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
 
         public static List<string> RANGE_VALUES = new List<string>()
         {
@@ -78,6 +90,7 @@ namespace SmashUltimateEditor
             "appear_rule_count"
         };
 
+        // final_stage1 Looks functioning?
         public static List<string> BOSSES = new List<string>()
         {
             "ui_chara_ganonboss",

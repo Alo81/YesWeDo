@@ -78,34 +78,7 @@ namespace SmashUltimateEditor
 
         public Fighter GetNewBoss(string battle_id)
         {
-            var boss = new Fighter()
-            {
-                battle_id = battle_id,
-                appear_rule_count = 0,
-                appear_rule_time = 0,
-                _0x0f2077926c = false,
-                attr = "spirits_attr_none",
-                color = 0,
-                corps = false,
-                cpu_item_pick_up = true,
-                cpu_lv = (byte)new Random().Next(99),
-                cpu_sub_type = "none",
-                cpu_type = "cp_normal",
-                defense = 0,
-                enable_charge_final = true,
-                fly_rate = 1,
-                hp = 0,
-                init_damage = 0,
-                invalid_drop = false,
-                scale = 1,
-                spirit_name = "none",
-                stock = 1,
-                sub_rule = "no_sub_rule",
-                entry_type = "boss_type",
-                first_appear = true
-
-            };
-            return boss;
+            return GetFightersByBattleId(battle_id).Single().Copy();
         }
 
         public List<string> Fighters

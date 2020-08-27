@@ -57,18 +57,19 @@ namespace SmashUltimateEditor
             dataTbls.Save();
             int index = dataTbls.tabs.SelectedIndex;
             var battle = dataTbls.selectedBattle;
-            var fighter = dataTbls.selectedFighters.First();
 
             int seed = TryGetSeed();
             Random rnd = new Random(seed);
             if (index == 0)
             {
                 battle.Randomize(rnd, dataTbls);
-                battle.Cleanup(ref rnd, dataTbls.battleData.events);
+                battle.Cleanup(ref rnd, dataTbls.battleData.events, dataTbls.selectedFighters.Count);
             }
             else
             {
                 index -= 1; // We're looking at fighters now, start at index 0.
+                var fighter = dataTbls.selectedFighters[index];
+
                 var isMain = index == 0;     // Set first fighter to main.  
                 var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
                 var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  

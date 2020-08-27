@@ -146,15 +146,17 @@ namespace SmashUltimateEditor
             foreach (Battle battle in battleData.battleDataList)
             {
                 battle.Randomize(rnd, this);
+
                 // Save after randomizing, as we'll be setting battle_Type to HP, and modifying fighter to make one a boss.  
                 var isBossType = battle.IsBossType();     // Set first fighter to main.  
-                battle.Cleanup(ref rnd, battleData.events);
-
                 // If lose escort, need at least 2 fighters.  
-                fighterCount = battle.IsLoseEscort() ? 
-                    RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)] 
-                    : 
+                fighterCount = battle.IsLoseEscort() ?
+                    RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)]
+                    :
                     RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
+
+                battle.Cleanup(ref rnd, battleData.events, fighterCount);
+
 
                 for (int i = 0; i < fighterCount; i++)
                 {

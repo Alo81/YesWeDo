@@ -41,7 +41,16 @@ namespace SmashUltimateEditor
         }
 
         // Make an event object dawg.  
-        public void Cleanup(ref Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events)
+        public void Cleanup(ref Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events, int fighterCount)
+        {
+            EventSet(rnd, events);
+            HealthCheck();
+            HazardCheck();
+            BossCheck();
+            TimerCheck(fighterCount);
+        }
+
+        public void EventSet(Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events)
         {
             // Post Randomize battle modifiers
             var eventCount = RandomizerHelper.eventDistribution[rnd.Next(RandomizerHelper.eventDistribution.Count)];
@@ -49,12 +58,9 @@ namespace SmashUltimateEditor
             for (int j = 1; j <= eventCount; j++)
             {
                 var randEvent = events[rnd.Next(events.Count)];
-                BuildEvent(randEvent, j);
+                if(RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
+                    BuildEvent(randEvent, j);
             }
-
-            HealthCheck();
-            HazardCheck();
-            BossCheck();
         }
 
         public void HealthCheck()
@@ -87,6 +93,14 @@ namespace SmashUltimateEditor
             if (IsBossType())
             {
                 battle_type = "hp";
+            }
+        }
+
+        public void TimerCheck(int count)
+        {
+            if (count > Defs.FIGHTER_COUNT_TIMER_CUTOFF)
+            {
+                battle_time_sec += (ushort)(count * Defs.FIGHTER_COUNT_TIMER_ADD);
             }
         }
 

@@ -37,6 +37,7 @@ namespace SmashUltimateEditor.DataTables
 
             foreach (PropertyInfo field in type.GetProperties())
             {
+                string value;
                 if (Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
                 {
                     continue;
@@ -46,29 +47,26 @@ namespace SmashUltimateEditor.DataTables
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
                     var range = GetRangeFromName(field.Name.ToUpper());
-                    string value;
                     string fieldType = field.PropertyType.Name;
                     switch (fieldType)
                     {
                         case "Single":
-                            value = RandomizerHelper.GetRandomFloatInRange(ref rnd, range.Item1, range.Item2).ToString();
+                            value = RandomizerHelper.GetRandomFloatInRange(range.Item1, range.Item2, rnd).ToString();
                             break;
                         default:
                             value = rnd.Next((int)range.Item1, (int)range.Item2).ToString();
                             break;
                     }
-                    value = EnumChecker(value, field.Name);
-                    SetValueFromName(field.Name, value);
                 }
                 else
                 {
                     var options = dataTbls.GetOptionsFromTypeAndName(type, field.Name);
-                    var value = options[rnd.Next(options.Count)];
-
-                    value = EnumChecker(value.ToString(), field.Name);
-
-                    SetValueFromName(field.Name, value);
+                    value = options[rnd.Next(options.Count)].ToString();
                 }
+
+                value = EnumChecker(value, field.Name);
+                if(RandomizerHelper.ChancePass(Defs.CHAOS))
+                    SetValueFromName(field.Name, value);
             }
         }
 

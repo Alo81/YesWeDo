@@ -22,6 +22,8 @@ namespace SmashUltimateEditor
         public const int ROWS = 26;
         public const int COLUMNS = 4;
 
+        public const int CHAOS = 50;
+
         public const float BOSS_SCALE_MOD = 1.5F;
         public const float BOSS_ATTACK_MOD = 2;
         public const float BOSS_DEFENSE_MOD = 2;
@@ -31,6 +33,8 @@ namespace SmashUltimateEditor
         public const int BOSS_CPU_LVL_ADD = 20;
 
         public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
+        public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
+        public const int FIGHTER_COUNT_TIMER_ADD = 8;   //How many seconds to add?
 
         public static List<string> RANGE_VALUES = new List<string>()
         {
@@ -81,14 +85,37 @@ namespace SmashUltimateEditor
             "FLY_RATE",
         };
 
-        public static List<string> EXCLUDED_RANDOMIZED = new List<string>()
+        public static List<string> EVENT_OPTIONS = new List<String>()
+        {
+            "event1_type",
+            "event1_label",
+            "event1_start_time",
+            "event1_range_time",
+            "event1_count",
+            "event1_damage",
+            "event2_type",
+            "event2_label",
+            "event2_start_time",
+            "event2_range_time",
+            "event2_count",
+            "event2_damage",
+            "event3_type",
+            "event3_label",
+            "event3_start_time",
+            "event3_range_time",
+            "event3_count",
+            "event3_damage"
+        };
+
+        // Exclude event options from randomized, as we'll set it programatically elsewhere from a list of existing events.  
+        public static List<string> EXCLUDED_RANDOMIZED = new List<string>(EVENT_OPTIONS)
         {
             "aw_flap_delay",
             "battle_id",
-            "spirit_name",
             "appear_rule_time",
             "appear_rule_count"
         };
+
 
         // final_stage1 Looks functioning?
         public static List<string> BOSSES = new List<string>()
@@ -162,14 +189,14 @@ namespace SmashUltimateEditor
         #endregion
 
         #region BattleDataTbl
-        public static ushort BATTLE_TIME_SEC_MIN  { get; } = 15;
-        public static ushort BATTLE_TIME_SEC_MAX  { get; } = 180;
+        public static ushort BATTLE_TIME_SEC_MIN  { get; } = 0;
+        public static ushort BATTLE_TIME_SEC_MAX  { get; } = 240;
 
         public static ushort BASIC_INIT_DAMAGE_MIN  { get; } = 0;
-        public static ushort BASIC_INIT_DAMAGE_MAX  { get; } = 300;
+        public static ushort BASIC_INIT_DAMAGE_MAX  { get; } = 120;
 
         public static ushort BASIC_INIT_HP_MIN  { get; } = 80;
-        public static ushort BASIC_INIT_HP_MAX  { get; } = 150;
+        public static ushort BASIC_INIT_HP_MAX  { get; } = 185;
 
         public static byte BASIC_STOCK_MIN  { get; } = 1;
         public static byte BASIC_STOCK_MAX  { get; } = 5;

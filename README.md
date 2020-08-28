@@ -30,3 +30,5 @@ TODO:
   Edit Item Tables
   
   Add custom "Final Boss" spirit
+  
+  If we set Recommended Skills based off an attribute, remove some of the randomized skills to avoid too much noise in Recommendations.  

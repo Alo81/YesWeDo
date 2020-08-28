@@ -11,8 +11,9 @@ namespace SmashUltimateEditor
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
         public const string FILE_NAME = "ui_spirits_battle_db_mod_unencr.prc";
-        public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\";
+        public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
         public const string FILE_LOCATION = FILE_DIRECTORY + FILE_NAME;
+        public const string CUSTOM_BATTLES_DIRECTORY = FILE_DIRECTORY + @"CustomBattles\";
 
         public const int LABEL_HEIGHT = 20;
         public const int LABEL_WIDTH = 200 ;

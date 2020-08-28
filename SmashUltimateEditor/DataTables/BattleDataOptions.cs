@@ -18,6 +18,10 @@ namespace SmashUltimateEditor
         {
             battleDataList = new List<Battle>();
         }
+        public int GetBattleCount()
+        {
+            return battleDataList.Count();
+        }
 
         public Battle GetBattle(string battle_id)
         {

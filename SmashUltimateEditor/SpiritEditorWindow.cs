@@ -1,9 +1,11 @@
-﻿using SmashUltimateEditor.Helpers;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ namespace SmashUltimateEditor
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
+            dataTbls.progress = randomizeProgress;
             textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
         }
@@ -84,11 +87,6 @@ namespace SmashUltimateEditor
             dataTbls.ExportCurrentBattle();
         }
 
-        private void OpenFolderFile_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void OpenDbFile_Click(object sender, EventArgs e)
         {
             var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY};
@@ -149,6 +147,36 @@ namespace SmashUltimateEditor
             }
             dataTbls.RefreshTabs();
         }
+        private void ImportFolderFile_Click(object sender, EventArgs e)
+        {
+            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = Defs.CUSTOM_BATTLES_DIRECTORY, IsFolderPicker = true };
+            openDialog.ShowDialog();
+
+            if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
+            {
+                var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
+
+                var battles = new BattleDataOptions();
+                var fighters = new FighterDataOptions();
+                foreach (string file in files)
+                {
+                    dataTbls.ReadXML(file, ref battles, ref fighters);
+
+                    dataTbls.battleData.ReplaceBattles(battles);
+                    dataTbls.fighterData.ReplaceFighters(fighters);
+
+                    var battle_id = battles.GetBattleAtIndex(0).battle_id;
+
+                    if (dataTbls.selectedBattle.battle_id == battle_id)
+                    {
+                        dataTbls.SetSelectedBattle(battle_id);
+                        dataTbls.SetSelectedFighters(battle_id);
+                    }
+
+                }
+            }
+            dataTbls.RefreshTabs();
+        }
 
         private void RandomizeAllTool_Click(object sender, EventArgs e)
         {
@@ -160,7 +188,6 @@ namespace SmashUltimateEditor
 
         private int TryGetSeed()
         {
-
             try
             {
                 return Int32.Parse(textboxSeed.Text);

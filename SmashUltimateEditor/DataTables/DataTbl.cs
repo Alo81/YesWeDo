@@ -65,7 +65,7 @@ namespace SmashUltimateEditor.DataTables
                 }
 
                 value = EnumChecker(value, field.Name);
-                if(RandomizerHelper.ChancePass(Defs.CHAOS))
+                if(RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
                     SetValueFromName(field.Name, value);
             }
         }
@@ -223,38 +223,42 @@ namespace SmashUltimateEditor.DataTables
             // If val is null, interpret as empty string for our purposes.  
             val = val ?? "";
 
-            //this.GetType().GetFields().Select(x => x.FieldType).Distinct();
-
-            // I don't wanna use strings.  Probably a better way (?)
-            switch (type.ToString())
+            try
             {
-                case "System.Boolean":
-                    field.SetValue(this, Boolean.Parse(val));
-                    break;
-                case "System.Byte":
-                    field.SetValue(this, Byte.Parse(val));
-                    break;
-                case "System.SByte":
-                    field.SetValue(this, SByte.Parse(val));
-                    break;
-                case "System.UInt16":
-                    field.SetValue(this, UInt16.Parse(val));
-                    break;
-                case "System.Int16":
-                    field.SetValue(this, Int16.Parse(val));
-                    break;
-                case "System.UInt32":
-                    field.SetValue(this, UInt32.Parse(val));
-                    break;
-                case "System.Int32":
-                    field.SetValue(this, Int32.Parse(val));
-                    break;
-                case "System.String":
-                    field.SetValue(this, val);
-                    break;
-                case "System.Single":
-                    field.SetValue(this, Single.Parse(val));
-                    break;
+                switch (type.Name)
+                {
+                    case "Boolean":
+                        field.SetValue(this, Boolean.Parse(val));
+                        break;
+                    case "Byte":
+                        field.SetValue(this, Byte.Parse(val));
+                        break;
+                    case "SByte":
+                        field.SetValue(this, SByte.Parse(val));
+                        break;
+                    case "UInt16":
+                        field.SetValue(this, UInt16.Parse(val));
+                        break;
+                    case "Int16":
+                        field.SetValue(this, Int16.Parse(val));
+                        break;
+                    case "UInt32":
+                        field.SetValue(this, UInt32.Parse(val));
+                        break;
+                    case "Int32":
+                        field.SetValue(this, Int32.Parse(val));
+                        break;
+                    case "String":
+                        field.SetValue(this, val);
+                        break;
+                    case "Single":
+                        field.SetValue(this, Single.Parse(val));
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
             }
         }
 

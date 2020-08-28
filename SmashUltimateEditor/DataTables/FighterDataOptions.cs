@@ -18,7 +18,10 @@ namespace SmashUltimateEditor
         {
             fighterDataList = new List<Fighter>();
         }
-        
+        public int GetFighterCount()
+        {
+            return fighterDataList.Count();
+        }
         public List<Fighter> GetFightersByBattleId(string battle_id)
         {
             return fighterDataList.Where(x => x.battle_id == battle_id).ToList();
@@ -27,19 +30,18 @@ namespace SmashUltimateEditor
         {
             return fighterDataList[index];
         }
-        public void RemoveFightersByBattleId(string battle_id)
+        public int GetFighterIndex(Fighter fighter)
         {
-            fighterDataList.RemoveAll(x => x.battle_id == battle_id);
+            return fighterDataList.FindIndex(x => x == fighter);
         }
         public List<Fighter> GetFighters()
         {
             return fighterDataList;
         }
-        public int GetFighterIndex(Fighter fighter)
+        public void RemoveFightersByBattleId(string battle_id)
         {
-            return fighterDataList.FindIndex(x => x == fighter);
+            fighterDataList.RemoveAll(x => x.battle_id == battle_id);
         }
-
         public void AddFighter(Fighter fighter)
         {
             fighterDataList.Add(fighter);

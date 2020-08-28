@@ -26,6 +26,7 @@ namespace SmashUltimateEditor
         public Queue<TabPage> tabStorage = new Queue<TabPage>();
 
         public TabControl tabs;
+        public ProgressBar progress;
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
@@ -136,12 +137,23 @@ namespace SmashUltimateEditor
             }
         }
 
+        public void SetupRandomizeProgress()
+        {
+            progress.Visible = true;
+            progress.Minimum = 0;
+            progress.Maximum = battleData.GetBattleCount() * 3;
+            progress.Value = progress.Minimum;
+            progress.Step = 1;
+        }
+
         public void RandomizeAll(int seed = -1)
         {
             Random rnd = new Random(seed);
             FighterDataOptions randomizedFighters = new FighterDataOptions();
-            Fighter randomizedFighter; ;
+            Fighter randomizedFighter;
             int fighterCount;
+
+            SetupRandomizeProgress();
 
             foreach (Battle battle in battleData.battleDataList)
             {
@@ -157,6 +169,7 @@ namespace SmashUltimateEditor
 
                 battle.Cleanup(ref rnd, battleData.events, fighterCount);
 
+                progress.PerformStep();
 
                 for (int i = 0; i < fighterCount; i++)
                 {
@@ -171,11 +184,14 @@ namespace SmashUltimateEditor
                     randomizedFighter.StockCheck(fighterCount);
 
                     randomizedFighters.AddFighter(randomizedFighter);
+                    progress.PerformStep();
                 }
 
             }
             SaveToFile(battleData, randomizedFighters, Defs.FILE_LOCATION + "_Randomized");
             RefreshTabs();
+            progress.Visible = false;
+            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", Defs.CHAOS.ToString(), Defs.FILE_LOCATION + "_Randomized"));
         }
 
         public void FighterRandomizeCleanup(ref Fighter randomizedFighter, ref Random rnd, bool isMain, bool isLoseEscort, bool isBoss = false)

@@ -10,11 +10,13 @@ TODO:
   ~~Add individual fighters to battles~~
   
   More randomizer settings 
+  
   ~~battle types~~
     
   ~~bosses~~ (Kind of.  Bosses don't work, but added custom boss subtype that makes larger, more powerful standard enemies.)
     
   Make "Earn a fighters" more specific(?))
+  
   _____________________
   
   Randomizer difficulty skewing

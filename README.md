@@ -17,6 +17,25 @@ TODO:
     
   Make "Earn a fighters" more specific(?))
   
+  Make custom "Event types" where they're specifically formatted battle types.  Bosses are an example (skew high scale and damage)  Other ideas?
+    
+    Swarm of easy fighters
+    
+    A lot of one fighter
+    
+    Giga Bowser (don't give him a final smash tho)
+    
+    Final level scroll
+    
+    Enemy has instant final smash
+    
+    Food party
+    
+    "David vs. Goliath"
+    
+    Sporadic events.  Make them occur much more frequently.  
+    
+  
   _____________________
   
   Randomizer difficulty skewing

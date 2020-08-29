@@ -10,10 +10,21 @@ namespace SmashUltimateEditor
     {
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
+
         public const string FILE_NAME = "ui_spirits_battle_db_mod_unencr.prc";
+        public const string FILE_NAME_ENCR = "ui_spirits_battle_db.prc";
+
         public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
+        public const string FILE_DIRECTORY_CUSTOM_BATTLES = FILE_DIRECTORY + @"CustomBattles\";
+        public const string FILE_DIRECTORY_ENCR = FILE_DIRECTORY + @"Encrypted\";
+
         public const string FILE_LOCATION = FILE_DIRECTORY + FILE_NAME;
-        public const string CUSTOM_BATTLES_DIRECTORY = FILE_DIRECTORY + @"CustomBattles\";
+        public const string FILE_LOCATION_CUSTOM_BATTLES = FILE_DIRECTORY_CUSTOM_BATTLES + FILE_NAME;
+        public const string FILE_LOCATION_ENCR = FILE_DIRECTORY_ENCR + FILE_NAME_ENCR;
+
+        public const string LABELS_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
+        public const string LABELS_FILE_NAME = @"ParamLabels.csv";
+        public const string LABELS_FILE_LOCATION = LABELS_DIRECTORY + LABELS_FILE_NAME;
 
         public const int LABEL_HEIGHT = 20;
         public const int LABEL_WIDTH = 200 ;
@@ -108,6 +119,19 @@ namespace SmashUltimateEditor
             "event3_damage"
         };
 
+
+        public static List<string> REQUIRED_PARAMS = new List<string>()
+        {
+            "entry_type",
+            "fighter_kind",
+            "fly_rate",
+            "scale",
+            "cpu_lvl",
+            "battle_type",
+            "result_type",
+            "ui_stage_id"
+        };
+
         // Exclude event options from randomized, as we'll set it programatically elsewhere from a list of existing events.  
         public static List<string> EXCLUDED_RANDOMIZED = new List<string>(EVENT_OPTIONS)
         {
@@ -136,7 +160,18 @@ namespace SmashUltimateEditor
         public static List<string> EXCLUDED_FIGHTERS = new List<string>(BOSSES) {"ui_chara_random", ""};
 
         public static List<string> UNLOCKABLE_FIGHTERS = new List<string>() 
-        { 
+        {
+            "bayonetta","brave","buddy","captain","chrom","cloud","daisy","dedede",
+            "diddy","dolly","donkey","falco","fox","gamewatch","ganon","gaogaen",
+            "gekkouga","ice_climber","ike","inkling","jack","kamui","ken","kirby",
+            "koopa","koopajr","krool","link","littlemac","lucario","lucas","lucina",
+            "luigi","mario","mariod","marth","master","metaknight","mewtwo","miifighter",
+            "miigunner","miiswordsman","murabito","ness","packun","pacman","palutena","peach",
+            "pfushigisou","pichu","pikachu","pikmin","pit","pitb","plizardon","ptrainer",
+            "purin","pzenigame","reflet","richter","ridley","robot","rockman","rosetta",
+            "roy","ryu","samus","samusd","sheik","shizue","shulk","simon",
+            "snake","sonic","szerosuit","tantan","toonlink","wario","wiifit","wolf",
+            "yoshi","younglink","zelda"
         };
 
         public static List<string> MII_MOVES = new List<string>()

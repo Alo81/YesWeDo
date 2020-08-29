@@ -16,4 +16,8 @@
     <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Alo81\paracobNET\paracobNET\paracobNet.csproj" />
+  </ItemGroup>
+
 </Project>

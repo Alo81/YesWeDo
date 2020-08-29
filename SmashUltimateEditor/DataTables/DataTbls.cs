@@ -1,7 +1,9 @@
-﻿using SmashUltimateEditor.DataTables;
+﻿using paracobNET;
+using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,7 +18,7 @@ using static System.Windows.Forms.TabControl;
 
 namespace SmashUltimateEditor
 {
-    public class DataTbls
+    public partial class DataTbls
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
@@ -27,6 +29,7 @@ namespace SmashUltimateEditor
 
         public TabControl tabs;
         public ProgressBar progress;
+        public bool encrypt;
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
@@ -47,6 +50,13 @@ namespace SmashUltimateEditor
         }
 
     public bool HasEnoughPages { get { return tabs.TabPages.Count >= pageCount; } }
+        public string FileLocation
+        {
+            get
+            {
+                return encrypt ? Defs.FILE_LOCATION_ENCR : Defs.FILE_LOCATION;
+            }
+        }
 
         public DataTbls()
         {
@@ -55,6 +65,7 @@ namespace SmashUltimateEditor
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
+            encrypt = false;
 
             ReadXML(Defs.FILE_LOCATION, ref battleData, ref fighterData);
         }
@@ -65,19 +76,50 @@ namespace SmashUltimateEditor
             fighterData = new FighterDataOptions();
         }
 
+        public void Save()
+        {
+            Save(FileLocation);
+        }
+
+        public void Save(string fileLocation)
+        {
+            Save(battleData, fighterData, fileLocation);
+        }
+        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
+        {
+            Save(battleData, fighterData, FileLocation);
+        }
+        public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData)
+        {
+            Save(battleData, fighterData, FileLocation + "_Randomized");
+        }
+        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+        {
+            SaveLocal();
+            if (encrypt)
+            {
+                SaveToEncryptedFile(battleData, fighterData, fileLocation);
+            }
+            else
+            {
+                SaveToFile(battleData, fighterData, fileLocation);
+            }
+        }
+
+        public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+        {
+            var doc = BuildXml(battleData, fighterData);
+
+            AssmebleEncrypted(doc.ToXmlDocument(), fileLocation);
+        }
+
         public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation = Defs.FILE_LOCATION)
         {
-            Save();
-            WriteXML(fileLocation, battleData, fighterData);
+            var doc = BuildXml(battleData, fighterData);
+            WriteXmlToFile(fileLocation, doc);
         }
 
-        public void SaveToFile(string fileLocation = Defs.FILE_LOCATION)
-        {
-            Save();
-            WriteXML(fileLocation, battleData, fighterData);
-        }
-
-        public void Save()
+        public void SaveLocal()
         {
             SaveBattle();
             SaveFighters();
@@ -85,19 +127,28 @@ namespace SmashUltimateEditor
 
         public void ExportCurrentBattle()
         {
-            Save();
+            SaveLocal();
             BattleDataOptions singleBattle = new BattleDataOptions();
             singleBattle.AddBattle(battleData.GetBattle(selectedBattle.battle_id));
             FighterDataOptions fighters = new FighterDataOptions();
             fighters.AddFighters(selectedFighters);
-            SaveToFile(singleBattle, fighters, String.Format("{0}_{1}", Defs.FILE_LOCATION, singleBattle.battle_id.First()));
+            Save(singleBattle, fighters, String.Format("{0}_{1}", Defs.FILE_LOCATION_CUSTOM_BATTLES, singleBattle.battle_id.First()));
         }
 
         public void ImportBattle(string file_loc)
         {
-            BattleDataOptions impBattle = new BattleDataOptions();
-            FighterDataOptions impFighters = new FighterDataOptions();
-            ReadXML(file_loc, ref impBattle, ref impFighters);
+
+            var battles = new BattleDataOptions();
+            var fighters = new FighterDataOptions();
+            ReadXML(file_loc, ref battles, ref fighters);
+
+            battleData.ReplaceBattles(battles);
+            fighterData.ReplaceFighters(fighters);
+
+            var battle_id = battles.GetBattleAtIndex(0).battle_id;
+
+            SetSelectedBattle(battle_id);
+            SetSelectedFighters(battle_id);
         }
 
         public void SaveBattle()
@@ -188,10 +239,10 @@ namespace SmashUltimateEditor
                 }
 
             }
-            SaveToFile(battleData, randomizedFighters, Defs.FILE_LOCATION + "_Randomized");
+            SaveRandomized(battleData, randomizedFighters);
             RefreshTabs();
             progress.Visible = false;
-            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", Defs.CHAOS.ToString(), Defs.FILE_LOCATION + "_Randomized"));
+            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", Defs.CHAOS.ToString(), FileLocation + "_Randomized"));
         }
 
         public void FighterRandomizeCleanup(ref Fighter randomizedFighter, ref Random rnd, bool isMain, bool isLoseEscort, bool isBoss = false)
@@ -218,7 +269,7 @@ namespace SmashUltimateEditor
 
         public void SetSaveTabChange(object sender, EventArgs e)
         {
-            Save();
+            SaveLocal();
         }
         
         public void RefreshTabs()
@@ -357,11 +408,10 @@ namespace SmashUltimateEditor
             }
             Console.WriteLine("List Built.");
         }
-        public void WriteXML(string fileName, BattleDataOptions battleData, FighterDataOptions fighterData)
+        public XDocument BuildXml(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            using StreamWriter writer = new StreamWriter(fileName);
 
-            var type = fighterData.GetFighters().GetType().Name;
+            var type = fighterData.GetFighters().GetType().Name.ToLower();
             type = type.Remove(type.Length - 2);
 
             XDocument doc =
@@ -388,7 +438,14 @@ namespace SmashUltimateEditor
                     )
                 );
 
-            writer.Write(doc.Declaration.ToString() + "\r\n" + DataParse.ReplaceTypes(doc.ToString()).ToLower());
+            return doc;
+        }
+
+        public void WriteXmlToFile(string fileName, XDocument xmlDoc)
+        {
+            using StreamWriter writer = new StreamWriter(fileName);
+
+            writer.Write(xmlDoc.Declaration.ToString() + "\r\n" + xmlDoc.ToString());
             writer.Close();
             writer.Dispose();
         }
@@ -402,5 +459,140 @@ namespace SmashUltimateEditor
             }
 
         }
+
+        #region PRC Cryptography
+
+        static ParamFile file { get; set; }
+        static XmlDocument xml { get; set; }
+        static string labelName { get; set; }
+        static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
+        static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
+
+        static void AssmebleEncrypted(XmlDocument doc, string fileLocation)
+        {
+            labelName = Defs.LABELS_FILE_LOCATION;
+            stringToHashLabels = new OrderedDictionary<string, ulong>();
+            if (!string.IsNullOrEmpty(labelName))
+                stringToHashLabels = LabelIO.GetStringHashDict(labelName);
+
+            file = new ParamFile(Node2ParamStruct(doc.DocumentElement));
+
+            file.Save(fileLocation);
+        }
+
+        static XmlNode Param2Node(IParam param)
+        {
+            switch (param.TypeKey)
+            {
+                case ParamType.@struct:
+                    return ParamStruct2Node(param as ParamStruct);
+                case ParamType.list:
+                    return ParamArray2Node(param as ParamList);
+                default:
+                    return ParamValue2Node(param as ParamValue);
+            }
+        }
+
+        static XmlNode ParamStruct2Node(ParamStruct structure)
+        {
+            XmlNode xmlNode = xml.CreateElement(ParamType.@struct.ToString());
+            foreach (var node in structure.Nodes)
+            {
+                XmlNode childNode = Param2Node(node.Value);
+                XmlAttribute attr = xml.CreateAttribute("hash");
+                attr.Value = Hash40Util.FormatToString(node.Key, hashToStringLabels);
+                childNode.Attributes.Append(attr);
+                xmlNode.AppendChild(childNode);
+            }
+            return xmlNode;
+        }
+
+        static XmlNode ParamArray2Node(ParamList array)
+        {
+            XmlNode xmlNode = xml.CreateElement(ParamType.list.ToString());
+            XmlAttribute mainAttr = xml.CreateAttribute("size");
+            mainAttr.Value = array.Nodes.Count.ToString();
+            xmlNode.Attributes.Append(mainAttr);
+            for (int i = 0; i < array.Nodes.Count; i++)
+            {
+                XmlNode childNode = Param2Node(array.Nodes[i]);
+                XmlAttribute attr = xml.CreateAttribute("index");
+                attr.Value = i.ToString();
+                childNode.Attributes.Append(attr);
+                xmlNode.AppendChild(childNode);
+            }
+            return xmlNode;
+        }
+
+        static XmlNode ParamValue2Node(ParamValue value)
+        {
+            XmlNode xmlNode = xml.CreateElement(value.TypeKey.ToString());
+            XmlText text = xml.CreateTextNode(value.ToString(hashToStringLabels));
+            xmlNode.AppendChild(text);
+            return xmlNode;
+        }
+
+        static IParam Node2Param(XmlNode node)
+        {
+            try
+            {
+                if (!Enum.IsDefined(typeof(ParamType), node.Name))
+                    throw new FormatException($"\"{node.Name}\" is not a valid param type");
+                ParamType type = (ParamType)Enum.Parse(typeof(ParamType), node.Name);
+                switch (type)
+                {
+                    case ParamType.@struct:
+                        return Node2ParamStruct(node);
+                    case ParamType.list:
+                        return Node2ParamArray(node);
+                    default:
+                        return Node2ParamValue(node, type);
+                }
+            }
+            catch (Exception e)
+            {
+                //recursively add param node context to exceptions until we exit
+                string trace = "Trace: " + node.Name;
+                foreach (XmlAttribute attr in node.Attributes)
+                    trace += $" ({attr.Name}=\"{attr.Value}\")";
+                string message = trace + Environment.NewLine + e.Message;
+                if (e.InnerException == null)
+                    throw new Exception(message, e);
+                else
+                    throw new Exception(message, e.InnerException);
+            }
+        }
+
+        static ParamStruct Node2ParamStruct(XmlNode node)
+        {
+            Hash40Pairs<IParam> childParams = new Hash40Pairs<IParam>();
+            foreach (XmlNode child in node.ChildNodes)
+                childParams.Add(child.Attributes["hash"].Value, stringToHashLabels, Node2Param(child));
+            return new ParamStruct(childParams);
+        }
+
+        static ParamList Node2ParamArray(XmlNode node)
+        {
+            int count = node.ChildNodes.Count;
+            List<IParam> children = new List<IParam>(count);
+            for (int i = 0; i < count; i++)
+                children.Add(Node2Param(node.ChildNodes[i]));
+            return new ParamList(children);
+        }
+
+        static ParamValue Node2ParamValue(XmlNode node, ParamType type)
+        {
+            ParamValue param = new ParamValue(type);
+            param.SetValue(node.InnerText, stringToHashLabels);
+            return param;
+        }
+
+        enum BuildMode
+        {
+            Disassemble,
+            Assemble,
+            Invalid
+        }
+        #endregion
     }
 }

@@ -24,6 +24,25 @@ namespace SmashUltimateEditor
             dataTbls.progress = randomizeProgress;
             textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
+
+
+            // Find all unlockable characters.  Could have probably just done this by hand but at this point, committed.  
+            var x = dataTbls.fighterData.fighter_kind.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
+            var y = dataTbls.fighterData.battle_id.Where(x => Defs.UNLOCKABLE_FIGHTERS.Contains(x));
+            var z = dataTbls.battleData.GetBattles().Where(x => x.GetValueFromName("_0x18e536d4f7") != 0.ToString());
+            var a = dataTbls.battleData.GetBattles().Where(x => 
+            x.GetValueFromName("_0x0d6f19abae").ToUpper() == "FALSE" 
+            &&
+            x.GetValueFromName("_0x18e536d4f7") != 0.ToString()
+            );
+
+
+            var b = dataTbls.battleData.GetBattles().Where(x =>
+            x.GetValueFromName("_0x0d6f19abae").ToUpper() == "FALSE"
+            &&
+            x.GetValueFromName("_0x18e536d4f7") == 2.ToString()
+            );
+            //_0x0d6f19abae
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -35,7 +54,7 @@ namespace SmashUltimateEditor
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dataTbls.Save();
+            dataTbls.SaveLocal();
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
             dataTbls.RefreshTabs();
@@ -50,14 +69,9 @@ namespace SmashUltimateEditor
             dataTbls.RefreshTabs();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            dataTbls.SaveToFile(dataTbls.battleData, dataTbls.fighterData);
-        }
-
         private void btnRandomize_Click(object sender, EventArgs e)
         {
-            dataTbls.Save();
+            dataTbls.SaveLocal();
             int index = dataTbls.tabs.SelectedIndex;
             var battle = dataTbls.selectedBattle;
 
@@ -65,7 +79,7 @@ namespace SmashUltimateEditor
             Random rnd = new Random(seed);
             if (index == 0)
             {
-                battle.Randomize(rnd, dataTbls);
+                battle.Randomize(rnd, dataTbls, false);
                 battle.Cleanup(ref rnd, dataTbls.battleData.events, dataTbls.selectedFighters.Count);
             }
             else
@@ -76,7 +90,7 @@ namespace SmashUltimateEditor
                 var isMain = index == 0;     // Set first fighter to main.  
                 var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
                 var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  
-                fighter.Randomize(rnd, dataTbls);
+                fighter.Randomize(rnd, dataTbls, false);
                 dataTbls.FighterRandomizeCleanup(ref fighter, ref rnd, isMain, isLoseEscort, isBoss);
             }
             dataTbls.RefreshTabs();
@@ -90,9 +104,9 @@ namespace SmashUltimateEditor
         private void OpenDbFile_Click(object sender, EventArgs e)
         {
             var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY};
-            openDialog.ShowDialog();
+            var result = openDialog.ShowDialog();
 
-            if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
                 dataTbls.EmptySpiritData();
                 dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
@@ -106,17 +120,23 @@ namespace SmashUltimateEditor
 
         private void SaveFile_Click(object sender, EventArgs e)
         {
-            dataTbls.SaveToFile();
+            dataTbls.Save();
         }
 
         private void SaveAsFile_Click(object sender, EventArgs e)
         {
-            var saveDialog = new SaveFileDialog() { Title = "Save Unencrypted Spirit Battles", Filter = "PRC|*.prc*", FileName = Defs.FILE_NAME, InitialDirectory = Defs.FILE_DIRECTORY };
+            var saveDialog = new SaveFileDialog() 
+            { 
+                Title = String.Format("Save {0} Spirit Battles", dataTbls.encrypt ? "Encrypted" : "Unencrypted"), 
+                Filter = "PRC|*.prc*", 
+                FileName = dataTbls.encrypt ? Defs.FILE_NAME_ENCR : Defs.FILE_NAME, 
+                InitialDirectory = dataTbls.encrypt ? Defs.FILE_DIRECTORY_ENCR : Defs.FILE_DIRECTORY 
+            };
 
-            saveDialog.ShowDialog();
-            if(!String.IsNullOrWhiteSpace(saveDialog?.FileName))
+            var result = saveDialog.ShowDialog();
+            if(!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
-                dataTbls.SaveToFile(saveDialog.FileName);
+                dataTbls.Save(saveDialog.FileName);
             }
         }
 
@@ -129,27 +149,17 @@ namespace SmashUltimateEditor
         private void ImportBattle_Click(object sender, EventArgs e)
         {
             var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY };
-            importDialog.ShowDialog();
+            var result = importDialog.ShowDialog();
 
-            if (!String.IsNullOrWhiteSpace(importDialog?.FileName))
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var battles = new BattleDataOptions();
-                var fighters = new FighterDataOptions();
-                dataTbls.ReadXML(importDialog.FileName, ref battles, ref fighters);
-
-                dataTbls.battleData.ReplaceBattles(battles);
-                dataTbls.fighterData.ReplaceFighters(fighters);
-
-                var battle_id = battles.GetBattleAtIndex(0).battle_id;
-
-                dataTbls.SetSelectedBattle(battle_id);
-                dataTbls.SetSelectedFighters(battle_id);
+                dataTbls.ImportBattle(importDialog.FileName);
+                dataTbls.RefreshTabs();
             }
-            dataTbls.RefreshTabs();
         }
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
-            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = Defs.CUSTOM_BATTLES_DIRECTORY, IsFolderPicker = true };
+            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = Defs.FILE_DIRECTORY_CUSTOM_BATTLES, IsFolderPicker = true };
             openDialog.ShowDialog();
 
             if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
@@ -196,6 +206,11 @@ namespace SmashUltimateEditor
             {
                 return RandomizerHelper.GetRandomInt();
             }
+        }
+
+        private void checkBoxEncrypt_CheckedChanged(object sender, EventArgs e)
+        {
+            dataTbls.encrypt = checkBoxEncrypt.Checked;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace SmashUltimateEditor
@@ -68,7 +69,7 @@ namespace SmashUltimateEditor
         {
             foreach(KeyValuePair<string, string> type in XmlReplacements)
             {
-                xml = xml.Replace(type.Key, type.Value);
+                xml = xml.Replace(type.Key, type.Value, true, CultureInfo.InvariantCulture);
             }
 
             return xml;
@@ -76,7 +77,10 @@ namespace SmashUltimateEditor
 
         public static string NameFixer(string name)
         {
-            return name[0] == '_' ? name.Remove(0, 1) : name;
+            if(name.Length > 0)
+                return name[0] == '_' ? name.Remove(0, 1) : name;
+            else 
+                return name;
         }
     }
 }

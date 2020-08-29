@@ -31,7 +31,7 @@ namespace SmashUltimateEditor.DataTables
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
-        public void Randomize(Random rnd, DataTbls dataTbls)
+        public void Randomize(Random rnd, DataTbls dataTbls, bool checkRequired = true)
         {
             Type type = GetType();
 
@@ -65,7 +65,8 @@ namespace SmashUltimateEditor.DataTables
                 }
 
                 value = EnumChecker(value, field.Name);
-                if(RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
+                if((checkRequired && !(Defs.REQUIRED_PARAMS.Contains(field.Name))) 
+                    && RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
                     SetValueFromName(field.Name, value);
             }
         }

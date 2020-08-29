@@ -71,6 +71,7 @@ namespace SmashUltimateEditor
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSeed = new System.Windows.Forms.Label();
+            this.checkBoxEncrypt = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,10 +94,10 @@ namespace SmashUltimateEditor
             this.tabControlData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlData.Location = new System.Drawing.Point(10, 81);
+            this.tabControlData.Location = new System.Drawing.Point(10, 82);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1103, 927);
+            this.tabControlData.Size = new System.Drawing.Size(1103, 926);
             this.tabControlData.TabIndex = 5;
             // 
             // btnAddFighter
@@ -112,10 +113,11 @@ namespace SmashUltimateEditor
             // 
             // btnRandomizeAll
             // 
-            this.btnRandomizeAll.Location = new System.Drawing.Point(1000, 25);
+            this.btnRandomizeAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRandomizeAll.Location = new System.Drawing.Point(1025, 26);
             this.btnRandomizeAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRandomizeAll.Name = "btnRandomizeAll";
-            this.btnRandomizeAll.Size = new System.Drawing.Size(82, 22);
+            this.btnRandomizeAll.Size = new System.Drawing.Size(91, 22);
             this.btnRandomizeAll.TabIndex = 8;
             this.btnRandomizeAll.Text = "Randomize";
             this.btnRandomizeAll.UseVisualStyleBackColor = true;
@@ -123,7 +125,8 @@ namespace SmashUltimateEditor
             // 
             // textboxSeed
             // 
-            this.textboxSeed.Location = new System.Drawing.Point(914, 52);
+            this.textboxSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textboxSeed.Location = new System.Drawing.Point(1025, 53);
             this.textboxSeed.Name = "textboxSeed";
             this.textboxSeed.Size = new System.Drawing.Size(91, 23);
             this.textboxSeed.TabIndex = 9;
@@ -304,11 +307,10 @@ namespace SmashUltimateEditor
             // 
             // randomizeProgress
             // 
-            this.randomizeProgress.Location = new System.Drawing.Point(517, 30);
+            this.randomizeProgress.Location = new System.Drawing.Point(10, 59);
             this.randomizeProgress.Name = "randomizeProgress";
             this.randomizeProgress.Size = new System.Drawing.Size(366, 17);
             this.randomizeProgress.TabIndex = 10;
-            this.randomizeProgress.Visible = false;
             // 
             // toolStripSeparator4
             // 
@@ -360,18 +362,32 @@ namespace SmashUltimateEditor
             // 
             // labelSeed
             // 
+            this.labelSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSeed.AutoSize = true;
-            this.labelSeed.Location = new System.Drawing.Point(914, 31);
+            this.labelSeed.Location = new System.Drawing.Point(939, 56);
             this.labelSeed.Name = "labelSeed";
             this.labelSeed.Size = new System.Drawing.Size(80, 15);
             this.labelSeed.TabIndex = 11;
             this.labelSeed.Text = "Random Seed";
+            // 
+            // checkBoxEncrypt
+            // 
+            this.checkBoxEncrypt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxEncrypt.AutoSize = true;
+            this.checkBoxEncrypt.Location = new System.Drawing.Point(836, 55);
+            this.checkBoxEncrypt.Name = "checkBoxEncrypt";
+            this.checkBoxEncrypt.Size = new System.Drawing.Size(97, 19);
+            this.checkBoxEncrypt.TabIndex = 12;
+            this.checkBoxEncrypt.Text = "Encrypt Files?";
+            this.checkBoxEncrypt.UseVisualStyleBackColor = true;
+            this.checkBoxEncrypt.CheckedChanged += new System.EventHandler(this.checkBoxEncrypt_CheckedChanged);
             // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 1020);
+            this.Controls.Add(this.checkBoxEncrypt);
             this.Controls.Add(this.labelSeed);
             this.Controls.Add(this.randomizeProgress);
             this.Controls.Add(this.textboxSeed);
@@ -434,6 +450,7 @@ namespace SmashUltimateEditor
         private ToolStripMenuItem redoToolStripMenuItem;
         private ToolStripMenuItem undoToolStripMenuItem;
         private Label labelSeed;
+        private CheckBox checkBoxEncrypt;
     }
 }
 

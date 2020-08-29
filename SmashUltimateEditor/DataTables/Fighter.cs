@@ -22,8 +22,8 @@ namespace SmashUltimateEditor
             new XAttribute("index", index),
                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
                 this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
-               new XElement(property.PropertyType.Name,
-               new XAttribute("hash", DataParse.NameFixer(property.Name)), this.GetValueFromName(property.Name))
+               new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
+               new XAttribute("hash", DataParse.NameFixer(property.Name)), DataParse.NameFixer(this.GetValueFromName(property.Name)))
                     )
                 );
         }
@@ -59,6 +59,11 @@ namespace SmashUltimateEditor
                 entry_type = "main_type";
             else if (isLoseEscort)
                 entry_type = "friend_type";
+        }
+        public void FirstAppearCheck(bool isMain)
+        {
+            if (isMain)
+                first_appear = true;
         }
 
         public void BossCheck(bool isBoss)

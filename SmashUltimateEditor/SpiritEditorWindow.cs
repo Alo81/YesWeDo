@@ -23,6 +23,9 @@ namespace SmashUltimateEditor
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
             textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
+            dataTbls.encrypt = checkBoxEncrypt.Checked;
+            dataTbls.decrypt = checkBoxDecrypt.Checked;
+
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
 
 
@@ -62,6 +65,7 @@ namespace SmashUltimateEditor
 
         private async void btnAddFighter_Click(object sender, EventArgs e)
         {
+            dataTbls.SaveLocal();
             Fighter newFighter = dataTbls.selectedFighters[0].Copy();
 
             dataTbls.fighterData.AddFighter(newFighter);
@@ -94,11 +98,6 @@ namespace SmashUltimateEditor
                 dataTbls.FighterRandomizeCleanup(ref fighter, ref rnd, isMain, isLoseEscort, isBoss);
             }
             dataTbls.RefreshTabs();
-        }
-
-        private void buttonExport_Click(object sender, EventArgs e)
-        {
-            dataTbls.ExportCurrentBattle();
         }
 
         private void OpenDbFile_Click(object sender, EventArgs e)
@@ -143,7 +142,26 @@ namespace SmashUltimateEditor
         // Modify this to use a dialog prompt so we can choose where to save it.  
         private void ExportBattleFile_Click(object sender, EventArgs e)
         {
-            dataTbls.ExportCurrentBattle();
+            dataTbls.SaveLocal();
+            BattleDataOptions singleBattle = new BattleDataOptions();
+            singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
+            FighterDataOptions fighters = new FighterDataOptions();
+            fighters.AddFighters(dataTbls.selectedFighters);
+
+
+            var saveDialog = new SaveFileDialog()
+            {
+                Title = "Export Spirit Battle",
+                Filter = "PRC|*.prc*",
+                FileName = String.Format("{0}_{1}", Defs.FILE_NAME, singleBattle.battle_id.First()),
+                InitialDirectory = Defs.FILE_DIRECTORY_CUSTOM_BATTLES
+            };
+
+            var result = saveDialog.ShowDialog();
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
+            {
+                dataTbls.Save(singleBattle, fighters, saveDialog.FileName);
+            }
         }
 
         private void ImportBattle_Click(object sender, EventArgs e)
@@ -211,6 +229,11 @@ namespace SmashUltimateEditor
         private void checkBoxEncrypt_CheckedChanged(object sender, EventArgs e)
         {
             dataTbls.encrypt = checkBoxEncrypt.Checked;
+        }
+
+        private void checkBoxDecrypt_CheckedChanged(object sender, EventArgs e)
+        {
+            dataTbls.decrypt = checkBoxDecrypt.Checked;
         }
     }
 }

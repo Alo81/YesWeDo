@@ -72,6 +72,7 @@ namespace SmashUltimateEditor
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSeed = new System.Windows.Forms.Label();
             this.checkBoxEncrypt = new System.Windows.Forms.CheckBox();
+            this.checkBoxDecrypt = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -374,19 +375,35 @@ namespace SmashUltimateEditor
             // 
             this.checkBoxEncrypt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxEncrypt.AutoSize = true;
+            this.checkBoxEncrypt.Checked = true;
+            this.checkBoxEncrypt.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxEncrypt.Location = new System.Drawing.Point(836, 55);
             this.checkBoxEncrypt.Name = "checkBoxEncrypt";
-            this.checkBoxEncrypt.Size = new System.Drawing.Size(97, 19);
+            this.checkBoxEncrypt.Size = new System.Drawing.Size(106, 19);
             this.checkBoxEncrypt.TabIndex = 12;
-            this.checkBoxEncrypt.Text = "Encrypt Files?";
+            this.checkBoxEncrypt.Text = "Save Encrypted";
             this.checkBoxEncrypt.UseVisualStyleBackColor = true;
             this.checkBoxEncrypt.CheckedChanged += new System.EventHandler(this.checkBoxEncrypt_CheckedChanged);
+            // 
+            // checkBoxDecrypt
+            // 
+            this.checkBoxDecrypt.AutoSize = true;
+            this.checkBoxDecrypt.Checked = true;
+            this.checkBoxDecrypt.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxDecrypt.Location = new System.Drawing.Point(836, 28);
+            this.checkBoxDecrypt.Name = "checkBoxDecrypt";
+            this.checkBoxDecrypt.Size = new System.Drawing.Size(107, 19);
+            this.checkBoxDecrypt.TabIndex = 13;
+            this.checkBoxDecrypt.Text = "Save Decrypted";
+            this.checkBoxDecrypt.UseVisualStyleBackColor = true;
+            this.checkBoxDecrypt.CheckedChanged += new System.EventHandler(this.checkBoxDecrypt_CheckedChanged);
             // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 1020);
+            this.Controls.Add(this.checkBoxDecrypt);
             this.Controls.Add(this.checkBoxEncrypt);
             this.Controls.Add(this.labelSeed);
             this.Controls.Add(this.randomizeProgress);
@@ -451,6 +468,7 @@ namespace SmashUltimateEditor
         private ToolStripMenuItem undoToolStripMenuItem;
         private Label labelSeed;
         private CheckBox checkBoxEncrypt;
+        private CheckBox checkBoxDecrypt;
     }
 }
 

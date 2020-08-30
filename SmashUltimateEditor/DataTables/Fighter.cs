@@ -55,10 +55,10 @@ namespace SmashUltimateEditor
 
         public void EntryCheck(bool isMain, bool isLoseEscort)
         {
-            if(isMain || entry_type == "boss_type")
-                entry_type = "main_type";
-            else if (isLoseEscort)
+            if (isLoseEscort)
                 entry_type = "friend_type";
+            else if (isMain || entry_type == "boss_type")
+                entry_type = "main_type";
         }
         public void FirstAppearCheck(bool isMain)
         {

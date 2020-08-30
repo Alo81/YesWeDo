@@ -80,24 +80,24 @@ namespace SmashUltimateEditor
             get { return battleDataList.Select(x => x.battle_type).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<ushort>battle_time_sec
+        public List<string> battle_time_sec
         {
-            get { return battleDataList.Select(x => x.battle_time_sec).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.battle_time_sec.ToString()).OrderBy(x => x).ToList(); }
         }
 
-        public List<ushort>basic_init_damage
+        public List<string> basic_init_damage
         {
-            get { return battleDataList.Select(x => x.basic_init_damage).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.basic_init_damage.ToString()).OrderBy(x => x).ToList(); }
         }
 
-        public List<ushort>basic_init_hp
+        public List<string> basic_init_hp
         {
-            get { return battleDataList.Select(x => x.basic_init_hp).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.basic_init_hp.ToString()).OrderBy(x => x).ToList(); }
         }
 
-        public List<byte>basic_stock
+        public List<string> basic_stock
         {
-            get { return battleDataList.Select(x => x.basic_stock).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.basic_stock.ToString()).OrderBy(x => x).ToList(); }
         }
 
         public List<string>ui_stage_id
@@ -160,14 +160,14 @@ namespace SmashUltimateEditor
             get { return EnumUtil<event_label_opt>.GetValuesSorted(); }
         }
 
-        public List<int> event_start_time
+        public List<string> event_start_time
         {
-            get { return battleDataList.Select(x => x.event1_start_time).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.event1_start_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<int> event_range_time
+        public List<string> event_range_time
         {
-            get { return battleDataList.Select(x => x.event1_range_time).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.event1_range_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<Tuple<string, string, int, int, byte, ushort>> events
@@ -234,12 +234,12 @@ namespace SmashUltimateEditor
             get { return event_label;  }
         }
 
-        public List<int> event1_start_time
+        public List<string> event1_start_time
         {
             get { return event_start_time;  }
         }
 
-        public List<int> event1_range_time
+        public List<string> event1_range_time
         {
             get { return event_range_time; }
         }
@@ -263,12 +263,12 @@ namespace SmashUltimateEditor
             get { return event_label;  }
         }
 
-        public List<int> event2_start_time
+        public List<string> event2_start_time
         {
             get { return event_start_time; }
         }
 
-        public List<int> event2_range_time
+        public List<string> event2_range_time
         {
             get { return event_range_time; }
         }
@@ -292,12 +292,12 @@ namespace SmashUltimateEditor
             get { return event_label; }
         }
 
-        public List<int> event3_start_time
+        public List<string> event3_start_time
         {
             get { return event_start_time; }
         }
 
-        public List<int> event3_range_time
+        public List<string> event3_range_time
         {
             get { return event_range_time; }
         }
@@ -424,9 +424,9 @@ namespace SmashUltimateEditor
             get { return battleDataList.Select(x => x._0x0ff8afd14f).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<uint> battle_power
+        public List<string> battle_power
         {
-            get { return battleDataList.Select(x => x.battle_power).Distinct().OrderBy(x => x).ToList(); }
+            get { return battleDataList.Select(x => x.battle_power.ToString()).OrderBy(x => x).ToList(); }
         }
 		
     }

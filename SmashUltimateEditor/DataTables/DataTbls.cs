@@ -30,6 +30,7 @@ namespace SmashUltimateEditor
         public TabControl tabs;
         public ProgressBar progress;
         public bool encrypt;
+        public bool decrypt;
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
@@ -66,6 +67,7 @@ namespace SmashUltimateEditor
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
             encrypt = false;
+            decrypt = false;
 
             ReadXML(Defs.FILE_LOCATION, ref battleData, ref fighterData);
         }
@@ -89,20 +91,25 @@ namespace SmashUltimateEditor
         {
             Save(battleData, fighterData, FileLocation);
         }
+
+        // This isn't following proper standard.  Fix it.  
         public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            Save(battleData, fighterData, FileLocation + "_Randomized");
+            Save(battleData, fighterData, Defs.FILE_DIRECTORY_RANDOMIZED + Defs.FILE_NAME_ENCR);
         }
-        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+
+        // We should make it so directory and name are passed separately.  That way we can build a modified name, or add a modified directory.  
+        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name = "")
         {
             SaveLocal();
             if (encrypt)
             {
                 SaveToEncryptedFile(battleData, fighterData, fileLocation);
             }
-            else
+
+            if(decrypt)
             {
-                SaveToFile(battleData, fighterData, fileLocation);
+                SaveToFile(battleData, fighterData, fileLocation + "_unencr");
             }
         }
 
@@ -123,16 +130,6 @@ namespace SmashUltimateEditor
         {
             SaveBattle();
             SaveFighters();
-        }
-
-        public void ExportCurrentBattle()
-        {
-            SaveLocal();
-            BattleDataOptions singleBattle = new BattleDataOptions();
-            singleBattle.AddBattle(battleData.GetBattle(selectedBattle.battle_id));
-            FighterDataOptions fighters = new FighterDataOptions();
-            fighters.AddFighters(selectedFighters);
-            Save(singleBattle, fighters, String.Format("{0}_{1}", Defs.FILE_LOCATION_CUSTOM_BATTLES, singleBattle.battle_id.First()));
         }
 
         public void ImportBattle(string file_loc)
@@ -192,7 +189,7 @@ namespace SmashUltimateEditor
         {
             progress.Visible = true;
             progress.Minimum = 0;
-            progress.Maximum = battleData.GetBattleCount() * 3;
+            progress.Maximum = battleData.GetBattleCount() * 4;
             progress.Value = progress.Minimum;
             progress.Step = 1;
         }
@@ -360,6 +357,29 @@ namespace SmashUltimateEditor
             return null;
         }
 
+        public string GetModeFromTypeAndName(Type type, string name)
+        {
+            Type fighterType = fighterData.GetContainerType();
+            Type battleType = battleData.GetContainerType();
+
+            var options = new List<string>();
+
+            if (type == fighterType)
+            {
+                options = fighterData.GetOptionsFromName(name) ?? new List<string>();
+            }
+            if (type == battleType)
+            {
+                options = battleData.GetOptionsFromName(name) ?? new List<string>();
+            }
+
+            var groups = options.GroupBy(v => v);
+            int maxCount = groups.Max(g => g.Count());
+            string mode = groups.First(g => g.Count() == maxCount).Key;
+
+            return mode;
+        }
+
         // Methods
         public void ReadXML(string fileName, ref BattleDataOptions battleData, ref FighterDataOptions fighterData)
         {
@@ -380,6 +400,10 @@ namespace SmashUltimateEditor
                         break;
                     case Defs.FIGHTER_DATA_XML:
                         dataTable = new Fighter();
+                        parseData = true;
+                        break;
+                    case "powerup_param":
+                        dataTable = new Events();
                         parseData = true;
                         break;
                 }

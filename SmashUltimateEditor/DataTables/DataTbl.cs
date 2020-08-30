@@ -28,35 +28,30 @@ namespace SmashUltimateEditor.DataTables
             public int Order { get { return order_; } }
         }
 
+        List<string> dataList = new List<string>();
+
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
         public void Randomize(Random rnd, DataTbls dataTbls, bool checkRequired = true)
         {
             Type type = GetType();
-
+            string value;
+            bool isRange;
             foreach (PropertyInfo field in type.GetProperties())
             {
-                string value;
                 if (Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
                 {
                     continue;
                 }
 
+
+                isRange = Defs.RANGE_VALUES.Contains(field.Name.ToUpper());
+
                 // Range values?  Set a random value. 
-                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                if (isRange)
                 {
-                    var range = GetRangeFromName(field.Name.ToUpper());
-                    string fieldType = field.PropertyType.Name;
-                    switch (fieldType)
-                    {
-                        case "Single":
-                            value = RandomizerHelper.GetRandomFloatInRange(range.Item1, range.Item2, rnd).ToString();
-                            break;
-                        default:
-                            value = rnd.Next((int)range.Item1, (int)range.Item2).ToString();
-                            break;
-                    }
+                    value = GetRangeValue(ref rnd, field);
                 }
                 else
                 {
@@ -65,9 +60,29 @@ namespace SmashUltimateEditor.DataTables
                 }
 
                 value = EnumChecker(value, field.Name);
-                if((checkRequired && !(Defs.REQUIRED_PARAMS.Contains(field.Name))) 
-                    && RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
+                if ((checkRequired && (Defs.REQUIRED_PARAMS.Contains(field.Name)))
+                    || RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
+                {
                     SetValueFromName(field.Name, value);
+                }
+                else if (isRange)
+                {
+                    // Set floats to mode value?
+                    SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(type, field.Name));
+                }
+            }
+        }
+
+        public string GetRangeValue(ref Random rnd, PropertyInfo field)
+        {
+            var range = GetRangeFromName(field.Name.ToUpper());
+            string fieldType = field.PropertyType.Name;
+            switch (fieldType)
+            {
+                case "Single":
+                    return RandomizerHelper.GetRandomFloatInRange(range.Item1, range.Item2, rnd).ToString();
+                default:
+                    return rnd.Next((int)range.Item1, (int)range.Item2).ToString();
             }
         }
 
@@ -101,6 +116,15 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = combo?.SelectedItem?.ToString() ?? "";
+                
+                /*
+                var text = combo.Text;
+
+                if (!text.Equals(value))
+                {
+                    value = text;
+                }
+                */
                 value = EnumChecker(value, combo.Name);
                 SetValueFromName(combo.Name, value);
             }
@@ -117,6 +141,7 @@ namespace SmashUltimateEditor.DataTables
                 var value = GetValueFromName(combo.Name);
                 value = EnumChecker(value, combo.Name);
                 combo.SelectedIndex = combo.Items.IndexOf(value);
+                combo.Text = value;
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {

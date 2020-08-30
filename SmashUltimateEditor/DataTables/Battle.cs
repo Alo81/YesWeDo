@@ -43,11 +43,13 @@ namespace SmashUltimateEditor
         // Make an event object dawg.  
         public void Cleanup(ref Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events, int fighterCount)
         {
+            bool isBossType = IsBossType();
             EventSet(rnd, events);
-            HealthCheck();
             HazardCheck();
             BossCheck();
+            HealthCheck();
             TimerCheck(fighterCount);
+            BattlePowerCheck(rnd, isBossType);
         }
 
         public void EventSet(Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events)
@@ -71,6 +73,12 @@ namespace SmashUltimateEditor
                 var hold = basic_init_damage;
                 basic_init_damage = basic_init_hp;
                 basic_init_hp = hold;
+            }
+
+            // If HP battle, and player hass less than 30 hp, and they pass chaos chance, give em extra health.  
+            if(battle_type == "hp" || battle_type == "hp_time")
+            {
+                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(Defs.CHAOS) && basic_init_hp < 30 ? 0 : (ushort)Defs.PLAYER_LOW_HP_MOD);
             }
         }
 
@@ -102,6 +110,13 @@ namespace SmashUltimateEditor
             {
                 battle_time_sec += (ushort)(count * Defs.FIGHTER_COUNT_TIMER_ADD);
             }
+        }
+
+        public void BattlePowerCheck(Random rnd, bool isBoss)
+        {
+            int power = rnd.Next((int)Defs.BATTLE_POWER_MIN, (int)Defs.BATTLE_POWER_MAX);
+
+            battle_power = isBoss ? (uint)(power * 1.25) : (uint)power;
         }
 
         public bool IsLoseEscort()

@@ -17,6 +17,7 @@ namespace SmashUltimateEditor
         public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
         public const string FILE_DIRECTORY_CUSTOM_BATTLES = FILE_DIRECTORY + @"CustomBattles\";
         public const string FILE_DIRECTORY_ENCR = FILE_DIRECTORY + @"Encrypted\";
+        public const string FILE_DIRECTORY_RANDOMIZED = FILE_DIRECTORY + @"Randomized\";
 
         public const string FILE_LOCATION = FILE_DIRECTORY + FILE_NAME;
         public const string FILE_LOCATION_CUSTOM_BATTLES = FILE_DIRECTORY_CUSTOM_BATTLES + FILE_NAME;
@@ -36,13 +37,15 @@ namespace SmashUltimateEditor
 
         public const int CHAOS = 50;
 
-        public const float BOSS_SCALE_MOD = 1.5F;
+        public const float BOSS_SCALE_MOD = 1.35F;
         public const float BOSS_ATTACK_MOD = 2;
         public const float BOSS_DEFENSE_MOD = 2;
         public const float BOSS_LOW_HP_MOD = 2;
         public const float BOSS_HIGH_HP_MOD = 50;
         public const float BOSS_HP_CUTOFF = 100;
         public const int BOSS_CPU_LVL_ADD = 20;
+
+        public const ushort PLAYER_LOW_HP_MOD = 30;
 
         public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
@@ -125,8 +128,10 @@ namespace SmashUltimateEditor
             "entry_type",
             "fighter_kind",
             "fly_rate",
+            "hp",
             "scale",
             "cpu_lvl",
+            "basic_init_hp",
             "battle_type",
             "result_type",
             "ui_stage_id"
@@ -192,67 +197,86 @@ namespace SmashUltimateEditor
         #region FighterDataTbl
         public static ushort APPEAR_RULE_TIME_MIN  { get; } = 0;
         public static ushort APPEAR_RULE_TIME_MAX  { get; } = 60;
+        public static ushort APPEAR_RULE_TIME_SANE { get; } = 0;
 
         // Technically, 7 doesn't ever get used (?)
         public static ushort APPEAR_RULE_COUNT_MIN  { get; } = 0;
-        public static ushort APPEAR_RULE_COUNT_MAX  { get; } = 8;
+        public static ushort APPEAR_RULE_COUNT_MAX { get; } = 8;
+        public static ushort APPEAR_RULE_COUNT_SANE { get; } = 8;
 
         public static byte CPU_LV_MIN  { get; } = 1;
-        public static byte CPU_LV_MAX  { get; } = 100;
+        public static byte CPU_LV_MAX { get; } = 100;
+        public static byte CPU_LV_SANE { get; } = 100;
 
         public static byte STOCK_MIN { get; } = 1;
-        public static byte STOCK_MAX  { get; } = 3;
-        
+        public static byte STOCK_MAX { get; } = 3;
+        public static byte STOCK_SANE { get; } = 3;
+
         // 0, 500
-        public static ushort HP_MIN  { get; } = 0;
-        public static ushort HP_MAX  { get; } = 300;
+        public static ushort HP_MIN  { get; } = 35;
+        public static ushort HP_MAX { get; } = 300;
+        public static ushort HP_SANE { get; } = 300;
 
         // 0, 300
         public static ushort INIT_DAMAGE_MIN  { get; } = 0;
-        public static ushort INIT_DAMAGE_MAX  { get; } = 300;
+        public static ushort INIT_DAMAGE_MAX { get; } = 300;
+        public static ushort INIT_DAMAGE_SANE { get; } = 300;
 
-        public static float SCALE_MIN { get; } = 0.2f;
-        public static float SCALE_MAX  { get; } = 4.0f;
+        public static float SCALE_MIN { get; } = 0.4f;
+        public static float SCALE_MAX { get; } = 3.0f;
+        public static float SCALE_SANE { get; } = 4.0f;
 
-        public static float FLY_RATE_MIN  { get; } = 0f;
-        public static float FLY_RATE_MAX  { get; } = 5f;
+        public static float FLY_RATE_MIN  { get; } = 0.4f;
+        public static float FLY_RATE_MAX { get; } = 2.5f;
+        public static float FLY_RATE_SANE { get; } = 2.5f;
 
         public static short ATTACK_MIN  { get; } = 0;
-        public static short ATTACK_MAX  { get; } = 10000;
+        public static short ATTACK_MAX { get; } = 10000;
+        public static short ATTACK_SANE { get; } = 10000;
 
         public static short DEFENSE_MIN  { get; } = 0;
-        public static short DEFENSE_MAX  { get; } = 10000;
+        public static short DEFENSE_MAX { get; } = 10000;
+        public static short DEFENSE_SANE { get; } = 10000;
         #endregion
 
         #region BattleDataTbl
-        public static ushort BATTLE_TIME_SEC_MIN  { get; } = 0;
-        public static ushort BATTLE_TIME_SEC_MAX  { get; } = 240;
+        public static ushort BATTLE_TIME_SEC_MIN  { get; } = 15;
+        public static ushort BATTLE_TIME_SEC_MAX { get; } = 240;
+        public static ushort BATTLE_TIME_SEC_SANE { get; } = 240;
 
         public static ushort BASIC_INIT_DAMAGE_MIN  { get; } = 0;
-        public static ushort BASIC_INIT_DAMAGE_MAX  { get; } = 120;
+        public static ushort BASIC_INIT_DAMAGE_MAX { get; } = 120;
+        public static ushort BASIC_INIT_DAMAGE_SANE { get; } = 120;
 
         public static ushort BASIC_INIT_HP_MIN  { get; } = 80;
-        public static ushort BASIC_INIT_HP_MAX  { get; } = 185;
+        public static ushort BASIC_INIT_HP_MAX { get; } = 185;
+        public static ushort BASIC_INIT_HP_SANE { get; } = 185;
 
         public static byte BASIC_STOCK_MIN  { get; } = 1;
-        public static byte BASIC_STOCK_MAX  { get; } = 5;
+        public static byte BASIC_STOCK_MAX { get; } = 5;
+        public static byte BASIC_STOCK_SANE { get; } = 5;
 
         public static int EVENT_START_TIME_MIN  { get; } = 0;
-        public static int EVENT_START_TIME_MAX  { get; } = 80;
+        public static int EVENT_START_TIME_MAX { get; } = 80;
+        public static int EVENT_START_TIME_SANE { get; } = 80;
 
         public static int EVENT_RANGE_TIME_MIN  { get; } = -1;
-        public static int EVENT_RANGE_TIME_MAX  { get; } = 120;
+        public static int EVENT_RANGE_TIME_MAX { get; } = 120;
+        public static int EVENT_RANGE_TIME_SANE { get; } = 120;
 
         public static byte EVENT_COUNT_MIN  { get; } = 0;
-        public static byte EVENT_COUNT_MAX  { get; } = 200;
+        public static byte EVENT_COUNT_MAX { get; } = 200;
+        public static byte EVENT_COUNT_SANE { get; } = 200;
 
         public static ushort EVENT_DAMAGE_MIN  { get; } = 0;
-        public static ushort EVENT_DAMAGE_MAX  { get; } = 150;
-        
-        public static uint BATTLE_POWER_MIN  { get; } = 0;
-        public static uint BATTLE_POWER_MAX  { get; } = 20000;
+        public static ushort EVENT_DAMAGE_MAX { get; } = 150;
+        public static ushort EVENT_DAMAGE_SANE { get; } = 150;
 
-        
+        public static uint BATTLE_POWER_MIN  { get; } = 0;
+        public static uint BATTLE_POWER_MAX { get; } = 20000;
+        public static uint BATTLE_POWER_SANE { get; } = 20000;
+
+
         public static int  EVENT1_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }
         public static int  EVENT2_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }
         public static int  EVENT3_START_TIME_MIN { get { return EVENT_START_TIME_MIN; } }

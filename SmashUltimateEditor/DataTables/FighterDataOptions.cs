@@ -111,13 +111,13 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.first_appear.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<ushort> appear_rule_time
+        public List<string> appear_rule_time
         {
-            get { return fighterDataList.Select(x => x.appear_rule_time).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.appear_rule_time.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<ushort> appear_rule_count
+        public List<string> appear_rule_count
         {
-            get { return fighterDataList.Select(x => x.appear_rule_count).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.appear_rule_count.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> fighter_kind
         {
@@ -161,13 +161,13 @@ namespace SmashUltimateEditor
         {
             get { return EnumUtil<mii_sp_lw_opt>.GetValuesSorted(); }
         }
-        public List<byte> cpu_lv
+        public List<string> cpu_lv
         {
-            get { return fighterDataList.Select(x => x.cpu_lv).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.cpu_lv.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> cpu_type
         {
-            get { return fighterDataList.Select(x => x.cpu_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.cpu_type.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> cpu_sub_type
         {
@@ -177,9 +177,9 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.cpu_item_pick_up.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<byte> stock
+        public List<string> stock
         {
-            get { return fighterDataList.Select(x => x.stock).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.stock.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> corps
         {
@@ -189,25 +189,25 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x._0x0f2077926c.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<ushort> hp
+        public List<string> hp
         {
-            get { return fighterDataList.Select(x => x.hp).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.hp.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<ushort> init_damage
+        public List<string> init_damage
         {
-            get { return fighterDataList.Select(x => x.init_damage).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.init_damage.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> sub_rule
         {
             get { return fighterDataList.Select(x => x.sub_rule).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<float> scale
+        public List<string> scale
         {
-            get { return fighterDataList.Select(x => x.scale).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.scale.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<float> fly_rate
+        public List<string> fly_rate
         {
-            get { return fighterDataList.Select(x => x.fly_rate).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.fly_rate.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> invalid_drop
         {
@@ -217,13 +217,13 @@ namespace SmashUltimateEditor
         {
             get { return fighterDataList.Select(x => x.enable_charge_final.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<short> attack
+        public List<string> attack
         {
-            get { return fighterDataList.Select(x => x.attack).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.attack.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<short> defense
+        public List<string> defense
         {
-            get { return fighterDataList.Select(x => x.defense).Distinct().OrderBy(x => x).ToList(); }
+            get { return fighterDataList.Select(x => x.defense.ToString()).OrderBy(x => x).ToList(); }
         }
         public List<string> attr
         {

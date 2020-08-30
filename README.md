@@ -3,6 +3,8 @@ Spirit Editor
 
 TODO:
   
+  Separate out and properly organize objects by file.  Eg, have parsing of spirit battle DB being done for the whole file.  Abstract it out for all instances we want.  
+  
   ~~Manually set load (with a saved default)~~
   
   Automatically Encrypt after save

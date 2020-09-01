@@ -16,16 +16,13 @@ namespace SmashUltimateEditor
 
     public class Fighter : DataTbl, IDataTbl
     {
-        public XElement GetAsXElement(int index)
+        public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false)
         {
-            return new XElement("struct",
-            new XAttribute("index", index),
-                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
-               new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
-               new XAttribute("hash", DataParse.NameFixer(property.Name)), DataParse.NameFixer(this.GetValueFromName(property.Name)))
-                    )
-                );
+            // Post Randomize fighter modifiers
+            EntryCheck(isMain, isLoseEscort);
+            FighterCheck(fighters, ref rnd);
+            HealthCheck();
+            BossCheck(isBoss);
         }
 
         public void FighterCheck(List<string> options, ref Random rnd)
@@ -87,65 +84,6 @@ namespace SmashUltimateEditor
             }
 
             return newCopy;
-        }
-
-        public void BuildFromXml(XmlReader reader)
-        {
-            string attribute;
-            while (reader.Read())
-            {
-                while (!(reader.NodeType == XmlNodeType.Element))
-                {
-                    reader.Read();
-                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("struct"))
-                    {
-                        return;
-                    }
-                }
-                attribute = reader.GetAttribute("hash");
-                reader.Read();
-                switch (attribute)
-                {
-                    case "battle_id": battle_id = reader.Value; break;
-                    case "entry_type": entry_type = reader.Value; break;
-                    case "first_appear": first_appear = Convert.ToBoolean(reader.Value); break;
-                    case "appear_rule_time": appear_rule_time = Convert.ToUInt16(reader.Value); break;
-                    case "appear_rule_count": appear_rule_count = Convert.ToUInt16(reader.Value); break;
-                    case "fighter_kind": fighter_kind = reader.Value; break;
-                    case "color": color = Convert.ToByte(reader.Value); break;
-                    case "mii_hat_id": mii_hat_id = reader.Value; break;
-                    case "mii_body_id": mii_body_id = reader.Value; break;
-                    case "mii_color": mii_color = Convert.ToByte(reader.Value); break;
-                    case "mii_voice": mii_voice = reader.Value; break;
-                    case "mii_sp_n": mii_sp_n = Convert.ToByte(reader.Value); break;
-                    case "mii_sp_s": mii_sp_s = Convert.ToByte(reader.Value); break;
-                    case "mii_sp_hi": mii_sp_hi = Convert.ToByte(reader.Value); break;
-                    case "mii_sp_lw": mii_sp_lw = Convert.ToByte(reader.Value); break;
-                    case "cpu_lv": cpu_lv = Convert.ToByte(reader.Value); break;
-                    case "cpu_type": cpu_type = reader.Value; break;
-                    case "cpu_sub_type": cpu_sub_type = reader.Value; break;
-                    case "cpu_item_pick_up": cpu_item_pick_up = Convert.ToBoolean(reader.Value); break;
-                    case "stock": stock = Convert.ToByte(reader.Value); break;
-                    case "corps": corps = Convert.ToBoolean(reader.Value); break;
-                    case "0x0f2077926c": _0x0f2077926c = Convert.ToBoolean(reader.Value); break;
-                    case "hp": hp = Convert.ToUInt16(reader.Value); break;
-                    case "init_damage": init_damage = Convert.ToUInt16(reader.Value); break;
-                    case "sub_rule": sub_rule = reader.Value; break;
-                    case "scale": scale = (float)Convert.ToDouble(reader.Value); break;
-                    case "fly_rate": fly_rate = (float)Convert.ToDouble(reader.Value); break;
-                    case "invalid_drop": invalid_drop = Convert.ToBoolean(reader.Value); break;
-                    case "enable_charge_final": enable_charge_final = Convert.ToBoolean(reader.Value); break;
-                    case "spirit_name": spirit_name = reader.Value; break;
-                    case "attack": attack = Convert.ToInt16(reader.Value); break;
-                    case "defense": defense = Convert.ToInt16(reader.Value); break;
-                    case "attr": attr = reader.Value; break;
-                    case "ability1": ability1 = ValuableValue(reader.Value); break;
-                    case "ability2": ability2 = ValuableValue(reader.Value); break;
-                    case "ability3": ability3 = ValuableValue(reader.Value); break;
-                    case "ability_personal": ability_personal = ValuableValue(reader.Value); break;
-                }
-            }
-            return;
         }
 
         [Order]

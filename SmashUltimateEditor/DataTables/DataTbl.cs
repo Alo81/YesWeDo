@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor.DataTables
@@ -117,14 +119,6 @@ namespace SmashUltimateEditor.DataTables
             {
                 var value = combo?.SelectedItem?.ToString() ?? "";
                 
-                /*
-                var text = combo.Text;
-
-                if (!text.Equals(value))
-                {
-                    value = text;
-                }
-                */
                 value = EnumChecker(value, combo.Name);
                 SetValueFromName(combo.Name, value);
             }
@@ -245,52 +239,55 @@ namespace SmashUltimateEditor.DataTables
         public void SetValueFromName(string name, string val)
         {
             PropertyInfo field = this.GetType().GetProperty(name);
-            Type type = field.PropertyType;
             // If val is null, interpret as empty string for our purposes.  
-            val = val ?? "";
+            val ??= "";
 
             try
             {
-                switch (type.Name)
-                {
-                    case "Boolean":
-                        field.SetValue(this, Boolean.Parse(val));
-                        break;
-                    case "Byte":
-                        field.SetValue(this, Byte.Parse(val));
-                        break;
-                    case "SByte":
-                        field.SetValue(this, SByte.Parse(val));
-                        break;
-                    case "UInt16":
-                        field.SetValue(this, UInt16.Parse(val));
-                        break;
-                    case "Int16":
-                        field.SetValue(this, Int16.Parse(val));
-                        break;
-                    case "UInt32":
-                        field.SetValue(this, UInt32.Parse(val));
-                        break;
-                    case "Int32":
-                        field.SetValue(this, Int32.Parse(val));
-                        break;
-                    case "String":
-                        field.SetValue(this, val);
-                        break;
-                    case "Single":
-                        field.SetValue(this, Single.Parse(val));
-                        break;
-                }
+                field.SetValue(this, Convert.ChangeType(val, field.PropertyType));
             }
             catch(Exception ex)
             {
                 MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
+                throw ex;
             }
         }
 
         public string ValuableValue (string val)
         {
             return val == "none" ? "" : val;
+        }
+
+        public XElement GetAsXElement(int index)
+        {
+            return new XElement("struct",
+            new XAttribute("index", index),
+                //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
+                this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
+               new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
+               new XAttribute("hash", DataParse.ExportNameFixer(property.Name)), DataParse.ExportNameFixer(this.GetValueFromName(property.Name)))
+                    )
+                );
+        }
+
+        public void BuildFromXml(XmlReader reader)
+        {
+            string attribute;
+            while (reader.Read())
+            {
+                while (!(reader.NodeType == XmlNodeType.Element))
+                {
+                    reader.Read();
+                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("struct"))
+                    {
+                        return;
+                    }
+                }
+                attribute = reader.GetAttribute("hash");
+                reader.Read();
+                SetValueFromName(DataParse.ImportNameFixer(attribute), reader.Value);
+            }
+            return;
         }
     }
 }

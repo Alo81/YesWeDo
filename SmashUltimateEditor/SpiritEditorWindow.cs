@@ -22,7 +22,6 @@ namespace SmashUltimateEditor
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
-            textboxSeed.Text = RandomizerHelper.GetRandomInt().ToString();
             dataTbls.encrypt = checkBoxEncrypt.Checked;
             dataTbls.decrypt = checkBoxDecrypt.Checked;
 
@@ -95,7 +94,7 @@ namespace SmashUltimateEditor
                 var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
                 var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  
                 fighter.Randomize(rnd, dataTbls, false);
-                dataTbls.FighterRandomizeCleanup(ref fighter, ref rnd, isMain, isLoseEscort, isBoss);
+                fighter.Cleanup(ref rnd, isMain, isLoseEscort, dataTbls.fighterData.Fighters, isBoss);
             }
             dataTbls.RefreshTabs();
         }
@@ -107,12 +106,20 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                dataTbls.EmptySpiritData();
-                dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
+                try
+                {
+                    dataTbls.EmptySpiritData();
+                    dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
 
-                var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
+                    var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
 
-                buildFighterDataTab(battle_id);
+                    buildFighterDataTab(battle_id);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
+                    return;
+                }
             }
             dataTbls.RefreshTabs();
         }

@@ -22,6 +22,7 @@ namespace SmashUltimateEditor
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
+        public List<Events> eventsData;
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
@@ -63,6 +64,7 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
+            eventsData = new List<Events>();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
@@ -228,7 +230,7 @@ namespace SmashUltimateEditor
                     randomizedFighter = battle.GetNewFighter();
                     randomizedFighter.Randomize(rnd, this);
 
-                    FighterRandomizeCleanup(ref randomizedFighter, ref rnd, isMain, isLoseEscort, isBoss);
+                    randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss);
                     randomizedFighter.StockCheck(fighterCount);
 
                     randomizedFighters.AddFighter(randomizedFighter);
@@ -389,46 +391,62 @@ namespace SmashUltimateEditor
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
 
-            // Read the whole file.  
-            while (reader.Read())
-            {
-                switch (reader?.GetAttribute("hash"))
-                {
-                    case Defs.SPIRIT_BATTLE_DATA_XML:
-                        dataTable = new Battle();
-                        parseData = true;
-                        break;
-                    case Defs.FIGHTER_DATA_XML:
-                        dataTable = new Fighter();
-                        parseData = true;
-                        break;
-                    case "powerup_param":
-                        dataTable = new Events();
-                        parseData = true;
-                        break;
-                }
+            List<Events> events = new List<Events>();
 
-                if (parseData)
+            try
+            {
+                // Read the whole file.  
+                while (reader.Read())
                 {
-                    // Read until start of data.  
-                    ReadUntilType("struct", reader);
-                    // Lists have index values, so keep reading until we've left the list.  
-                    while (reader.GetAttribute("index") != null)
+                    switch (reader?.GetAttribute("hash"))
                     {
-                        dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
-                        dataTable.BuildFromXml(reader);
-                        if (dataTable is Battle battleTbl)
-                            battleData.AddBattle(battleTbl);
-                        else if (dataTable is Fighter fighterTbl)
-                            fighterData.AddFighter(fighterTbl);
-                        reader.Read();
-                        reader.Read();
+                        case Defs.SPIRIT_BATTLE_DATA_XML:
+                            dataTable = new Battle();
+                            parseData = true;
+                            break;
+                        case Defs.FIGHTER_DATA_XML:
+                            dataTable = new Fighter();
+                            parseData = true;
+                            break;
+                        case "powerup_param":
+                            dataTable = new Events();
+                            parseData = true;
+                            break;
+                        case "scale_param":
+                            //dataTable = new Events();
+                            //parseData = true;
+                            break;
                     }
 
-                    //Left the list.  Don't parse the next lines.  
-                    parseData = false;
-                    Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
+                    if (parseData)
+                    {
+                        // Read until start of data.  
+                        ReadUntilType("struct", reader);
+                        // Lists have index values, so keep reading until we've left the list.  
+                        while (reader.GetAttribute("index") != null)
+                        {
+                            dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
+                            dataTable.BuildFromXml(reader);
+                            if (dataTable is Battle battleTbl)
+                                battleData.AddBattle(battleTbl);
+                            else if (dataTable is Fighter fighterTbl)
+                                fighterData.AddFighter(fighterTbl);
+                            else if (dataTable is Events eventTbl)
+                                eventsData.Add(eventTbl);
+
+                            reader.Read();
+                            reader.Read();
+                        }
+
+                        //Left the list.  Don't parse the next lines.  
+                        parseData = false;
+                        Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
             }
             Console.WriteLine("List Built.");
         }

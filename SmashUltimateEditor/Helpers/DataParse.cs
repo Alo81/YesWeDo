@@ -75,11 +75,18 @@ namespace SmashUltimateEditor
             return xml;
         }
 
-        public static string NameFixer(string name)
+        public static string ExportNameFixer(string name)
         {
             if(name.Length > 0)
                 return name[0] == '_' ? name.Remove(0, 1) : name;
             else 
+                return name;
+        }
+        public static string ImportNameFixer(string name)
+        {
+            if (name.Length > 0)
+                return name.Substring(0,2) == "0x" ? '_' + name : name;
+            else
                 return name;
         }
     }

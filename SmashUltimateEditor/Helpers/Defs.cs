@@ -8,6 +8,7 @@ namespace SmashUltimateEditor
 {
     public static class Defs
     {
+        #region File Management
         public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
         public const string FIGHTER_DATA_XML = "fighter_data_tbl";
 
@@ -26,7 +27,9 @@ namespace SmashUltimateEditor
         public const string LABELS_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
         public const string LABELS_FILE_NAME = @"ParamLabels.csv";
         public const string LABELS_FILE_LOCATION = LABELS_DIRECTORY + LABELS_FILE_NAME;
+        #endregion
 
+        #region UI
         public const int LABEL_HEIGHT = 20;
         public const int LABEL_WIDTH = 200 ;
         public const int PADDING = 5;
@@ -34,7 +37,9 @@ namespace SmashUltimateEditor
         public const int BOX_WIDTH = 200 ;
         public const int ROWS = 26;
         public const int COLUMNS = 4;
+        #endregion
 
+        #region randomizer
         public const int CHAOS = 50;
 
         public const float BOSS_SCALE_MOD = 1.35F;
@@ -50,7 +55,9 @@ namespace SmashUltimateEditor
         public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_ADD = 8;   //How many seconds to add?
+        #endregion
 
+        #region Spirit Battles
         public static List<string> RANGE_VALUES = new List<string>()
         {
             "APPEAR_RULE_TIME",
@@ -302,5 +309,9 @@ namespace SmashUltimateEditor
         public static ushort EVENT2_DAMAGE_MAX { get { return EVENT_DAMAGE_MAX; } }
         public static ushort EVENT3_DAMAGE_MAX { get { return EVENT_DAMAGE_MAX; } }
         #endregion
+
+        #endregion
+
+
     }
 }

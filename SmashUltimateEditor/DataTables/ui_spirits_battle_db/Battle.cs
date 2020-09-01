@@ -11,6 +11,8 @@ namespace SmashUltimateEditor
 {
     public class Battle : DataTbl, IDataTbl
     {
+        public const string XML_NAME = "battle_data_tbl";
+
         public void BuildEvent(Tuple<string, string, int, int, byte, ushort> randEvent, int index)
         {
             var eventNum = String.Format("event{0}_", index);

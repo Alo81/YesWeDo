@@ -16,6 +16,8 @@ namespace SmashUltimateEditor
 
     public class Fighter : DataTbl, IDataTbl
     {
+        public const string XML_NAME = "fighter_data_tbl";
+
         public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false)
         {
             // Post Randomize fighter modifiers

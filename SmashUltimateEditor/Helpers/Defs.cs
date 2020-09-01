@@ -9,9 +9,6 @@ namespace SmashUltimateEditor
     public static class Defs
     {
         #region File Management
-        public const string SPIRIT_BATTLE_DATA_XML = "battle_data_tbl";
-        public const string FIGHTER_DATA_XML = "fighter_data_tbl";
-
         public const string FILE_NAME = "ui_spirits_battle_db_mod_unencr.prc";
         public const string FILE_NAME_ENCR = "ui_spirits_battle_db.prc";
 

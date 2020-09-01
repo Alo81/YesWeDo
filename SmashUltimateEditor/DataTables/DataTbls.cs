@@ -22,7 +22,7 @@ namespace SmashUltimateEditor
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
-        public List<Events> eventsData;
+        public List<PowerupEvent> eventsData;
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
@@ -64,7 +64,7 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
-            eventsData = new List<Events>();
+            eventsData = new List<PowerupEvent>();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
@@ -391,7 +391,7 @@ namespace SmashUltimateEditor
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
 
-            List<Events> events = new List<Events>();
+            List<PowerupEvent> events = new List<PowerupEvent>();
 
             try
             {
@@ -400,16 +400,16 @@ namespace SmashUltimateEditor
                 {
                     switch (reader?.GetAttribute("hash"))
                     {
-                        case Defs.SPIRIT_BATTLE_DATA_XML:
+                        case Battle.XML_NAME:
                             dataTable = new Battle();
                             parseData = true;
                             break;
-                        case Defs.FIGHTER_DATA_XML:
+                        case Fighter.XML_NAME:
                             dataTable = new Fighter();
                             parseData = true;
                             break;
                         case "powerup_param":
-                            dataTable = new Events();
+                            dataTable = new PowerupEvent();
                             parseData = true;
                             break;
                         case "scale_param":
@@ -431,7 +431,7 @@ namespace SmashUltimateEditor
                                 battleData.AddBattle(battleTbl);
                             else if (dataTable is Fighter fighterTbl)
                                 fighterData.AddFighter(fighterTbl);
-                            else if (dataTable is Events eventTbl)
+                            else if (dataTable is PowerupEvent eventTbl)
                                 eventsData.Add(eventTbl);
 
                             reader.Read();

@@ -3,6 +3,7 @@ using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,11 +23,13 @@ namespace SmashUltimateEditor
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
-        public List<PowerupEvent> eventsData;
+        public List<Event> eventsData;
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
         public Queue<TabPage> tabStorage = new Queue<TabPage>();
+
+        public Config config;
 
         public TabControl tabs;
         public ProgressBar progress;
@@ -56,7 +59,7 @@ namespace SmashUltimateEditor
         {
             get
             {
-                return encrypt ? Defs.FILE_LOCATION_ENCR : Defs.FILE_LOCATION;
+                return encrypt ? config.file_location_encr : config.file_location;
             }
         }
 
@@ -64,14 +67,16 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
-            eventsData = new List<PowerupEvent>();
+            eventsData = new List<Event>();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
+            config = new Config();
+
             encrypt = false;
             decrypt = false;
 
-            ReadXML(Defs.FILE_LOCATION, ref battleData, ref fighterData);
+            ReadXML(config.file_location, ref battleData, ref fighterData);
         }
 
         public void EmptySpiritData()
@@ -97,7 +102,7 @@ namespace SmashUltimateEditor
         // This isn't following proper standard.  Fix it.  
         public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            Save(battleData, fighterData, Defs.FILE_DIRECTORY_RANDOMIZED + Defs.FILE_NAME_ENCR);
+            Save(battleData, fighterData, config.file_directory_randomized + config.file_name_encr);
         }
 
         // We should make it so directory and name are passed separately.  That way we can build a modified name, or add a modified directory.  
@@ -122,7 +127,7 @@ namespace SmashUltimateEditor
             AssmebleEncrypted(doc.ToXmlDocument(), fileLocation);
         }
 
-        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation = Defs.FILE_LOCATION)
+        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData,  string fileLocation)
         {
             var doc = BuildXml(battleData, fighterData);
             WriteXmlToFile(fileLocation, doc);
@@ -391,7 +396,7 @@ namespace SmashUltimateEditor
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
 
-            List<PowerupEvent> events = new List<PowerupEvent>();
+            List<Event> events = new List<Event>();
 
             try
             {
@@ -409,7 +414,7 @@ namespace SmashUltimateEditor
                             parseData = true;
                             break;
                         case "powerup_param":
-                            dataTable = new PowerupEvent();
+                            dataTable = new Event();
                             parseData = true;
                             break;
                         case "scale_param":
@@ -431,7 +436,7 @@ namespace SmashUltimateEditor
                                 battleData.AddBattle(battleTbl);
                             else if (dataTable is Fighter fighterTbl)
                                 fighterData.AddFighter(fighterTbl);
-                            else if (dataTable is PowerupEvent eventTbl)
+                            else if (dataTable is Event eventTbl)
                                 eventsData.Add(eventTbl);
 
                             reader.Read();
@@ -499,7 +504,6 @@ namespace SmashUltimateEditor
             {
                 reader.Read();
             }
-
         }
 
         #region PRC Cryptography
@@ -510,9 +514,9 @@ namespace SmashUltimateEditor
         static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
         static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
 
-        static void AssmebleEncrypted(XmlDocument doc, string fileLocation)
+        void AssmebleEncrypted(XmlDocument doc, string fileLocation)
         {
-            labelName = Defs.LABELS_FILE_LOCATION;
+            labelName = config.labels_file_location;
             stringToHashLabels = new OrderedDictionary<string, ulong>();
             if (!string.IsNullOrEmpty(labelName))
                 stringToHashLabels = LabelIO.GetStringHashDict(labelName);

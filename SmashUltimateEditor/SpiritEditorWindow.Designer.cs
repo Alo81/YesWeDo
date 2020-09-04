@@ -387,6 +387,7 @@ namespace SmashUltimateEditor
             // 
             // checkBoxDecrypt
             // 
+            this.checkBoxDecrypt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxDecrypt.AutoSize = true;
             this.checkBoxDecrypt.Checked = true;
             this.checkBoxDecrypt.CheckState = System.Windows.Forms.CheckState.Checked;

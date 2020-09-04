@@ -32,7 +32,7 @@ namespace SmashUltimateEditor.DataTables
         public string item_id { get; set; }
     }
 
-    public class PowerupEvent : ValueEvent
+    public class PowerUpEvent : ValueEvent
     {
         internal const string XML_NAME = "powerup_param";
         [Order]

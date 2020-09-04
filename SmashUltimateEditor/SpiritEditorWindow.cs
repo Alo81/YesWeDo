@@ -101,7 +101,7 @@ namespace SmashUltimateEditor
 
         private void OpenDbFile_Click(object sender, EventArgs e)
         {
-            var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY};
+            var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
             var result = openDialog.ShowDialog();
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
@@ -135,8 +135,8 @@ namespace SmashUltimateEditor
             { 
                 Title = String.Format("Save {0} Spirit Battles", dataTbls.encrypt ? "Encrypted" : "Unencrypted"), 
                 Filter = "PRC|*.prc*", 
-                FileName = dataTbls.encrypt ? Defs.FILE_NAME_ENCR : Defs.FILE_NAME, 
-                InitialDirectory = dataTbls.encrypt ? Defs.FILE_DIRECTORY_ENCR : Defs.FILE_DIRECTORY 
+                FileName = dataTbls.encrypt ? dataTbls.config.file_name_encr : dataTbls.config.file_name, 
+                InitialDirectory = dataTbls.encrypt ? dataTbls.config.file_directory_encr : dataTbls.config.file_directory 
             };
 
             var result = saveDialog.ShowDialog();
@@ -160,8 +160,8 @@ namespace SmashUltimateEditor
             {
                 Title = "Export Spirit Battle",
                 Filter = "PRC|*.prc*",
-                FileName = String.Format("{0}_{1}", Defs.FILE_NAME, singleBattle.battle_id.First()),
-                InitialDirectory = Defs.FILE_DIRECTORY_CUSTOM_BATTLES
+                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, singleBattle.battle_id.First()),
+                InitialDirectory = dataTbls.config.file_directory_custom_battles
             };
 
             var result = saveDialog.ShowDialog();
@@ -173,7 +173,7 @@ namespace SmashUltimateEditor
 
         private void ImportBattle_Click(object sender, EventArgs e)
         {
-            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = Defs.FILE_DIRECTORY };
+            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory };
             var result = importDialog.ShowDialog();
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
@@ -184,7 +184,7 @@ namespace SmashUltimateEditor
         }
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
-            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = Defs.FILE_DIRECTORY_CUSTOM_BATTLES, IsFolderPicker = true };
+            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
             openDialog.ShowDialog();
 
             if (!String.IsNullOrWhiteSpace(openDialog?.FileName))

@@ -7,35 +7,7 @@ using System.Threading.Tasks;
 namespace SmashUltimateEditor
 {
     public static class Defs
-    {
-        #region File Management
-        public const string FILE_NAME = "ui_spirits_battle_db_mod_unencr.prc";
-        public const string FILE_NAME_ENCR = "ui_spirits_battle_db.prc";
-
-        public const string FILE_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
-        public const string FILE_DIRECTORY_CUSTOM_BATTLES = FILE_DIRECTORY + @"CustomBattles\";
-        public const string FILE_DIRECTORY_ENCR = FILE_DIRECTORY + @"Encrypted\";
-        public const string FILE_DIRECTORY_RANDOMIZED = FILE_DIRECTORY + @"Randomized\";
-
-        public const string FILE_LOCATION = FILE_DIRECTORY + FILE_NAME;
-        public const string FILE_LOCATION_CUSTOM_BATTLES = FILE_DIRECTORY_CUSTOM_BATTLES + FILE_NAME;
-        public const string FILE_LOCATION_ENCR = FILE_DIRECTORY_ENCR + FILE_NAME_ENCR;
-
-        public const string LABELS_DIRECTORY = @"F:\Tools\Switch\Smash Ultimate Modding\PRCEditor\files\SpiritDbs\";
-        public const string LABELS_FILE_NAME = @"ParamLabels.csv";
-        public const string LABELS_FILE_LOCATION = LABELS_DIRECTORY + LABELS_FILE_NAME;
-        #endregion
-
-        #region UI
-        public const int LABEL_HEIGHT = 20;
-        public const int LABEL_WIDTH = 200 ;
-        public const int PADDING = 5;
-        public const int BOX_HEIGHT = 20 ;
-        public const int BOX_WIDTH = 200 ;
-        public const int ROWS = 26;
-        public const int COLUMNS = 4;
-        #endregion
-
+    {   
         #region randomizer
         public const int CHAOS = 50;
 
@@ -53,6 +25,17 @@ namespace SmashUltimateEditor
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_ADD = 8;   //How many seconds to add?
         #endregion
+
+        #region UI
+        public const int LABEL_HEIGHT = 20;
+        public const int LABEL_WIDTH = 200 ;
+        public const int PADDING = 5;
+        public const int BOX_HEIGHT = 20 ;
+        public const int BOX_WIDTH = 200 ;
+        public const int ROWS = 26;
+        public const int COLUMNS = 4;
+        #endregion
+
 
         #region Spirit Battles
         public static List<string> RANGE_VALUES = new List<string>()

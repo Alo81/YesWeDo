@@ -388,39 +388,26 @@ namespace SmashUltimateEditor
         }
 
         // Methods
-        public void ReadXML(string fileName, ref BattleDataOptions battleData, ref FighterDataOptions fighterData)
+        public Type ReadXML(string fileName, ref BattleDataOptions battleData, ref FighterDataOptions fighterData)
         {
             bool parseData = false;
             IDataTbl dataTable = new Battle();
+            Type xmlType = null;
 
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
-
-            List<Event> events = new List<Event>();
 
             try
             {
                 // Read the whole file.  
                 while (reader.Read())
                 {
-                    switch (reader?.GetAttribute("hash"))
+                    dataTable = (IDataTbl)DataTbl.GetDataTblFromName(reader?.GetAttribute("hash"));
+
+                    if(dataTable != null)
                     {
-                        case Battle.XML_NAME:
-                            dataTable = new Battle();
-                            parseData = true;
-                            break;
-                        case Fighter.XML_NAME:
-                            dataTable = new Fighter();
-                            parseData = true;
-                            break;
-                        case "powerup_param":
-                            dataTable = new Event();
-                            parseData = true;
-                            break;
-                        case "scale_param":
-                            //dataTable = new Events();
-                            //parseData = true;
-                            break;
+                        xmlType = xmlType == null ? dataTable.GetType() : xmlType;
+                        parseData = true;
                     }
 
                     if (parseData)
@@ -448,6 +435,7 @@ namespace SmashUltimateEditor
                         Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
                     }
                 }
+                return xmlType;
             }
             catch(Exception ex)
             {

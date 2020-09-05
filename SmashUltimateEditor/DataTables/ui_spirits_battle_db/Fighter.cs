@@ -16,7 +16,7 @@ namespace SmashUltimateEditor
 
     public class Fighter : DataTbl, IDataTbl
     {
-        public const string XML_NAME = "fighter_data_tbl";
+        internal static string XML_NAME = "fighter_data_tbl";
 
         public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false)
         {
@@ -82,7 +82,7 @@ namespace SmashUltimateEditor
             Fighter newCopy = new Fighter();
             foreach(PropertyInfo property in GetType().GetProperties())
             {
-                newCopy.SetValueFromName(property.Name, GetValueFromName(property.Name));
+                newCopy.SetValueFromName(property.Name, GetPropertyValueFromName(property.Name));
             }
 
             return newCopy;

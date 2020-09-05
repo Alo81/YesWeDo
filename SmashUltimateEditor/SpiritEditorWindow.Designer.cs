@@ -391,7 +391,7 @@ namespace SmashUltimateEditor
             this.checkBoxDecrypt.AutoSize = true;
             this.checkBoxDecrypt.Checked = true;
             this.checkBoxDecrypt.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDecrypt.Location = new System.Drawing.Point(836, 28);
+            this.checkBoxDecrypt.Location = new System.Drawing.Point(835, 28);
             this.checkBoxDecrypt.Name = "checkBoxDecrypt";
             this.checkBoxDecrypt.Size = new System.Drawing.Size(107, 19);
             this.checkBoxDecrypt.TabIndex = 13;

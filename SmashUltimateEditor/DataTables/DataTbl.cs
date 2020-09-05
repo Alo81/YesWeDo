@@ -35,6 +35,30 @@ namespace SmashUltimateEditor.DataTables
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
+        public static DataTbl GetDataTblFromName(string className)
+        {
+            if (String.IsNullOrWhiteSpace(className))
+            {
+                return null;
+            }
+
+            var type = typeof(DataTbl);
+
+            var child = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass
+                                    && type.IsAssignableFrom(t) && t != type
+                                    && (string)t?.GetField("XML_NAME", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)
+                                    ?.GetValue(null) == className)?.FirstOrDefault() ?? null;
+            if (child is null)
+            {
+                return null;
+            }
+            else
+            {
+                return (DataTbl)Activator.CreateInstance(child);
+            }
+
+        }
+
         public void Randomize(Random rnd, DataTbls dataTbls, bool checkRequired = true)
         {
             Type type = GetType();
@@ -132,14 +156,14 @@ namespace SmashUltimateEditor.DataTables
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
-                var value = GetValueFromName(combo.Name);
+                var value = GetPropertyValueFromName(combo.Name);
                 value = EnumChecker(value, combo.Name);
                 combo.SelectedIndex = combo.Items.IndexOf(value);
                 combo.Text = value;
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
-                text.Text = GetValueFromName(text.Name);
+                text.Text = GetPropertyValueFromName(text.Name);
             }
             if(GetType().Name == "Fighter")
             {
@@ -225,9 +249,13 @@ namespace SmashUltimateEditor.DataTables
 
             return page;
         }
-        public string GetValueFromName(string name)
+        public string GetPropertyValueFromName(string name)
         {
             return this.GetType().GetProperty(name).GetValue(this)?.ToString().ToLower() ?? "";
+        }
+        public string GetFieldValueFromName(string name)
+        {
+            return this?.GetType()?.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(this)?.ToString()?.ToLower() ?? "";
         }
         public Tuple<float, float> GetRangeFromName(string name)
         {
@@ -265,7 +293,7 @@ namespace SmashUltimateEditor.DataTables
                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
                 this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
                new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
-               new XAttribute("hash", DataParse.ExportNameFixer(property.Name)), DataParse.ExportNameFixer(this.GetValueFromName(property.Name)))
+               new XAttribute("hash", DataParse.ExportNameFixer(property.Name)), DataParse.ExportNameFixer(this.GetPropertyValueFromName(property.Name)))
                     )
                 );
         }

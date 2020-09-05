@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
@@ -31,18 +32,18 @@ namespace SmashUltimateEditor
             // Find all unlockable characters.  Could have probably just done this by hand but at this point, committed.  
             var x = dataTbls.fighterData.fighter_kind.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
             var y = dataTbls.fighterData.battle_id.Where(x => Defs.UNLOCKABLE_FIGHTERS.Contains(x));
-            var z = dataTbls.battleData.GetBattles().Where(x => x.GetValueFromName("_0x18e536d4f7") != 0.ToString());
+            var z = dataTbls.battleData.GetBattles().Where(x => x.GetPropertyValueFromName("_0x18e536d4f7") != 0.ToString());
             var a = dataTbls.battleData.GetBattles().Where(x => 
-            x.GetValueFromName("_0x0d6f19abae").ToUpper() == "FALSE" 
+            x.GetPropertyValueFromName("_0x0d6f19abae").ToUpper() == "FALSE" 
             &&
-            x.GetValueFromName("_0x18e536d4f7") != 0.ToString()
+            x.GetPropertyValueFromName("_0x18e536d4f7") != 0.ToString()
             );
 
 
             var b = dataTbls.battleData.GetBattles().Where(x =>
-            x.GetValueFromName("_0x0d6f19abae").ToUpper() == "FALSE"
+            x.GetPropertyValueFromName("_0x0d6f19abae").ToUpper() == "FALSE"
             &&
-            x.GetValueFromName("_0x18e536d4f7") == 2.ToString()
+            x.GetPropertyValueFromName("_0x18e536d4f7") == 2.ToString()
             );
             //_0x0d6f19abae
         }
@@ -108,12 +109,17 @@ namespace SmashUltimateEditor
             {
                 try
                 {
-                    dataTbls.EmptySpiritData();
-                    dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
+                    BattleDataOptions battles = new BattleDataOptions();
+                    FighterDataOptions fighters = new FighterDataOptions();
+                    var type = dataTbls.ReadXML(openDialog.FileName, ref dataTbls.battleData, ref dataTbls.fighterData);
+                    if(type.Name == "Battle")
+                    {
+                        dataTbls.EmptySpiritData();
+                        var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
 
-                    var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
+                        buildFighterDataTab(battle_id);
+                    }
 
-                    buildFighterDataTab(battle_id);
                 }
                 catch (Exception ex)
                 {

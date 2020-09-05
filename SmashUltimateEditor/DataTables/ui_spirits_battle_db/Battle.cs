@@ -11,7 +11,7 @@ namespace SmashUltimateEditor
 {
     public class Battle : DataTbl, IDataTbl
     {
-        public const string XML_NAME = "battle_data_tbl";
+        internal static string XML_NAME = "battle_data_tbl";
 
         public void BuildEvent(Tuple<string, string, int, int, byte, ushort> randEvent, int index)
         {
@@ -123,7 +123,7 @@ namespace SmashUltimateEditor
             Battle newCopy = new Battle();
             foreach (PropertyInfo property in GetType().GetProperties())
             {
-                newCopy.SetValueFromName(property.Name, GetValueFromName(property.Name));
+                newCopy.SetValueFromName(property.Name, GetPropertyValueFromName(property.Name));
             }
 
             return newCopy;

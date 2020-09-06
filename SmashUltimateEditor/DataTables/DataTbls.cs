@@ -76,7 +76,11 @@ namespace SmashUltimateEditor
             encrypt = false;
             decrypt = false;
 
-            ReadXML(config.file_location, ref battleData, ref fighterData);
+            var results = ReadXML(config.file_location);
+            //ref battleData, ref fighterData
+            battleData.SetBattles(results.GetBattles());
+            fighterData.SetFighters(results.GetFighters());
+            eventsData = results.GetEvents();
         }
 
         public void EmptySpiritData()
@@ -144,7 +148,10 @@ namespace SmashUltimateEditor
 
             var battles = new BattleDataOptions();
             var fighters = new FighterDataOptions();
-            ReadXML(file_loc, ref battles, ref fighters);
+            var results = ReadXML(file_loc);
+            
+            battles.SetBattles(results.GetBattles());
+            fighters.SetFighters(results.GetFighters());
 
             battleData.ReplaceBattles(battles);
             fighterData.ReplaceFighters(fighters);
@@ -210,7 +217,7 @@ namespace SmashUltimateEditor
 
             SetupRandomizeProgress();
 
-            foreach (Battle battle in battleData.battleDataList)
+            foreach (Battle battle in battleData.GetBattles())
             {
                 battle.Randomize(rnd, this);
 
@@ -388,11 +395,12 @@ namespace SmashUltimateEditor
         }
 
         // Methods
-        public Type ReadXML(string fileName, ref BattleDataOptions battleData, ref FighterDataOptions fighterData)
+        // GENERICIZE reading XML such that it figures out which type and only updates that one.
+        public DataOptions ReadXML(string fileName)
         {
             bool parseData = false;
             IDataTbl dataTable = new Battle();
-            Type xmlType = null;
+            var results = new DataOptions();
 
             using Stream stream = new FileStream(fileName, FileMode.Open);
             XmlReader reader = XmlReader.Create(stream);
@@ -406,7 +414,6 @@ namespace SmashUltimateEditor
 
                     if(dataTable != null)
                     {
-                        xmlType = xmlType == null ? dataTable.GetType() : xmlType;
                         parseData = true;
                     }
 
@@ -419,12 +426,8 @@ namespace SmashUltimateEditor
                         {
                             dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
                             dataTable.BuildFromXml(reader);
-                            if (dataTable is Battle battleTbl)
-                                battleData.AddBattle(battleTbl);
-                            else if (dataTable is Fighter fighterTbl)
-                                fighterData.AddFighter(fighterTbl);
-                            else if (dataTable is Event eventTbl)
-                                eventsData.Add(eventTbl);
+
+                            results.AddDataTbl(dataTable);
 
                             reader.Read();
                             reader.Read();
@@ -435,7 +438,7 @@ namespace SmashUltimateEditor
                         Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
                     }
                 }
-                return xmlType;
+                return results;
             }
             catch(Exception ex)
             {

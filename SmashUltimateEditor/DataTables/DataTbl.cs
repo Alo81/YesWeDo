@@ -30,8 +30,6 @@ namespace SmashUltimateEditor.DataTables
             public int Order { get { return order_; } }
         }
 
-        List<string> dataList = new List<string>();
-
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 

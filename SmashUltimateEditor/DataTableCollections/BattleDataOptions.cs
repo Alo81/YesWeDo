@@ -10,57 +10,61 @@ namespace SmashUltimateEditor
 {
     public class BattleDataOptions : DataOptions
     {
-        public List<Battle> battleDataList;
+        public List<Battle> dataList;
 
         private List<Tuple<string, string, int, int, byte, ushort>> _events;
 
         public BattleDataOptions()
         {
-            battleDataList = new List<Battle>();
+            dataList = new List<Battle>();
         }
         public int GetBattleCount()
         {
-            return battleDataList.Count();
+            return dataList.Count();
         }
 
         public Battle GetBattle(string battle_id)
         {
 
-            return battleDataList.FirstOrDefault(x => x.battle_id == battle_id);
+            return dataList.FirstOrDefault(x => x.battle_id == battle_id);
         }
 
         public int GetBattleIndex(string battle_id)
         {
-            return battleDataList.FindIndex(x => x.battle_id == battle_id);
+            return dataList.FindIndex(x => x.battle_id == battle_id);
         }
         public int GetBattleIndex(Battle battle)
         {
-            return battleDataList.FindIndex(x => x == battle);
+            return dataList.FindIndex(x => x == battle);
         }
         public Battle GetBattleAtIndex(int index)
         {
-            return battleDataList?[index];
+            return dataList?[index];
         }
         public List<Battle> GetBattles()
         {
-            return battleDataList;
+            return dataList;
         }
 
         public void AddBattle(Battle newBattle)
         {
-            battleDataList.Add(newBattle);
+            dataList.Add(newBattle);
+        }
+        public void SetBattles(List<Battle> newBattles)
+        {
+            dataList = newBattles;
         }
 
         public void ReplaceBattles(BattleDataOptions replacement)
         {
             foreach(var replBattle in replacement.GetBattles())
             {
-                battleDataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
+                dataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
             }
         }
         public void ReplaceBattleAtIndex(int index, Battle newBattle)
         {
-            battleDataList[index] = newBattle;
+            dataList[index] = newBattle;
         }
         public string GetXmlName()
         {
@@ -68,87 +72,87 @@ namespace SmashUltimateEditor
         }
         public Type GetContainerType()
         {
-            return battleDataList[0].GetType();
+            return dataList[0].GetType();
         }
 
         public List<string> battle_id
         {
-            get { return battleDataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.battle_id).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>battle_type{
-            get { return battleDataList.Select(x => x.battle_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.battle_type).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> battle_time_sec
         {
-            get { return battleDataList.Select(x => x.battle_time_sec.ToString()).OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.battle_time_sec.ToString()).OrderBy(x => x).ToList(); }
         }
 
         public List<string> basic_init_damage
         {
-            get { return battleDataList.Select(x => x.basic_init_damage.ToString()).OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.basic_init_damage.ToString()).OrderBy(x => x).ToList(); }
         }
 
         public List<string> basic_init_hp
         {
-            get { return battleDataList.Select(x => x.basic_init_hp.ToString()).OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.basic_init_hp.ToString()).OrderBy(x => x).ToList(); }
         }
 
         public List<string> basic_stock
         {
-            get { return battleDataList.Select(x => x.basic_stock.ToString()).OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.basic_stock.ToString()).OrderBy(x => x).ToList(); }
         }
 
         public List<string>ui_stage_id
         {
-            get { return battleDataList.Select(x => x.ui_stage_id).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.ui_stage_id).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_type
         {
-            get { return battleDataList.Select(x => x.stage_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.stage_type).Distinct().OrderBy(x => x).ToList(); }
         }
 
         // ORIGINALLY AN SBYTE.  (?)
         public List<string>_0x18e536d4f7
         {
-            get { return battleDataList.Select(x => x._0x18e536d4f7.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x._0x18e536d4f7.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_bgm
         {
-            get { return battleDataList.Select(x => x.stage_bgm).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.stage_bgm).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_gimmick
         {
-            get { return battleDataList.Select(x => x.stage_gimmick.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.stage_gimmick.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_attr
         {
-            get { return battleDataList.Select(x => x.stage_attr).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.stage_attr).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>floor_place_id
         {
-            get { return battleDataList.Select(x => x.floor_place_id).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.floor_place_id).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>item_table
         {
-            get { return battleDataList.Select(x => x.item_table).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.item_table).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>item_level
         {
-            get { return battleDataList.Select(x => x.item_level).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.item_level).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>result_type
         {
-            get { return battleDataList.Select(x => x.result_type).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.result_type).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> event_type
         {
@@ -162,12 +166,12 @@ namespace SmashUltimateEditor
 
         public List<string> event_start_time
         {
-            get { return battleDataList.Select(x => x.event1_start_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.event1_start_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> event_range_time
         {
-            get { return battleDataList.Select(x => x.event1_range_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.event1_range_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<Tuple<string, string, int, int, byte, ushort>> events
@@ -177,7 +181,7 @@ namespace SmashUltimateEditor
                 {
                     _events = new List<Tuple<string, string, int, int, byte, ushort>>();
 
-                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    _events.AddRange((dataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
                     (
                         x.event1_type, 
                         x.event1_label, 
@@ -187,7 +191,7 @@ namespace SmashUltimateEditor
                         x.event1_damage
                     )).Distinct()));
 
-                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    _events.AddRange((dataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
                     (
                         x.event2_type,
                         x.event2_label,
@@ -197,7 +201,7 @@ namespace SmashUltimateEditor
                         x.event2_damage
                     )).Distinct()));
 
-                    _events.AddRange((battleDataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
+                    _events.AddRange((dataList.Select(x => new Tuple<string, string, int, int, byte, ushort>
                     (
                         x.event3_type,
                         x.event3_label,
@@ -216,12 +220,12 @@ namespace SmashUltimateEditor
 
         public List<byte> event_count
         {
-            get { return battleDataList.Select(x => x.event1_count).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.event1_count).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<ushort> event_damage
         {
-            get { return battleDataList.Select(x => x.event1_damage).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.event1_damage).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> event1_type
@@ -314,27 +318,27 @@ namespace SmashUltimateEditor
 
         public List<string>aw_flap_delay
         {
-            get { return battleDataList.Select(x => x.aw_flap_delay.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.aw_flap_delay.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> _0x0d41ef8328
         {
-            get { return battleDataList.Select(x => x._0x0d41ef8328.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x._0x0d41ef8328.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> _0x0d6f19abae
         {
-            get { return battleDataList.Select(x => x._0x0d6f19abae.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x._0x0d6f19abae.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>_0x18d9441f71
         {
-            get { return battleDataList.Select(x => x._0x18d9441f71).Distinct().OrderBy(x => x).ToList();  }
+            get { return dataList.Select(x => x._0x18d9441f71).Distinct().OrderBy(x => x).ToList();  }
         }
 
         public List<string> _0x18404d4ecb
         {
-            get { return battleDataList.Select(x => x._0x18404d4ecb).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x._0x18404d4ecb).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>recommended_skill
@@ -421,12 +425,12 @@ namespace SmashUltimateEditor
 
         public List<string>_0x0ff8afd14f
 {
-            get { return battleDataList.Select(x => x._0x0ff8afd14f).Distinct().OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x._0x0ff8afd14f).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string> battle_power
         {
-            get { return battleDataList.Select(x => x.battle_power.ToString()).OrderBy(x => x).ToList(); }
+            get { return dataList.Select(x => x.battle_power.ToString()).OrderBy(x => x).ToList(); }
         }
 		
     }

@@ -2,6 +2,8 @@
 Spirit Editor
 
 TODO:
+
+  Config file support (Set your paths, things like that).  
   
   Separate out and properly organize objects by file.  Eg, have parsing of spirit battle DB being done for the whole file.  Abstract it out for all instances we want.  
   
@@ -53,3 +55,6 @@ TODO:
   Add custom "Final Boss" spirit
   
   If we set Recommended Skills based off an attribute, remove some of the randomized skills to avoid too much noise in Recommendations.  
+
+________________________
+Apparently, Boss Spirits work in World of Light, but not from spirit Rematch.  Good to know. 

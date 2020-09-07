@@ -1,4 +1,5 @@
 ﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,15 @@ namespace SmashUltimateEditor.DataTableCollections
         }
         public List<string> GetLabelsOfType(string type)
         {
-            return dataList.Where(x => x.GetTypeName() == type).Select(x => ((LabelEvent)x)?.label).OrderBy(x => x).ToList();
+            try
+            {
+                return dataList.Where(x => x.GetTypeName() == type).Select(x => ((LabelEvent)x)?.label).OrderBy(x => x).ToList();
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpCallingClass(String.Format("No Event labels or error getting Event labels of type: {0}.\r\n", type));
+                return new List<String>() { "" };
+            }
         }
 
         public int GetEventIndex(Type type, string label)

@@ -482,6 +482,7 @@ namespace SmashUltimateEditor
         public DataOptions ReadXML(string fileName)
         {
             bool parseData = false;
+            bool firstPass = false;
             IDataTbl dataTable;
             var results = new DataOptions();
 
@@ -490,36 +491,47 @@ namespace SmashUltimateEditor
 
             try
             {
+                reader.Read();
                 // Read the whole file.  
-                while (reader.Read())
+                while (!reader.EOF)
                 {
                     dataTable = (IDataTbl)DataTbl.GetDataTblFromName(reader?.GetAttribute("hash"));
 
                     if(dataTable != null)
                     {
                         parseData = true;
+                        firstPass = true;
                     }
 
                     if (parseData)
                     {
                         // Read until start of data.  
-                        ReadUntilType("struct", reader);
+                        ReadUntilName(reader, stopper: "struct");
+
                         // Lists have index values, so keep reading until we've left the list.  
-                        while (reader.GetAttribute("index") != null)
+                        // Added first pass to handle when a struct is not in a list.  
+                        while (firstPass || reader.GetAttribute("index") != null)
                         {
                             dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
                             dataTable.BuildFromXml(reader);
 
                             results.AddDataTbl(dataTable);
 
-                            reader.Read();
-                            reader.Read();
+                            ReadUntilNodeType(reader, node: XmlNodeType.Element);
+
+                            //reader.Read();
+                            //reader.Read();
+                            firstPass = false;
                         }
 
                         //Left the list.  Don't parse the next lines.  
                         parseData = false;
                         Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
+                        
+                        continue;
                     }
+
+                    reader.Read();
                 }
                 return results;
             }
@@ -571,9 +583,18 @@ namespace SmashUltimateEditor
         }
 
         // Maybe use a list of tuples for string/Node pairs?  
-        public static void ReadUntilType(string stopper, XmlReader reader, XmlNodeType node = XmlNodeType.Element)
+        public static void ReadUntilNodeType(XmlReader reader, XmlNodeType node = XmlNodeType.Element)
         {
-            while (reader.NodeType != node || reader.Name != stopper)
+            while (!reader.EOF && reader.NodeType != node)
+            {
+                reader.Read();
+            }
+        }
+
+        // Maybe use a list of tuples for string/Node pairs?  
+        public static void ReadUntilName(XmlReader reader, string stopper = "")
+        {
+            while (!reader.EOF && reader.Name != stopper)
             {
                 reader.Read();
             }

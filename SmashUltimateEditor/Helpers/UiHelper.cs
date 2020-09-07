@@ -1,6 +1,7 @@
 ﻿using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -51,6 +52,14 @@ namespace SmashUltimateEditor.Helpers
             b.Text = "Remove Fighter";
 
             return b;
+        }
+
+        public static void PopUpCallingClass(string message = "Error from: ")
+        {
+            int skipFrames = 1;
+            var method = new StackTrace().GetFrame(skipFrames).GetMethod();
+
+            MessageBox.Show(    String.Concat(message, String.Format("{0} - {1}", method.Name, method.DeclaringType.Name)  )   );
         }
     }
 }

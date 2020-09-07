@@ -18,7 +18,7 @@ namespace SmashUltimateEditor
         {
             dataList = new List<Fighter>();
         }
-        public int GetFighterCount()
+        public int GetCount()
         {
             return dataList.Count();
         }

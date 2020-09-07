@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
 using System;
@@ -9,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,29 +29,6 @@ namespace SmashUltimateEditor
             dataTbls.decrypt = checkBoxDecrypt.Checked;
 
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
-
-
-            var test = new BattleDataOptions();
-            test.AddBattle(new Battle());
-            var test2 = test.GetCount();
-
-            // Find all unlockable characters.  Could have probably just done this by hand but at this point, committed.  
-            var x = dataTbls.fighterData.fighter_kind.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
-            var y = dataTbls.fighterData.battle_id.Where(x => Defs.UNLOCKABLE_FIGHTERS.Contains(x));
-            var z = dataTbls.battleData.GetBattles().Where(x => x.GetPropertyValueFromName("_0x18e536d4f7") != 0.ToString());
-            var a = dataTbls.battleData.GetBattles().Where(x => 
-            x.GetPropertyValueFromName("_0x0d6f19abae").ToUpper() == "FALSE" 
-            &&
-            x.GetPropertyValueFromName("_0x18e536d4f7") != 0.ToString()
-            );
-
-
-            var b = dataTbls.battleData.GetBattles().Where(x =>
-            x.GetPropertyValueFromName("_0x0d6f19abae").ToUpper() == "FALSE"
-            &&
-            x.GetPropertyValueFromName("_0x18e536d4f7") == 2.ToString()
-            );
-            //_0x0d6f19abae
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -115,15 +94,15 @@ namespace SmashUltimateEditor
                 {
                     var battles = new BattleDataOptions();
                     var fighters = new FighterDataOptions();
-                    var events = new List<Event>();
+                    var events = new EventDataOptions();
 
                     var results = dataTbls.ReadXML(openDialog.FileName);
 
                     battles.SetBattles(results.GetBattles());
                     fighters.SetFighters(results.GetFighters());
-                    events = results.GetEvents();
+                    events.SetEvents(results.GetEvents());
 
-                    if(battles.GetBattleCount() > 0)
+                    if(battles.GetCount() > 0)
                     {
                         dataTbls.EmptySpiritData();
                         dataTbls.battleData = battles;
@@ -134,9 +113,10 @@ namespace SmashUltimateEditor
 
                         MessageBox.Show(String.Format("Opened Battle Data."));
                     }
-                    if(events.Count > 0)
+                    if(events.GetCount() > 0)
                     {
                         dataTbls.eventsData = events;
+                        dataTbls.UpdateEventsForDbValues();
 
                         MessageBox.Show(String.Format("Opened Event Data."));
                     }

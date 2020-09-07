@@ -1,4 +1,5 @@
 ﻿using paracobNET;
+using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Helpers;
 using System;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -23,7 +25,7 @@ namespace SmashUltimateEditor
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
-        public List<Event> eventsData;
+        public EventDataOptions eventsData;
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
@@ -42,7 +44,11 @@ namespace SmashUltimateEditor
         {
             get
             {
-                return BuildEmptyPage(this, typeof(Battle));
+                var page = BuildEmptyPage(this, typeof(Battle));
+                SetEventOnChange(ref page);
+                if(eventsData.GetCount() != 0)
+                    SetEventTypeForPage(ref page);
+                return page;
             } 
         }
 
@@ -67,7 +73,7 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
-            eventsData = new List<Event>();
+            eventsData = new EventDataOptions();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
@@ -80,13 +86,35 @@ namespace SmashUltimateEditor
             //ref battleData, ref fighterData
             battleData.SetBattles(results.GetBattles());
             fighterData.SetFighters(results.GetFighters());
-            eventsData = results.GetEvents();
+            eventsData.SetEvents(results.GetEvents());
         }
 
         public void EmptySpiritData()
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
+        }
+        public void UpdateEventsForDbValues()
+        {
+            if(eventsData.GetCount() == 0)
+            {
+                return;
+            }
+
+            // Visible pages.
+            for(int i = 0; i < tabs.TabCount; i++)
+            {
+                var page = tabs.TabPages[i];
+                SetEventTypeForPage(ref page);
+            }
+
+            // Stored pages.
+            for (int i = 0; i < tabStorage.Count; i++)
+            {
+                var page = tabStorage.Dequeue();
+                SetEventTypeForPage(ref page);
+                tabStorage.Enqueue(page);
+            }
         }
 
         public void Save()
@@ -203,7 +231,7 @@ namespace SmashUltimateEditor
         {
             progress.Visible = true;
             progress.Minimum = 0;
-            progress.Maximum = battleData.GetBattleCount() * 4;
+            progress.Maximum = battleData.GetCount() * 4;
             progress.Value = progress.Minimum;
             progress.Step = 1;
         }
@@ -346,6 +374,62 @@ namespace SmashUltimateEditor
             }
         }
 
+        public void SetEventTypeForPage(ref TabPage page)
+        {
+            foreach (ComboBox control in page.Controls.OfType<ComboBox>())
+            {
+                if (Regex.IsMatch(control.Name, "event.*type"))
+                {
+                    control.DataSource = eventsData.event_type;
+                }
+            }
+        }
+
+        public void SetEventOnChange(ref TabPage page)
+        {
+            foreach(ComboBox control in page.Controls.OfType<ComboBox>())
+            {
+                if (Regex.IsMatch(control.Name, "event.*type"))
+                {
+                    control.SelectedIndexChanged += SetEventLabelOptions;
+                }
+            }
+        }
+
+        public void SetEventLabelOptions(object sender, EventArgs e)
+        {
+            if(eventsData.GetCount() == 0)
+            {
+                return;
+            }
+
+            var combo = ((ComboBox)sender);
+            var labelComboName = "event#_label";
+
+            foreach(char character in combo.Name)
+            {
+                if (Char.IsDigit(character))
+                {
+                    labelComboName = labelComboName.Replace('#', character);
+                    break;
+                }
+            }
+
+            var controls = tabs.SelectedTab.Controls.OfType<ComboBox>();
+
+            var labels = eventsData.GetLabelsOfType(combo?.SelectedItem?.ToString());
+
+            foreach (ComboBox control in controls)
+            {
+                if (control.Name == labelComboName)
+                {
+                    control.DataSource = labels;
+                    return;
+                }
+            }
+
+        }
+
         public void SetSelectedBattle(string battle_id)
         {
             selectedBattle = battleData.GetBattle(battle_id);
@@ -395,11 +479,10 @@ namespace SmashUltimateEditor
         }
 
         // Methods
-        // GENERICIZE reading XML such that it figures out which type and only updates that one.
         public DataOptions ReadXML(string fileName)
         {
             bool parseData = false;
-            IDataTbl dataTable = new Battle();
+            IDataTbl dataTable;
             var results = new DataOptions();
 
             using Stream stream = new FileStream(fileName, FileMode.Open);
@@ -444,7 +527,6 @@ namespace SmashUltimateEditor
             {
                 throw ex;
             }
-            Console.WriteLine("List Built.");
         }
         public XDocument BuildXml(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
@@ -573,8 +655,10 @@ namespace SmashUltimateEditor
         {
             try
             {
-                if (!Enum.IsDefined(typeof(ParamType), node.Name))
-                    throw new FormatException($"\"{node.Name}\" is not a valid param type");
+                if (!Enum.IsDefined(typeof(ParamType), node.Name)) 
+                {
+                    //throw new FormatException($"\"{node.Name}\" is not a valid param type");
+                }
                 ParamType type = (ParamType)Enum.Parse(typeof(ParamType), node.Name);
                 switch (type)
                 {

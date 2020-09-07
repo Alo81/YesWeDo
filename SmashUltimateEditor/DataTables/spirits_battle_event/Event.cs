@@ -9,12 +9,22 @@ namespace SmashUltimateEditor.DataTables
     {
         // Default empty XML_NAME where it is not an actual XML element.
         internal static string XML_NAME = "";
+        internal static string TYPE_NAME = XML_NAME.Replace("_param", "");
+
+        public string GetTypeName()
+        {
+            string typeName = GetFieldValueFromName("TYPE_NAME");
+            return typeName == "" ? (GetFieldValueFromName("XML_NAME").Replace("_param", "")) : typeName;
+        }
     }
 
-    public class StandardEvent : Event
+    public class LabelEvent : Event
     {
         [Order]
         public string label { get; set; }
+    }
+    public class StandardEvent : LabelEvent
+    {
         [Order]
         public bool is_player_target { get; set; }
         [Order]
@@ -25,10 +35,8 @@ namespace SmashUltimateEditor.DataTables
         [Order]
         public int value { get; set; }
     }
-    public class SpawnEvent : Event
+    public class SpawnEvent : LabelEvent
     {
-        [Order]
-        public string label { get; set; }
         [Order]
         public string item_id { get; set; }
     }
@@ -42,6 +50,7 @@ namespace SmashUltimateEditor.DataTables
     public class ScaleEvent : StandardEvent
     {
         internal static string XML_NAME = "scale_param";
+        internal static string TYPE_NAME = "change_scale";
         [Order]
         public bool to_bigger { get; set; }
     }
@@ -60,6 +69,7 @@ namespace SmashUltimateEditor.DataTables
     public class QuakeEvent : Event
     {
         internal static string XML_NAME = "quake_param";
+        internal static string TYPE_NAME = "earthquake";
 
         [Order]
         public int before_quake_frame { get; set; }
@@ -176,12 +186,10 @@ namespace SmashUltimateEditor.DataTables
     {
         internal static string XML_NAME = "reflect_up_param";
     }
-    public class _0x18bde21b22 : Event
+    public class _0x18bde21b22 : LabelEvent
     {
         internal static string XML_NAME = "0x18bde21b22";
 
-        [Order]
-        public string label { get; set; }
         [Order]
         public int value { get; set; }
         [Order]
@@ -189,12 +197,11 @@ namespace SmashUltimateEditor.DataTables
         [Order]
         public string attr { get; set; }
     }
-    public class ItemEvent : Event
+    public class ItemEvent : LabelEvent
     {
         internal static string XML_NAME = "item_appear_param";
+        internal static string TYPE_NAME = "item";
 
-        [Order]
-        public string label { get; set; }
         [Order]
         public string item_id { get; set; }
         [Order]
@@ -206,12 +213,10 @@ namespace SmashUltimateEditor.DataTables
     {
         internal static string XML_NAME = "warp_param";
     }
-    public class StormEvent : Event
+    public class StormEvent : LabelEvent
     {
         internal static string XML_NAME = "storm_param";
 
-        [Order]
-        public string label { get; set; }
         [Order]
         public bool is_left { get; set; }
         [Order]
@@ -235,9 +240,11 @@ namespace SmashUltimateEditor.DataTables
     public class AssistEvent : SpawnEvent
     {
         internal static string XML_NAME = "assist_param";
+        internal static string TYPE_NAME = "assist_appear";
     }
     public class PokemonEvent : SpawnEvent
     {
         internal static string XML_NAME = "pokemon_param";
+        internal static string TYPE_NAME = "pokemon_fix";
     }
 }

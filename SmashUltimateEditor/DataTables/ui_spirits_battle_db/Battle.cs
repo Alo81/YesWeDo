@@ -1,4 +1,5 @@
 ﻿using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
@@ -13,16 +14,16 @@ namespace SmashUltimateEditor
     {
         internal static string XML_NAME = "battle_data_tbl";
 
-        public void BuildEvent(Tuple<string, string, int, int, byte, ushort> randEvent, int index)
+        public void BuildEvent(BattleEvent randEvent, int index)
         {
             var eventNum = String.Format("event{0}_", index);
             // event1_type, event1_ label,  event1_ start_time, event1_ range_time, event1_ count, event1_ damage
-            SetValueFromName(eventNum + "type", randEvent.Item1);
-            SetValueFromName(eventNum + "label", randEvent.Item2);
-            SetValueFromName(eventNum + "start_time", randEvent.Item3.ToString());
-            SetValueFromName(eventNum + "range_time", randEvent.Item4.ToString());
-            SetValueFromName(eventNum + "count", randEvent.Item5.ToString());
-            SetValueFromName(eventNum + "damage", randEvent.Item6.ToString());
+            SetValueFromName(eventNum + "type", randEvent.event_type);
+            SetValueFromName(eventNum + "label", randEvent.event_label);
+            SetValueFromName(eventNum + "start_time", randEvent.event_start_time.ToString());
+            SetValueFromName(eventNum + "range_time", randEvent.event_range_time.ToString());
+            SetValueFromName(eventNum + "count", randEvent.event_count.ToString());
+            SetValueFromName(eventNum + "damage", randEvent.event_damage.ToString());
         }
 
         public Fighter GetNewFighter()
@@ -31,31 +32,57 @@ namespace SmashUltimateEditor
         }
 
         // Make an event object dawg.  
-        public void Cleanup(ref Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events, int fighterCount)
+        public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls)
         {
             bool isBossType = IsBossType();
-            EventSet(rnd, events);
+            EventSet(ref rnd, dataTbls);
             HazardCheck();
             BossCheck();
-            HealthCheck();
+            HealthCheck(ref rnd);
             TimerCheck(fighterCount);
-            BattlePowerCheck(rnd, isBossType);
+            BattlePowerCheck(ref rnd, isBossType);
         }
 
-        public void EventSet(Random rnd, List<Tuple<string, string, int, int, byte, ushort>> events)
+        public void EventSet(ref Random rnd, DataTbls dataTbls)
         {
             // Post Randomize battle modifiers
             var eventCount = RandomizerHelper.eventDistribution[rnd.Next(RandomizerHelper.eventDistribution.Count)];
 
+
             for (int j = 1; j <= eventCount; j++)
             {
-                var randEvent = events[rnd.Next(events.Count)];
-                if(RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
+                if(RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd))
+                {
+                    var randEvent = GetRandomBattleEvent(ref rnd, dataTbls);
                     BuildEvent(randEvent, j);
+                }
+            }
+        }
+        public BattleEvent GetRandomBattleEvent(ref Random rand, DataTbls dataTbls)
+        {
+            if (dataTbls.eventData.GetCount() == 0)
+            {
+                return dataTbls.battleData.events[rand.Next(dataTbls.battleData.events.Count)];
+            }
+            else
+            {
+                var properties = GetType().GetProperties();
+                var event_types = dataTbls.eventData.event_type;
+                var randEvent = new BattleEvent();
+                randEvent.event_count = Byte.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_count").FirstOrDefault(), ref rand, dataTbls, true));
+                randEvent.event_damage = UInt16.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_damage").FirstOrDefault(), ref rand, dataTbls, true));
+                randEvent.event_start_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_start_time").FirstOrDefault(), ref rand, dataTbls, true));
+                randEvent.event_range_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_range_time").FirstOrDefault(), ref rand, dataTbls, true));
+                randEvent.event_type = event_types[rand.Next(event_types.Count)];
+
+                var labels = dataTbls.eventData.GetLabelsOfType(randEvent.event_type);
+                randEvent.event_label = labels[rand.Next(labels.Count)];
+
+                return randEvent;
             }
         }
 
-        public void HealthCheck()
+        public void HealthCheck(ref Random rnd)
         {
             // Check if init HP is lower than init damage (?)
             if (basic_init_hp < basic_init_damage)
@@ -68,7 +95,7 @@ namespace SmashUltimateEditor
             // If HP battle, and player hass less than 30 hp, and they pass chaos chance, give em extra health.  
             if(battle_type == "hp" || battle_type == "hp_time")
             {
-                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(Defs.CHAOS) && basic_init_hp < 30 ? 0 : (ushort)Defs.PLAYER_LOW_HP_MOD);
+                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd) && basic_init_hp < 30 ? 0 : (ushort)Defs.PLAYER_LOW_HP_MOD);
             }
         }
 
@@ -102,7 +129,7 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void BattlePowerCheck(Random rnd, bool isBoss)
+        public void BattlePowerCheck(ref Random rnd, bool isBoss)
         {
             int power = rnd.Next((int)Defs.BATTLE_POWER_MIN, (int)Defs.BATTLE_POWER_MAX);
 

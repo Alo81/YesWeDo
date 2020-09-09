@@ -1,34 +1,37 @@
-﻿using System;
+﻿using paracobNET;
+using SmashUltimateEditor.DataTableCollections;
+using SmashUltimateEditor.DataTables.ui_item_db;
+using SmashUltimateEditor.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using static SmashUltimateEditor.DataTables.DataTbl;
 
 namespace SmashUltimateEditor.DataTables
 {
-    public class DataOptions
+    public class DataOptions : BaseDataOptions, IDataOptions//, IXmlType
     {
+        //public ParamType TypeKey { get; } = ParamType.list;
         // Try this more?
-        public List<IDataTbl> dataList;
+        public List<IDataTbl> _dataList;
+        public List<IDataTbl> dataList { get { return _dataList; } }
 
         public DataOptions()
         {
-            dataList = new List<IDataTbl>();
+            _dataList = new List<IDataTbl>();
         }
-
         public void AddDataTbl(IDataTbl tbl)
         {
             dataList.Add(tbl);
         }
-
-        public List<string> GetOptionsFromName(string name)
-        {
-            return (List<string>)GetType().GetProperty(name).GetValue(this) ?? new List<string>();
-        }
-
         public int GetCount()
         {
             return dataList.Count;
         }
+
         public List<Battle> GetBattles()
         {
             return dataList.OfType<Battle>().ToList();
@@ -40,6 +43,14 @@ namespace SmashUltimateEditor.DataTables
         public List<Event> GetEvents()
         {
             return dataList.OfType<Event>().ToList();
+        }
+        public List<Item> GetItems()
+        {
+            return dataList.OfType<Item>().ToList();
+        }
+        public List<Type> GetContainerTypes()
+        {
+            return dataList.Select(x => x.GetType()).Distinct().ToList();
         }
     }
 }

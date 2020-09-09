@@ -7,17 +7,18 @@ using System.Text;
 
 namespace SmashUltimateEditor.DataTableCollections
 {
-    public class EventDataOptions : DataOptions
+    public class EventDataOptions : BaseDataOptions, IDataOptions
     {
-        public List<Event> dataList;
+        public List<Event> _dataList;
+        public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
 
         public EventDataOptions()
         {
-            dataList = new List<Event>();
+            _dataList = new List<Event>();
         }
         public int GetCount()
         {
-            return dataList.Count;
+            return _dataList.Count;
         }
 
         public Event GetEvent(Type type, string label)
@@ -27,21 +28,21 @@ namespace SmashUltimateEditor.DataTableCollections
 
         public List<Event> GetEventsOfType(Type type)
         {
-            return dataList.Where(x => x.GetType() == type).ToList();
+            return _dataList.Where(x => x.GetType() == type).ToList();
         }
         public List<string> GetLabelsOfType(Type type)
         {
-            return dataList.Where(x => x.GetType() == type).Select(x => ((LabelEvent)x).label).OrderBy(x => x).ToList();
+            return _dataList.Where(x => x.GetType() == type).Select(x => ((LabelEvent)x).label).OrderBy(x => x).ToList();
         }
         public List<string> GetLabelsOfType(string type)
         {
             try
             {
-                return dataList.Where(x => x.GetTypeName() == type).Select(x => ((LabelEvent)x)?.label).OrderBy(x => x).ToList();
+                return _dataList.Where(x => x.GetTypeName() == type).Select(x => ((LabelEvent)x)?.label).OrderBy(x => x).ToList();
             }
             catch (Exception ex)
             {
-                UiHelper.PopUpCallingClass(String.Format("No Event labels or error getting Event labels of type: {0}.\r\n", type));
+                //UiHelper.PopUpCallingClass(String.Format("No Event labels or error getting Event labels of type: {0}.\r\n", type));
                 return new List<String>() { "" };
             }
         }
@@ -52,46 +53,62 @@ namespace SmashUltimateEditor.DataTableCollections
         }
         public int GetEventIndex(Event inEvent)
         {
-            return dataList.FindIndex(x => x == inEvent);
+            return _dataList.FindIndex(x => x == inEvent);
         }
         public Event GetEventAtIndex(int index)
         {
-            return dataList?[index];
+            return _dataList?[index];
         }
         public List<Event> GetEvents()
         {
-            return dataList;
+            return _dataList;
         }
 
         public void AddEvent(Event inEvent)
         {
-            dataList.Add(inEvent);
+            _dataList.Add(inEvent);
+        }
+        public void AddUniqueEvents(List<Event> events)
+        {
+            foreach(Event inEvent in events)
+            {
+                if (!_dataList.Contains(inEvent))
+                {
+                    _dataList.Add(inEvent);
+                }
+            }
+        }
+        public void AddUniqueEvents(List<ItemEvent> events)
+        {
+            var items = _dataList.OfType<ItemEvent>();
+            foreach (ItemEvent inEvent in events)
+            {
+                if (!(items.Any(x =>  x.label == inEvent.label)))
+                {
+                    _dataList.Add(inEvent);
+                }
+            }
         }
         public void SetEvents(List<Event> inEvents)
         {
-            dataList = inEvents;
+            _dataList = inEvents;
         }
 
         public void ReplaceEvents(EventDataOptions replacement)
         {
             foreach (var replEvent in replacement.GetEvents())
             {
-                dataList[GetEventIndex(replEvent.GetType(), replEvent.GetFieldValueFromName("label"))] = replEvent;
+                _dataList[GetEventIndex(replEvent.GetType(), replEvent.GetFieldValueFromName("label"))] = replEvent;
             }
         }
         public void ReplaceEventAtIndex(int index, Event newEvent)
         {
-            dataList[index] = newEvent;
+            _dataList[index] = newEvent;
         }
-        public Type GetContainerType()
-        {
-            return dataList[0].GetType();
-        }
-
 
         public List<string> event_type
         {
-            get { return dataList.Select(x => x.GetTypeName()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.GetTypeName()).Distinct().OrderBy(x => x).ToList(); }
         }
     }
 }

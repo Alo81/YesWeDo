@@ -1,6 +1,7 @@
 ﻿using paracobNET;
 using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,9 @@ namespace SmashUltimateEditor
     {
         public BattleDataOptions battleData;
         public FighterDataOptions fighterData;
-        public EventDataOptions eventsData;
+        public EventDataOptions eventData;
+        public ItemDataOptions itemData;
+
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
         public Fighter selectedFighter;
@@ -46,7 +49,7 @@ namespace SmashUltimateEditor
             {
                 var page = BuildEmptyPage(this, typeof(Battle));
                 SetEventOnChange(ref page);
-                if(eventsData.GetCount() != 0)
+                if(eventData.GetCount() != 0)
                     SetEventTypeForPage(ref page);
                 return page;
             } 
@@ -73,7 +76,8 @@ namespace SmashUltimateEditor
         {
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
-            eventsData = new EventDataOptions();
+            eventData = new EventDataOptions();
+            itemData = new ItemDataOptions();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
@@ -86,7 +90,7 @@ namespace SmashUltimateEditor
             //ref battleData, ref fighterData
             battleData.SetBattles(results.GetBattles());
             fighterData.SetFighters(results.GetFighters());
-            eventsData.SetEvents(results.GetEvents());
+            eventData.SetEvents(results.GetEvents());
         }
 
         public void EmptySpiritData()
@@ -96,7 +100,7 @@ namespace SmashUltimateEditor
         }
         public void UpdateEventsForDbValues()
         {
-            if(eventsData.GetCount() == 0)
+            if(eventData.GetCount() == 0)
             {
                 return;
             }
@@ -152,14 +156,14 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+        public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, EventDataOptions eventData = null)
         {
             var doc = BuildXml(battleData, fighterData);
 
             AssmebleEncrypted(doc.ToXmlDocument(), fileLocation);
         }
 
-        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData,  string fileLocation)
+        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData,  string fileLocation, EventDataOptions eventData = null)
         {
             var doc = BuildXml(battleData, fighterData);
             WriteXmlToFile(fileLocation, doc);
@@ -247,7 +251,7 @@ namespace SmashUltimateEditor
 
             foreach (Battle battle in battleData.GetBattles())
             {
-                battle.Randomize(rnd, this);
+                battle.Randomize(ref rnd, this);
 
                 // Save after randomizing, as we'll be setting battle_Type to HP, and modifying fighter to make one a boss.  
                 var isBossType = battle.IsBossType();     // Set first fighter to main.  
@@ -257,7 +261,7 @@ namespace SmashUltimateEditor
                     :
                     RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
 
-                battle.Cleanup(ref rnd, battleData.events, fighterCount);
+                battle.Cleanup(ref rnd, fighterCount, this);
 
                 progress.PerformStep();
 
@@ -268,7 +272,7 @@ namespace SmashUltimateEditor
                     var isBoss = i == 0 && isBossType;     // Set first fighter to main.  
 
                     randomizedFighter = battle.GetNewFighter();
-                    randomizedFighter.Randomize(rnd, this);
+                    randomizedFighter.Randomize(ref rnd, this);
 
                     randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss);
                     randomizedFighter.StockCheck(fighterCount);
@@ -282,15 +286,6 @@ namespace SmashUltimateEditor
             RefreshTabs();
             progress.Visible = false;
             MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", Defs.CHAOS.ToString(), FileLocation + "_Randomized"));
-        }
-
-        public void FighterRandomizeCleanup(ref Fighter randomizedFighter, ref Random rnd, bool isMain, bool isLoseEscort, bool isBoss = false)
-        {
-            // Post Randomize fighter modifiers
-            randomizedFighter.EntryCheck(isMain, isLoseEscort);
-            randomizedFighter.FighterCheck(fighterData.Fighters, ref rnd);
-            randomizedFighter.HealthCheck();
-            randomizedFighter.BossCheck(isBoss);
         }
 
         public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
@@ -328,10 +323,18 @@ namespace SmashUltimateEditor
                 if (i == 0)
                 {
                     var collectionIndex = battleData.GetBattleIndex(selectedBattle);
+                    selectedBattle.CorrectEventLabels(ref page, this);
                     selectedBattle.UpdatePageValues(ref page, i, selectedBattle.battle_id, collectionIndex);
                 }
                 else
                 {
+                    if(i == 1)
+                    {
+                        if(tabCount == 2)
+                            DisableFighterButton(ref page);
+                        else
+                            EnableFighterButton(ref page);
+                    }
                     var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
                     selectedFighters[i - 1].UpdatePageValues(ref page, i, selectedFighters[i - 1].fighter_kind, collectionIndex);
                 }
@@ -374,13 +377,25 @@ namespace SmashUltimateEditor
             }
         }
 
+        public void DisableFighterButton(ref TabPage page)
+        {
+            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            button.Enabled = false;
+        }
+
+        public void EnableFighterButton(ref TabPage page)
+        {
+            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            button.Enabled = true;
+        }
+
         public void SetEventTypeForPage(ref TabPage page)
         {
             foreach (ComboBox control in page.Controls.OfType<ComboBox>())
             {
                 if (Regex.IsMatch(control.Name, "event.*type"))
                 {
-                    control.DataSource = eventsData.event_type;
+                    control.DataSource = eventData.event_type;
                 }
             }
         }
@@ -396,17 +411,27 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void SetEventLabelOptions(object sender, EventArgs e)
+        public void SetEventLabelOptions(object sender, EventArgs e = null)
         {
-            if(eventsData.GetCount() == 0)
+            if(eventData.GetCount() == 0)
             {
                 return;
             }
 
             var combo = ((ComboBox)sender);
+            SetEventLabelOptions(combo, tabs.SelectedTab);
+        }
+        public void SetEventLabelOptions(ComboBox combo, TabPage page)
+        {
+            if (eventData.GetCount() == 0)
+            {
+                return;
+            }
+
+            var labelType = combo?.SelectedItem?.ToString();
             var labelComboName = "event#_label";
 
-            foreach(char character in combo.Name)
+            foreach (char character in combo.Name)
             {
                 if (Char.IsDigit(character))
                 {
@@ -415,9 +440,18 @@ namespace SmashUltimateEditor
                 }
             }
 
-            var controls = tabs.SelectedTab.Controls.OfType<ComboBox>();
+            SetEventLabelOptions(labelComboName, labelType, page);
+        }
+        public void SetEventLabelOptions(string labelComboName, string labelType, TabPage page)
+        {
+            if (eventData.GetCount() == 0)
+            {
+                return;
+            }
 
-            var labels = eventsData.GetLabelsOfType(combo?.SelectedItem?.ToString());
+            var controls = page.Controls.OfType<ComboBox>();
+
+            var labels = eventData.GetLabelsOfType(labelType);
 
             foreach (ComboBox control in controls)
             {
@@ -427,7 +461,6 @@ namespace SmashUltimateEditor
                     return;
                 }
             }
-
         }
 
         public void SetSelectedBattle(string battle_id)

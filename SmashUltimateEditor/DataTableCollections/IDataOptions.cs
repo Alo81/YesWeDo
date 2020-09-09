@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmashUltimateEditor
+namespace SmashUltimateEditor.DataTableCollections
 {
     public interface IDataOptions
     {
-        public abstract int GetCount();
+        public List<IDataTbl> dataList { get;}
     }
 }

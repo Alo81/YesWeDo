@@ -21,15 +21,17 @@ namespace SmashUltimateEditor
         public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false)
         {
             // Post Randomize fighter modifiers
-            EntryCheck(isMain, isLoseEscort);
-            FighterCheck(fighters, ref rnd);
+            var realBoss = BossTypeCheck(isBoss, ref rnd);
+            EntryCheck(isMain, isLoseEscort, realBoss);
+            FighterCheck(fighters, realBoss, ref rnd);
             HealthCheck();
-            BossCheck(isBoss);
+            BossCheck(isBoss&(!realBoss));
         }
 
-        public void FighterCheck(List<string> options, ref Random rnd)
+        public void FighterCheck(List<string> options, bool realBoss, ref Random rnd)
         {
-            fighter_kind = options[rnd.Next(options.Count)];
+            // If real boss, get a boss.  Otherwise, get a regular character we'll bossify.  
+            fighter_kind = realBoss? Defs.BOSSES[rnd.Next(Defs.BOSSES.Count)] : options[rnd.Next(options.Count)];
         }
 
         public void StockCheck(int fighterCount)
@@ -52,17 +54,36 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void EntryCheck(bool isMain, bool isLoseEscort)
+        public void EntryCheck(bool isMain, bool isLoseEscort, bool realBoss)
         {
             if (isLoseEscort)
                 entry_type = "friend_type";
+            else if (realBoss)
+            {
+                entry_type = "boss_type";
+                first_appear = true;
+            }
+            // One of our fake bosses.  
             else if (isMain || entry_type == "boss_type")
+            {
                 entry_type = "main_type";
+                first_appear = true;
+            }
         }
         public void FirstAppearCheck(bool isMain)
         {
             if (isMain)
                 first_appear = true;
+        }
+
+        public bool BossTypeCheck(bool isBoss, ref Random rnd)
+        {
+            if (isBoss)
+            {
+                return RandomizerHelper.ChancePass(Defs.BOSS_CHECK, ref rnd);
+            }
+            else
+                return false;
         }
 
         public void BossCheck(bool isBoss)

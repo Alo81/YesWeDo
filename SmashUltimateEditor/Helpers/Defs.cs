@@ -10,6 +10,7 @@ namespace SmashUltimateEditor
     {   
         #region randomizer
         public const int CHAOS = 50;
+        public const int BOSS_CHECK = 20;
 
         public const float BOSS_SCALE_MOD = 1.35F;
         public const float BOSS_ATTACK_MOD = 2;
@@ -142,6 +143,7 @@ namespace SmashUltimateEditor
             "ui_chara_darz", 
             "ui_chara_dracula",
             "ui_chara_galleom",
+            "ui_chara_koopag",
             "ui_chara_kiila",
             "ui_chara_kiila_darz",
             "ui_chara_lioleus",

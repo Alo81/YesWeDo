@@ -66,8 +66,8 @@ namespace SmashUltimateEditor
             Random rnd = new Random(seed);
             if (index == 0)
             {
-                battle.Randomize(rnd, dataTbls, false);
-                battle.Cleanup(ref rnd, dataTbls.battleData.events, dataTbls.selectedFighters.Count);
+                battle.Randomize(ref rnd, dataTbls, false);
+                battle.Cleanup(ref rnd, dataTbls.selectedFighters.Count, dataTbls);
             }
             else
             {
@@ -77,7 +77,7 @@ namespace SmashUltimateEditor
                 var isMain = index == 0;     // Set first fighter to main.  
                 var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
                 var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  
-                fighter.Randomize(rnd, dataTbls, false);
+                fighter.Randomize(ref rnd, dataTbls, false);
                 fighter.Cleanup(ref rnd, isMain, isLoseEscort, dataTbls.fighterData.Fighters, isBoss);
             }
             dataTbls.RefreshTabs();
@@ -95,14 +95,16 @@ namespace SmashUltimateEditor
                     var battles = new BattleDataOptions();
                     var fighters = new FighterDataOptions();
                     var events = new EventDataOptions();
+                    var items = new ItemDataOptions();
 
                     var results = dataTbls.ReadXML(openDialog.FileName);
 
                     battles.SetBattles(results.GetBattles());
                     fighters.SetFighters(results.GetFighters());
                     events.SetEvents(results.GetEvents());
+                    items.SetItems(results.GetItems());
 
-                    if(battles.GetCount() > 0)
+                    if (battles.GetCount() > 0)
                     {
                         dataTbls.EmptySpiritData();
                         dataTbls.battleData = battles;
@@ -115,10 +117,18 @@ namespace SmashUltimateEditor
                     }
                     if(events.GetCount() > 0)
                     {
-                        dataTbls.eventsData = events;
+                        dataTbls.eventData = events;
                         dataTbls.UpdateEventsForDbValues();
 
                         MessageBox.Show(String.Format("Opened Event Data."));
+                    }
+                    if (items.GetCount() > 0)
+                    {
+                        dataTbls.itemData = items;
+                        var itemEvents = dataTbls.itemData.GetAsEvents();
+                        dataTbls.eventData.AddUniqueEvents(itemEvents);
+
+                        MessageBox.Show(String.Format("Opened Item Data."));
                     }
 
                 }

@@ -31,7 +31,7 @@ namespace SmashUltimateEditor.Helpers
             return Single.Parse((rnd.Next((int)(min * 100), (int)(max * 100))).ToString()) / 100;
         }
 
-        public static bool ChancePass(int chance, Random rnd = null)
+        public static bool ChancePass(int chance, ref Random rnd)
         {
             if (rnd is null)
                 rnd = new Random();

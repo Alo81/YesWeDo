@@ -1,4 +1,6 @@
-﻿using SmashUltimateEditor.Helpers;
+﻿using paracobNET;
+using SmashUltimateEditor.Helpers;
+using SmashUltimateEditor.Interfaces;
 using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -16,8 +19,10 @@ using static SmashUltimateEditor.Extensions;
 namespace SmashUltimateEditor.DataTables
 {
     // IF YOU'RE GRABBING EMPTY VALUES, JUST SET THEM TO NULL?
-    public class DataTbl
+    public class DataTbl //: IXmlType
     {
+        //public ParamType TypeKey { get; } = ParamType.@struct;
+
         [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
         public sealed class OrderAttribute : Attribute
         {
@@ -57,43 +62,56 @@ namespace SmashUltimateEditor.DataTables
 
         }
 
-        public void Randomize(Random rnd, DataTbls dataTbls, bool checkRequired = true)
+        public void Randomize(ref Random rnd, DataTbls dataTbls, bool checkRequired = true)
+        {
+            Type type = GetType();
+            foreach (PropertyInfo field in type.GetProperties())
+            {
+                var val = GetRandomFieldValue(field, ref rnd, dataTbls);
+                SaveRandomizedField(ref rnd, field, val, dataTbls);
+            }
+        }
+
+        public string GetRandomFieldValue(PropertyInfo field, ref Random rnd, DataTbls dataTbls, bool overrideExclusion = false)
         {
             Type type = GetType();
             string value;
-            bool isRange;
-            foreach (PropertyInfo field in type.GetProperties())
+            if (!overrideExclusion && Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
             {
-                if (Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
-                {
-                    continue;
-                }
+                return null;
+            }
 
+            // Range values?  Set a random value. 
+            if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()) && !Defs.EVENT_OPTIONS.Contains(field.Name.ToLower()))
+            {
+                value = GetRangeValue(ref rnd, field);
+            }
+            else
+            {
+                var options = dataTbls.GetOptionsFromTypeAndName(type, field.Name);
+                value = options[rnd.Next(options.Count)].ToString();
+            }
 
-                isRange = Defs.RANGE_VALUES.Contains(field.Name.ToUpper());
+            value = EnumChecker(value, field.Name);
 
-                // Range values?  Set a random value. 
-                if (isRange)
-                {
-                    value = GetRangeValue(ref rnd, field);
-                }
-                else
-                {
-                    var options = dataTbls.GetOptionsFromTypeAndName(type, field.Name);
-                    value = options[rnd.Next(options.Count)].ToString();
-                }
+            return value;
+        }
 
-                value = EnumChecker(value, field.Name);
-                if ((checkRequired && (Defs.REQUIRED_PARAMS.Contains(field.Name)))
-                    || RandomizerHelper.ChancePass(Defs.CHAOS, rnd))
-                {
-                    SetValueFromName(field.Name, value);
-                }
-                else if (isRange)
-                {
-                    // Set floats to mode value?
-                    SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(type, field.Name));
-                }
+        public void SaveRandomizedField(ref Random rnd, PropertyInfo field, string value, DataTbls dataTbls, bool checkRequired = true)
+        {
+            if(value is null)
+            {
+                return;
+            }
+            if ((checkRequired && (Defs.REQUIRED_PARAMS.Contains(field.Name)))
+                || RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd))
+            {
+                SetValueFromName(field.Name, value);
+            }
+            else if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+            {
+                // Set floats to mode value?
+                SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(GetType(), field.Name));
             }
         }
 
@@ -156,6 +174,7 @@ namespace SmashUltimateEditor.DataTables
             {
                 var value = GetPropertyValueFromName(combo.Name);
                 value = EnumChecker(value, combo.Name);
+
                 combo.SelectedIndex = combo.Items.IndexOf(value);
                 combo.Text = value;
             }
@@ -170,6 +189,20 @@ namespace SmashUltimateEditor.DataTables
             }
             this.pageIndex = pageIndex;
             page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
+        }
+
+        public void CorrectEventLabels(ref TabPage page, DataTbls dataTbls)
+        {
+            foreach (ComboBox combo in page.Controls.OfType<ComboBox>().Where(x => Regex.IsMatch(x.Name, "event.*type")))
+            {
+                var value = GetPropertyValueFromName(combo.Name);
+                value = EnumChecker(value, combo.Name);
+
+                dataTbls.SetEventLabelOptions(combo, page);
+
+                combo.SelectedIndex = combo.Items.IndexOf(value);
+                combo.Text = value;
+            }
         }
 
         public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)

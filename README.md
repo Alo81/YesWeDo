@@ -4,11 +4,12 @@ Spirit Editor
 TODO:
 
 In progress
+  
+  Genericize table Export
+  
   Config file support (Set your paths, things like that).  (Partial.  Config supported.  Editing config in UI not yet supported.)
   
   Genericize table import(?)  (Could i check for first XML tag with a hash?)
-  
-  Genericize table Export     (Could i check for first XML tag with a hash?)
 
 Coming up
 

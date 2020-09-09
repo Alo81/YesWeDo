@@ -110,6 +110,12 @@ namespace SmashUltimateEditor
                     var skill = String.Format("recommended_skill{0}", i++);
                     SetValueFromName(skill, hazardRelief);
                 }
+                i += 3; // We want to keep some randomized skills regardless.  
+                while(i <= 13)
+                {
+                    var skill = String.Format("recommended_skill{0}", i++);
+                    SetValueFromName(skill, "");
+                }
             }
         }
 

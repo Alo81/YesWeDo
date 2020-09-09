@@ -66,7 +66,7 @@ namespace SmashUltimateEditor
             Random rnd = new Random(seed);
             if (index == 0)
             {
-                battle.Randomize(ref rnd, dataTbls, false);
+                battle.Randomize(ref rnd, dataTbls);
                 battle.Cleanup(ref rnd, dataTbls.selectedFighters.Count, dataTbls);
             }
             else
@@ -77,7 +77,7 @@ namespace SmashUltimateEditor
                 var isMain = index == 0;     // Set first fighter to main.  
                 var isLoseEscort = index == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
                 var isBoss = index == 0 && battle.IsBossType();     // Set second fighter to ally, if Lose Escort result type.  
-                fighter.Randomize(ref rnd, dataTbls, false);
+                fighter.Randomize(ref rnd, dataTbls);
                 fighter.Cleanup(ref rnd, isMain, isLoseEscort, dataTbls.fighterData.Fighters, isBoss);
             }
             dataTbls.RefreshTabs();

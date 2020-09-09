@@ -62,7 +62,7 @@ namespace SmashUltimateEditor.DataTables
 
         }
 
-        public void Randomize(ref Random rnd, DataTbls dataTbls, bool checkRequired = true)
+        public void Randomize(ref Random rnd, DataTbls dataTbls)
         {
             Type type = GetType();
             foreach (PropertyInfo field in type.GetProperties())
@@ -104,7 +104,7 @@ namespace SmashUltimateEditor.DataTables
                 return;
             }
             if ((checkRequired && (Defs.REQUIRED_PARAMS.Contains(field.Name)))
-                || RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd))
+                || RandomizerHelper.ChancePass(dataTbls.config.chaos, ref rnd))
             {
                 SetValueFromName(field.Name, value);
             }

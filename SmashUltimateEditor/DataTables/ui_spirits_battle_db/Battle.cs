@@ -38,7 +38,7 @@ namespace SmashUltimateEditor
             EventSet(ref rnd, dataTbls);
             HazardCheck();
             BossCheck();
-            HealthCheck(ref rnd);
+            HealthCheck(ref rnd, dataTbls);
             TimerCheck(fighterCount);
             BattlePowerCheck(ref rnd, isBossType);
         }
@@ -51,7 +51,7 @@ namespace SmashUltimateEditor
 
             for (int j = 1; j <= eventCount; j++)
             {
-                if(RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd))
+                if(RandomizerHelper.ChancePass(dataTbls.config.chaos, ref rnd))
                 {
                     var randEvent = GetRandomBattleEvent(ref rnd, dataTbls);
                     BuildEvent(randEvent, j);
@@ -82,7 +82,7 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void HealthCheck(ref Random rnd)
+        public void HealthCheck(ref Random rnd, DataTbls dataTbls)
         {
             // Check if init HP is lower than init damage (?)
             if (basic_init_hp < basic_init_damage)
@@ -95,7 +95,7 @@ namespace SmashUltimateEditor
             // If HP battle, and player hass less than 30 hp, and they pass chaos chance, give em extra health.  
             if(battle_type == "hp" || battle_type == "hp_time")
             {
-                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(Defs.CHAOS, ref rnd) && basic_init_hp < 30 ? 0 : (ushort)Defs.PLAYER_LOW_HP_MOD);
+                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(dataTbls.config.chaos, ref rnd) && basic_init_hp < 30 ? Defs.PLAYER_LOW_HP_MOD : 0);
             }
         }
 

@@ -285,7 +285,7 @@ namespace SmashUltimateEditor
             SaveRandomized(battleData, randomizedFighters);
             RefreshTabs();
             progress.Visible = false;
-            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", Defs.CHAOS.ToString(), FileLocation + "_Randomized"));
+            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", config.chaos.ToString(), FileLocation + "_Randomized"));
         }
 
         public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)

@@ -244,7 +244,8 @@ namespace SmashUltimateEditor
         {
             try
             {
-                return Int32.Parse(textboxSeed.Text);
+                var seed = Int32.Parse(textboxSeed.Text);
+                return seed == -1 ? RandomizerHelper.GetRandomInt() : seed;
             }
             catch
             {

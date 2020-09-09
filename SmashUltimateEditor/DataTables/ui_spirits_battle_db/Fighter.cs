@@ -23,8 +23,8 @@ namespace SmashUltimateEditor
             // Post Randomize fighter modifiers
             var realBoss = BossTypeCheck(isBoss, ref rnd);
             EntryCheck(isMain, isLoseEscort, realBoss);
+            HealthCheck(isLoseEscort, ref rnd);
             FighterCheck(fighters, realBoss, ref rnd);
-            HealthCheck();
             BossCheck(isBoss&(!realBoss));
         }
 
@@ -43,7 +43,7 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void HealthCheck()
+        public void HealthCheck(bool isLoseEscort, ref Random rnd)
         {
             // Check if init HP is lower than init damage (?)
             if (hp < init_damage)
@@ -51,6 +51,19 @@ namespace SmashUltimateEditor
                 var hold = init_damage;
                 init_damage = hp;
                 hp = hold;
+            }
+
+            if(isLoseEscort && hp < Defs.ALLY_LOW_HP_CUTOFF)
+            {
+                // Losing from low health escorts sucks.  Either add HP, or add Stocks. 
+                if(RandomizerHelper.ChancePass(50, ref rnd))
+                {
+                    hp += Defs.ALLY_LOW_HP_MOD;
+                }
+                else
+                {
+                    stock += Defs.ALLY_LOW_STOCK_MOD;
+                }
             }
         }
 

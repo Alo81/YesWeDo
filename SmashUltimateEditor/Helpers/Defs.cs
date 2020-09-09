@@ -20,7 +20,11 @@ namespace SmashUltimateEditor
         public const float BOSS_HP_CUTOFF = 100;
         public const int BOSS_CPU_LVL_ADD = 20;
 
+        public const ushort PLAYER_LOW_HP_CUTOFF = 30;
         public const ushort PLAYER_LOW_HP_MOD = 30;
+        public const ushort ALLY_LOW_HP_CUTOFF = 35;
+        public const ushort ALLY_LOW_HP_MOD = 40;
+        public const byte ALLY_LOW_STOCK_MOD = 2;
 
         public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;

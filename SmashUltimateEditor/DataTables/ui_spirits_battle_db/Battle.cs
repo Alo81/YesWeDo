@@ -95,7 +95,7 @@ namespace SmashUltimateEditor
             // If HP battle, and player hass less than 30 hp, and they pass chaos chance, give em extra health.  
             if(battle_type == "hp" || battle_type == "hp_time")
             {
-                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(dataTbls.config.chaos, ref rnd) && basic_init_hp < 30 ? Defs.PLAYER_LOW_HP_MOD : 0);
+                basic_init_hp += (ushort)(RandomizerHelper.ChancePass(100 - dataTbls.config.chaos, ref rnd) && basic_init_hp < Defs.PLAYER_LOW_HP_CUTOFF ? Defs.PLAYER_LOW_HP_MOD : 0);
             }
         }
 

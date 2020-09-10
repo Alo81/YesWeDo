@@ -516,10 +516,19 @@ namespace SmashUltimateEditor
         {
             bool parseData = false;
             bool firstPass = false;
+            bool sharedXmlName;
             IDataTbl dataTable;
             var results = new DataOptions();
 
-            using Stream stream = new FileStream(fileName, FileMode.Open);
+            // Copy the stream to memory, so we're not holding the resource open.  
+            MemoryStream stream = new MemoryStream();
+
+            using (Stream fileStream = new FileStream(fileName, FileMode.Open))
+            {
+                fileStream.CopyTo(stream);
+                stream.Position = 0;
+            }
+
             XmlReader reader = XmlReader.Create(stream);
 
             try
@@ -528,18 +537,29 @@ namespace SmashUltimateEditor
                 // Read the whole file.  
                 while (!reader.EOF)
                 {
-                    dataTable = (IDataTbl)DataTbl.GetDataTblFromName(reader?.GetAttribute("hash"));
+                    dataTable = GetDataTblFromXmlName(reader?.GetAttribute("hash"));
 
                     if(dataTable != null)
                     {
                         parseData = true;
                         firstPass = true;
+                        sharedXmlName = dataTable.GetType() == typeof(DataTbl);
+
+                        if (sharedXmlName)
+                        {
+                            MemoryStream firstLevelCopy = new MemoryStream();
+                            // Store the position, read from the beginning, restore the position.
+                            var position = stream.Position;
+                            stream.Position = 0;
+                            dataTable = DetermineXmlTypeFromFirstLevel(stream);
+                            stream.Position = position;
+                        }
                     }
 
                     if (parseData)
                     {
                         // Read until start of data.  
-                        ReadUntilName(reader, stopper: "struct");
+                        XmlHelper.ReadUntilName(reader, stopper: "struct");
 
                         // Lists have index values, so keep reading until we've left the list.  
                         // Added first pass to handle when a struct is not in a list.  
@@ -550,10 +570,8 @@ namespace SmashUltimateEditor
 
                             results.AddDataTbl(dataTable);
 
-                            ReadUntilNodeType(reader, node: XmlNodeType.Element);
+                            XmlHelper.ReadUntilNodeType(reader, node: XmlNodeType.Element);
 
-                            //reader.Read();
-                            //reader.Read();
                             firstPass = false;
                         }
 
@@ -573,6 +591,9 @@ namespace SmashUltimateEditor
                 throw ex;
             }
         }
+
+
+
         public XDocument BuildXml(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
 
@@ -613,24 +634,6 @@ namespace SmashUltimateEditor
             writer.Write(xmlDoc.Declaration.ToString() + "\r\n" + xmlDoc.ToString());
             writer.Close();
             writer.Dispose();
-        }
-
-        // Maybe use a list of tuples for string/Node pairs?  
-        public static void ReadUntilNodeType(XmlReader reader, XmlNodeType node = XmlNodeType.Element)
-        {
-            while (!reader.EOF && reader.NodeType != node)
-            {
-                reader.Read();
-            }
-        }
-
-        // Maybe use a list of tuples for string/Node pairs?  
-        public static void ReadUntilName(XmlReader reader, string stopper = "")
-        {
-            while (!reader.EOF && reader.Name != stopper)
-            {
-                reader.Read();
-            }
         }
 
         #region PRC Cryptography

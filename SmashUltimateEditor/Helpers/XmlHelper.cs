@@ -12,6 +12,30 @@ namespace SmashUltimateEditor.Helpers
     {
         static ParamFile file { get; set; }
         static XmlDocument xml { get; set; }
+
+        public static void ReadUntilName(XmlReader reader, string stopper = "")
+        {
+            while (!reader.EOF && reader.Name != stopper)
+            {
+                reader.Read();
+            }
+        }
+
+        public static void ReadUntilNodeType(XmlReader reader, XmlNodeType node = XmlNodeType.Element)
+        {
+            while (!reader.EOF && reader.NodeType != node)
+            {
+                reader.Read();
+            }
+        }
+        public static void ReadUntilAttribute(XmlReader reader, string attribute)
+        {
+            while (!reader.EOF && reader.GetAttribute(attribute) is null)
+            {
+                reader.Read();
+            }
+        }
+
         /*
         public XmlDocument BuildXml(DataOptions opt)
         {

@@ -5,6 +5,7 @@ using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -19,7 +20,7 @@ using static SmashUltimateEditor.Extensions;
 namespace SmashUltimateEditor.DataTables
 {
     // IF YOU'RE GRABBING EMPTY VALUES, JUST SET THEM TO NULL?
-    public class DataTbl //: IXmlType
+    public class DataTbl : IDataTbl //: IXmlType
     {
         //public ParamType TypeKey { get; } = ParamType.@struct;
 
@@ -38,7 +39,7 @@ namespace SmashUltimateEditor.DataTables
         internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
-        public static DataTbl GetDataTblFromName(string className)
+        public static DataTbl GetDataTblFromXmlName(string className)
         {
             if (String.IsNullOrWhiteSpace(className))
             {
@@ -50,16 +51,47 @@ namespace SmashUltimateEditor.DataTables
             var child = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass
                                     && type.IsAssignableFrom(t) && t != type
                                     && (string)t?.GetField("XML_NAME", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)
-                                    ?.GetValue(null) == className)?.FirstOrDefault() ?? null;
+                                    ?.GetValue(null) == className) ?? null;
+            if (child is null)
+            {
+                return null;
+            }
+            else if(child.Count() > 1)
+            {
+                return new DataTbl();
+            }
+            else
+            {
+                return (DataTbl)Activator.CreateInstance(child.First());
+            }
+        }
+
+        public static IDataTbl GetDataTblFromClassName(string name)
+        {
+            return (IDataTbl)Activator.CreateInstance(Type.GetType(name));
+        }
+
+        public static DataTbl GetDataTblFromFirstField(string attribute)
+        {
+            if (String.IsNullOrWhiteSpace(attribute))
+            {
+                return null;
+            }
+
+            var type = typeof(DataTbl);
+
+            var child = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass
+                                    && type.IsAssignableFrom(t) && t != type
+                                    && (string)t?.GetField("XML_FIRST_FIELD", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)
+                                    ?.GetValue(null) == attribute) ?? null;
             if (child is null)
             {
                 return null;
             }
             else
             {
-                return (DataTbl)Activator.CreateInstance(child);
+                return (DataTbl)Activator.CreateInstance(child.First());
             }
-
         }
 
         public void Randomize(ref Random rnd, DataTbls dataTbls)
@@ -315,6 +347,26 @@ namespace SmashUltimateEditor.DataTables
         public string ValuableValue (string val)
         {
             return val == "none" ? "" : val;
+        }
+
+        public static DataTbl DetermineXmlTypeFromFirstLevel(MemoryStream stream)
+        {
+            XmlReader reader = XmlReader.Create(stream);
+
+            try
+            {
+                reader.Read();
+                // Read until start of data.  
+                XmlHelper.ReadUntilAttribute(reader, attribute: "hash");
+                reader.Read();  // Skip first instance, as it is hash of List
+                XmlHelper.ReadUntilAttribute(reader, attribute: "hash");
+                var attribute = reader.GetAttribute("hash");
+                return GetDataTblFromFirstField(attribute);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public XElement GetAsXElement(int index)

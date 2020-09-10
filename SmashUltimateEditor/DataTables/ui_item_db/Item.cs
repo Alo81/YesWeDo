@@ -9,6 +9,8 @@ namespace SmashUltimateEditor.DataTables.ui_item_db
 
         // This may end up clashing.... We may need further determination if there are other db_roots in the future.  
         internal static string XML_NAME = "db_root";
+        // Use first field if XML_NAME is generic. 
+        internal static string XML_FIRST_FIELD = "ui_item_id";
 
         [Order]
         public string ui_item_id { get; set; }

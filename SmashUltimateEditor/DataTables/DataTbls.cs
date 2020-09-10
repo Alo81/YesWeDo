@@ -296,7 +296,7 @@ namespace SmashUltimateEditor
                     progress.PerformStep();
                 }
                 // Do a total fighter check, and adjust stock accordingly. 
-                if (fighterCount > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
+                if (fighterSum > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
                 {
                     for (int i = randomizedFighters.GetCount() - fighterCount; i < randomizedFighters.GetCount(); i++)
                     {

@@ -9,6 +9,22 @@ namespace SmashUltimateEditor.DataTableCollections
     public class SpiritFighterDataOptions
     {
         public List<SpiritFighter> _dataList;
+
+        public SpiritFighterDataOptions()
+        {
+            _dataList = new List<SpiritFighter>();
+        }
+
+        public void SetSpiritFighters(List<SpiritFighter> spiritFighters)
+        {
+            _dataList = spiritFighters;
+        }
+
+        public int GetCount()
+        {
+            return _dataList.Count;
+        }
+
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
 
         public List<string> chara_id

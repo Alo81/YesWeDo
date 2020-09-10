@@ -40,7 +40,7 @@ namespace SmashUltimateEditor.DataTableCollections
             {
                 return _dataList.Where(x => x.GetTypeName() == type).Select(x => ((LabelEvent)x)?.label).OrderBy(x => x).ToList();
             }
-            catch (Exception ex)
+            catch
             {
                 //UiHelper.PopUpCallingClass(String.Format("No Event labels or error getting Event labels of type: {0}.\r\n", type));
                 return new List<String>() { "" };

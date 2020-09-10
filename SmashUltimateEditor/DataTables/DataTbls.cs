@@ -28,6 +28,7 @@ namespace SmashUltimateEditor
         public FighterDataOptions fighterData;
         public EventDataOptions eventData;
         public ItemDataOptions itemData;
+        public SpiritFighterDataOptions spiritFighterData;
 
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
@@ -78,6 +79,7 @@ namespace SmashUltimateEditor
             fighterData = new FighterDataOptions();
             eventData = new EventDataOptions();
             itemData = new ItemDataOptions();
+            spiritFighterData = new SpiritFighterDataOptions();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             selectedFighter = new Fighter();
@@ -246,6 +248,7 @@ namespace SmashUltimateEditor
             FighterDataOptions randomizedFighters = new FighterDataOptions();
             Fighter randomizedFighter;
             int fighterCount;
+            List<string> unlockableFighters = spiritFighterData.chara_id;
 
             SetupRandomizeProgress();
 
@@ -254,7 +257,8 @@ namespace SmashUltimateEditor
                 battle.Randomize(ref rnd, this);
 
                 // Save after randomizing, as we'll be setting battle_Type to HP, and modifying fighter to make one a boss.  
-                var isBossType = battle.IsBossType();     // Set first fighter to main.  
+                var isUnlockableFighterType = spiritFighterData.IsUnlockableFighter(battle.battle_id);
+
                 // If lose escort, need at least 2 fighters.  
                 fighterCount = battle.IsLoseEscort() ?
                     RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)]
@@ -267,14 +271,24 @@ namespace SmashUltimateEditor
 
                 for (int i = 0; i < fighterCount; i++)
                 {
+                    string unlockableFighter = null;
+
                     var isMain = i == 0;     // Set first fighter to main.  
+                    var isUnlockableFighter = isMain && isUnlockableFighterType;     // If unlockable fighter, we will explicitly set a fighter to match the spirit.  
+                    var isBoss = isMain && battle.IsBossType();     // Set first fighter to main.  
                     var isLoseEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
-                    var isBoss = i == 0 && isBossType;     // Set first fighter to main.  
 
                     randomizedFighter = battle.GetNewFighter();
                     randomizedFighter.Randomize(ref rnd, this);
 
-                    randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss);
+                    if (isUnlockableFighter)
+                    {
+                        int fighterIndex = rnd.Next(unlockableFighters.Count);
+                        unlockableFighter = unlockableFighters[fighterIndex];
+                        unlockableFighters.RemoveAt(fighterIndex);
+                    }
+
+                    randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss, unlockableFighter);
                     randomizedFighter.StockCheck(fighterCount);
 
                     randomizedFighters.AddFighter(randomizedFighter);

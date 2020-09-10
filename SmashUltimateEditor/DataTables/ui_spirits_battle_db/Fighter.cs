@@ -18,20 +18,22 @@ namespace SmashUltimateEditor
     {
         internal static string XML_NAME = "fighter_data_tbl";
 
-        public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false)
+        public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false, string unlockableFighter = null)
         {
             // Post Randomize fighter modifiers
             var realBoss = BossTypeCheck(isBoss, ref rnd);
             EntryCheck(isMain, isLoseEscort, realBoss);
             HealthCheck(isLoseEscort, ref rnd);
-            FighterCheck(fighters, realBoss, ref rnd);
+            FighterCheck(fighters, realBoss, unlockableFighter, ref rnd);
             BossCheck(isBoss&(!realBoss));
         }
 
-        public void FighterCheck(List<string> options, bool realBoss, ref Random rnd)
+        public void FighterCheck(List<string> options, bool realBoss, string unlockableFighter, ref Random rnd)
         {
-            // If real boss, get a boss.  Otherwise, get a regular character we'll bossify.  
-            fighter_kind = realBoss? Defs.BOSSES[rnd.Next(Defs.BOSSES.Count)] : options[rnd.Next(options.Count)];
+            // If unlockable fighter, set as that.  If real boss, get a boss.  Otherwise, get a regular character we'll bossify.  
+            fighter_kind = unlockableFighter 
+                ?? 
+                (realBoss? Defs.BOSSES[rnd.Next(Defs.BOSSES.Count)] : options[rnd.Next(options.Count)]);
         }
 
         public void StockCheck(int fighterCount)

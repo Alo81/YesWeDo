@@ -96,6 +96,7 @@ namespace SmashUltimateEditor
                     var fighters = new FighterDataOptions();
                     var events = new EventDataOptions();
                     var items = new ItemDataOptions();
+                    var spiritFighters = new SpiritFighterDataOptions();
 
                     var results = dataTbls.ReadXML(openDialog.FileName);
 
@@ -103,6 +104,7 @@ namespace SmashUltimateEditor
                     fighters.SetFighters(results.GetFighters());
                     events.SetEvents(results.GetEvents());
                     items.SetItems(results.GetItems());
+                    spiritFighters.SetSpiritFighters(results.GetSpiritFighters());
 
                     if (battles.GetCount() > 0)
                     {
@@ -129,6 +131,12 @@ namespace SmashUltimateEditor
                         dataTbls.eventData.AddUniqueEvents(itemEvents);
 
                         MessageBox.Show(String.Format("Opened Item Data."));
+                    }
+                    if (spiritFighters.GetCount() > 0)
+                    {
+                        dataTbls.spiritFighterData = spiritFighters;
+
+                        MessageBox.Show(String.Format("Opened Spirit Fighter Data."));
                     }
 
                 }

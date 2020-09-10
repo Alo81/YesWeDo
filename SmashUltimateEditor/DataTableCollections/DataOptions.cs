@@ -1,5 +1,6 @@
 ﻿using paracobNET;
 using SmashUltimateEditor.DataTableCollections;
+using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
 using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Interfaces;
 using System;
@@ -32,6 +33,10 @@ namespace SmashUltimateEditor.DataTables
             return dataList.Count;
         }
 
+        public List<IDataTbl> GetOfType(Type type)
+        {
+            return dataList.Where(x => x.GetType() == type).ToList();
+        }
         public List<Battle> GetBattles()
         {
             return dataList.OfType<Battle>().ToList();
@@ -47,6 +52,10 @@ namespace SmashUltimateEditor.DataTables
         public List<Item> GetItems()
         {
             return dataList.OfType<Item>().ToList();
+        }
+        public List<SpiritFighter> GetSpiritFighters()
+        {
+            return dataList.OfType<SpiritFighter>().ToList();
         }
         public List<Type> GetContainerTypes()
         {

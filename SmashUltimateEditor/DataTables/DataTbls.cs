@@ -269,6 +269,7 @@ namespace SmashUltimateEditor
 
                 progress.PerformStep();
 
+                var fighterSum = 0;
                 for (int i = 0; i < fighterCount; i++)
                 {
                     string unlockableFighter = null;
@@ -289,12 +290,19 @@ namespace SmashUltimateEditor
                     }
 
                     randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss, unlockableFighter);
-                    randomizedFighter.StockCheck(fighterCount);
+                    fighterSum += randomizedFighter.stock;
 
                     randomizedFighters.AddFighter(randomizedFighter);
                     progress.PerformStep();
                 }
-
+                // Do a total fighter check, and adjust stock accordingly. 
+                if (fighterCount > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
+                {
+                    for (int i = randomizedFighters.GetCount() - fighterCount; i < randomizedFighters.GetCount(); i++)
+                    {
+                        randomizedFighters.GetFighterAtIndex(i).StockCheck(fighterSum);
+                    }
+                }
             }
             SaveRandomized(battleData, randomizedFighters);
             RefreshTabs();

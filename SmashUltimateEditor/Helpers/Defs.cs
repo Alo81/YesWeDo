@@ -183,12 +183,12 @@ namespace SmashUltimateEditor
         public static ushort APPEAR_RULE_COUNT_SANE { get; } = 8;
 
         public static byte CPU_LV_MIN  { get; } = 1;
-        public static byte CPU_LV_MAX { get; } = 100;
-        public static byte CPU_LV_SANE { get; } = 100;
+        public static byte CPU_LV_MAX { get; } = 101;
+        public static byte CPU_LV_SANE { get; } = 101;
 
         public static byte STOCK_MIN { get; } = 1;
-        public static byte STOCK_MAX { get; } = 3;
-        public static byte STOCK_SANE { get; } = 3;
+        public static byte STOCK_MAX { get; } = 4;
+        public static byte STOCK_SANE { get; } = 4;
 
         // 0, 500
         public static ushort HP_MIN  { get; } = 35;
@@ -201,11 +201,11 @@ namespace SmashUltimateEditor
         public static ushort INIT_DAMAGE_SANE { get; } = 300;
 
         public static float SCALE_MIN { get; } = 0.4f;
-        public static float SCALE_MAX { get; } = 3.0f;
+        public static float SCALE_MAX { get; } = 2.2f;
         public static float SCALE_SANE { get; } = 4.0f;
 
         public static float FLY_RATE_MIN  { get; } = 0.4f;
-        public static float FLY_RATE_MAX { get; } = 2.5f;
+        public static float FLY_RATE_MAX { get; } = 2.2f;
         public static float FLY_RATE_SANE { get; } = 2.5f;
 
         public static short ATTACK_MIN  { get; } = 0;
@@ -232,10 +232,10 @@ namespace SmashUltimateEditor
 
         public static byte BASIC_STOCK_MIN  { get; } = 1;
         public static byte BASIC_STOCK_MAX { get; } = 5;
-        public static byte BASIC_STOCK_SANE { get; } = 5;
+        public static byte BASIC_STOCK_SANE { get; } = 2;
 
         public static int EVENT_START_TIME_MIN  { get; } = 0;
-        public static int EVENT_START_TIME_MAX { get; } = 80;
+        public static int EVENT_START_TIME_MAX { get; } = 45;
         public static int EVENT_START_TIME_SANE { get; } = 80;
 
         public static int EVENT_RANGE_TIME_MIN  { get; } = -1;
@@ -247,7 +247,7 @@ namespace SmashUltimateEditor
         public static byte EVENT_COUNT_SANE { get; } = 200;
 
         public static ushort EVENT_DAMAGE_MIN  { get; } = 0;
-        public static ushort EVENT_DAMAGE_MAX { get; } = 150;
+        public static ushort EVENT_DAMAGE_MAX { get; } = 120;
         public static ushort EVENT_DAMAGE_SANE { get; } = 150;
 
         public static uint BATTLE_POWER_MIN  { get; } = 0;

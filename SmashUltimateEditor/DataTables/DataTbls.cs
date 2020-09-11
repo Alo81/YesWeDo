@@ -48,7 +48,7 @@ namespace SmashUltimateEditor
         {
             get
             {
-                var page = BuildEmptyPage(this, typeof(Battle));
+                var page = Battle.BuildEmptyPage(this);
                 SetEventOnChange(ref page);
                 if(eventData.GetCount() != 0)
                     SetEventTypeForPage(ref page);
@@ -60,7 +60,7 @@ namespace SmashUltimateEditor
         {
             get
             {
-                return BuildEmptyPage(this, typeof(Fighter));
+                return Fighter.BuildEmptyPage(this);
             }
         }
 
@@ -204,7 +204,17 @@ namespace SmashUltimateEditor
             {
                 return;
             }
+            // Update fields on page, then fields on subpages. 
             selectedBattle.UpdateTblValues(battlePage);
+            foreach(TabPage subPage in battlePage.Controls.OfType<TabControl>().First().TabPages)
+            {
+                // No battle?
+                if (subPage is null)
+                {
+                    return;
+                }
+                selectedBattle.UpdateTblValues(subPage);
+            }
             int index = battleData.GetBattleIndex(selectedBattle);
             if (index >= 0)
             {
@@ -224,7 +234,14 @@ namespace SmashUltimateEditor
             for (int i = 0; i< fighterPages.Count-1; i++)
             {
                 // Match on tab index, which is assigned to Fighter when it updates page values.  
+                // Update fields on page, then fields on subpages. 
                 selectedFighters[i].UpdateTblValues(fighterPages[i+1]);
+
+                foreach (TabPage subPage in fighterPages[i + 1].Controls.OfType<TabControl>().First().TabPages)
+                {
+                    subPage.Select();
+                    selectedFighters[i].UpdateTblValues(subPage);
+                }
                 int index = fighterData.GetFighterIndex(selectedFighters[i]);
                 if (index >= 0)
                 {
@@ -344,25 +361,57 @@ namespace SmashUltimateEditor
                 // Battle
                 if (i == 0)
                 {
-                    var collectionIndex = battleData.GetBattleIndex(selectedBattle);
-                    selectedBattle.CorrectEventLabels(ref page, this);
-                    selectedBattle.UpdatePageValues(ref page, i, selectedBattle.battle_id, collectionIndex);
+                    SetPageName(ref page, selectedBattle.battle_id, battleData.GetBattleIndex(selectedBattle));
+
+                    TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
+                    for (int j = 0; j < subPages.Count; j++)
+                    {
+                        var subPage = subPages[j];
+                        UpdateBattlePageValues(ref subPage, j);
+                        subPages[j] = subPage;
+                    }
                 }
                 else
                 {
-                    if(i == 1)
+
+                    SetPageName(ref page, selectedFighters[i-1].fighter_kind, fighterData.GetFighterIndex(selectedFighters[i-1]));
+                    TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
+                    for (int j = 0; j < subPages.Count; j++)
                     {
-                        if(tabCount == 2)
-                            DisableFighterButton(ref page);
-                        else
-                            EnableFighterButton(ref page);
+                        var subPage = subPages[j];
+                        if (i == 1 && j == 0)
+                        {
+                            if (tabCount == 2)
+                                DisableFighterButton(ref subPage);
+                            else
+                                EnableFighterButton(ref subPage);
+                        }
+                        UpdateFighterPageValues(ref subPage, i);
+                        subPages[j] = subPage;
                     }
-                    var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
-                    selectedFighters[i - 1].UpdatePageValues(ref page, i, selectedFighters[i - 1].fighter_kind, collectionIndex);
                 }
             }
 
             HideTabs();
+        }
+
+        public void SetPageName(ref TabPage page, string tabName, int collectionIndex)
+        {
+            page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
+        }
+
+        public void UpdateBattlePageValues(ref TabPage page, int i = 0)
+        {
+            var collectionIndex = battleData.GetBattleIndex(selectedBattle);
+            selectedBattle.CorrectEventLabels(ref page, this);
+            selectedBattle.UpdatePageValues(ref page, i, collectionIndex);
+
+        }
+        
+        public void UpdateFighterPageValues(ref TabPage page, int i)
+        {
+            var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
+            selectedFighters[i - 1].UpdatePageValues(ref page, i, collectionIndex);
         }
 
         public void BuildEmptyTabs()

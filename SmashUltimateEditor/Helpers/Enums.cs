@@ -7,6 +7,19 @@ namespace SmashUltimateEditor
     class Enums
     {
     #region FighterDataTbl
+        public enum Fighter_Page
+        {
+            Basics,
+            Attributes,
+            Mii
+        }
+        public enum Battle_Page
+        {
+            Basics,
+            Events,
+            Skills,
+            Unknowns
+        }
 
         public enum entry_type_opt
         {

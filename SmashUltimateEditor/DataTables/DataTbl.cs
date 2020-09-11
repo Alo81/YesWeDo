@@ -27,13 +27,25 @@ namespace SmashUltimateEditor.DataTables
         [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
         public sealed class OrderAttribute : Attribute
         {
-            private readonly int order_;
+            private readonly int _order;
             public OrderAttribute([CallerLineNumber] int order = 0)
             {
-                order_ = order;
+                _order = order;
             }
 
-            public int Order { get { return order_; } }
+            public int Order { get { return _order; } }
+        }
+
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class PageAttribute : Attribute
+        {
+            private readonly int _page;
+            public PageAttribute(int page = 0)
+            {
+                _page = page;
+            }
+
+            public int Page { get { return _page; } }
         }
 
         internal int pageIndex = 0;
@@ -196,11 +208,12 @@ namespace SmashUltimateEditor.DataTables
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
-                SetValueFromName(text.Name, text.Text);
+                if(!String.IsNullOrWhiteSpace(text.Text))
+                    SetValueFromName(text.Name, text.Text);
             }
         }
 
-        public void UpdatePageValues(ref TabPage page, int pageIndex, string tabName, int collectionIndex)
+        public void UpdatePageValues(ref TabPage page, int pageIndex, int collectionIndex)
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
@@ -216,11 +229,13 @@ namespace SmashUltimateEditor.DataTables
             }
             if(GetType().Name == "Fighter")
             {
-                Button b = page.Controls.OfType<Button>().Single();
-                b.Name = collectionIndex.ToString();
+                Button b = page.Controls.OfType<Button>().FirstOrDefault();
+                if(!(b == default))
+                {
+                    b.Name = collectionIndex.ToString();
+                }
             }
             this.pageIndex = pageIndex;
-            page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
         }
 
         public void CorrectEventLabels(ref TabPage page, DataTbls dataTbls)

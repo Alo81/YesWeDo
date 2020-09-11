@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using static SmashUltimateEditor.Enums;
 
 namespace SmashUltimateEditor
 {
@@ -165,123 +166,185 @@ namespace SmashUltimateEditor
             return newCopy;
         }
 
-        [Order]
+        public static TabPage BuildEmptyPage(DataTbls dataTbls)
+        {
+            Type type = typeof(Battle);
+            TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
+            List<Point> points = new List<Point>();
+            TabControl subControl = new TabControl();
+
+            subControl.Anchor = (((((AnchorStyles.Top | AnchorStyles.Bottom)
+            | AnchorStyles.Left)
+            | AnchorStyles.Right)));
+
+            topLevelPage.Controls.Add(subControl);
+
+            TabPage page;
+            Point currentPos;
+            LabelBox lb;
+
+            for (int i = 0; i < Enum.GetNames(typeof(Battle_Page)).Length; i++)
+            {
+                subControl.TabPages.Add(UiHelper.GetEmptyTabPage(i));
+                subControl.TabPages[i].Name = subControl.TabPages[i].Text = ((Battle_Page)i).ToString();
+                points.Add(new Point(0, 0));
+            }
+
+
+            // GetBattleIndex
+            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
+            {
+                lb = new LabelBox();
+                var pageNum = field.GetCustomAttributes(true).OfType<PageAttribute>().First().Page;
+                page = subControl.TabPages[pageNum];
+                currentPos = points[pageNum];
+
+                // Range values?  Use a textbox.
+                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                {
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                }
+                //Else - use a combo box with preset list.  
+                else
+                {
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                }
+
+                page.Controls.Add(lb.label);
+                if (lb.IsComboSet())
+                {
+                    page.Controls.Add(lb.combo);
+                }
+                else if (lb.IsTextboxSet())
+                {
+                    page.Controls.Add(lb.text);
+                }
+
+                points[pageNum] = currentPos;
+            }
+
+            return topLevelPage;
+        }
+
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string   battle_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	battle_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public ushort	battle_time_sec { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public ushort	basic_init_damage { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public ushort	basic_init_hp { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public byte	    basic_stock { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	ui_stage_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public sbyte _0x18e536d4f7 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_bgm { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    stage_gimmick { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_attr { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	floor_place_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	item_table { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	item_level { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	result_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event1_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event1_label { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event1_start_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event1_range_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public byte	    event1_count { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public ushort	event1_damage { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event2_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event2_label { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event2_start_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event2_range_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public byte	    event2_count { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public ushort	event2_damage { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event3_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event3_label { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event3_start_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public int		event3_range_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public byte	    event3_count { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Events)]
         public ushort	event3_damage { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d41ef8328 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    aw_flap_delay { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d6f19abae { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x18d9441f71 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x18404d4ecb { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill1 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill2 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill3 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill4 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill5 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill6 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill7 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill8 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill9 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill10 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill11 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill12 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	recommended_skill13 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	un_recommended_skill1 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	un_recommended_skill2 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	un_recommended_skill3 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	un_recommended_skill4 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Skills)]
         public string	un_recommended_skill5 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x0ff8afd14f { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         public uint	    battle_power { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using static SmashUltimateEditor.Enums;
 
 namespace SmashUltimateEditor
 {
@@ -123,81 +124,154 @@ namespace SmashUltimateEditor
 
             return newCopy;
         }
+        public static TabPage BuildEmptyPage(DataTbls dataTbls)
+        {
+            Type type = typeof(Fighter);
+            TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
+            List<Point> points = new List<Point>();
+            TabControl subControl = new TabControl();
 
-        [Order]
+            subControl.Anchor = (((((AnchorStyles.Top | AnchorStyles.Bottom)
+            | AnchorStyles.Left)
+            | AnchorStyles.Right)));
+
+            topLevelPage.Controls.Add(subControl);
+
+            TabPage page;
+            Point currentPos;
+            LabelBox lb;
+
+            for (int i = 0; i < Enum.GetNames(typeof(Fighter_Page)).Length; i++)
+            {
+                subControl.TabPages.Add(UiHelper.GetEmptyTabPage(i));
+                subControl.TabPages[i].Name = subControl.TabPages[i].Text = ((Fighter_Page)i).ToString();
+                points.Add(new Point(0, 0));
+            }
+
+            // First pass, add button to first page.  
+            page = subControl.TabPages[0];
+            currentPos = points[0];
+
+            Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+
+            /* We need to set the button name for real though.  */
+            dataTbls.SetRemoveFighterButtonMethod(ref b);
+            page.Controls.Add(b);
+            Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count) };
+            page.Controls.Add(spacer);
+
+            points[0] = currentPos;
+
+            // GetBattleIndex
+            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
+            {
+                lb = new LabelBox();
+                var pageNum = field.GetCustomAttributes(true).OfType<PageAttribute>().First().Page;
+                page = subControl.TabPages[pageNum];
+                currentPos = points[pageNum];
+
+                // Range values?  Use a textbox.
+                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                {
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                }
+                //Else - use a combo box with preset list.  
+                else
+                {
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                }
+
+                page.Controls.Add(lb.label);
+                if (lb.IsComboSet())
+                {
+                    page.Controls.Add(lb.combo);
+                }
+                else if (lb.IsTextboxSet())
+                {
+                    page.Controls.Add(lb.text);
+                }
+
+                points[pageNum] = currentPos;
+            }
+
+            return topLevelPage;
+        }
+
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string battle_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string entry_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool first_appear { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public ushort appear_rule_time { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public ushort appear_rule_count { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string fighter_kind { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public byte color { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_hat_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_body_id { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_color { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_voice { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_sp_n { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_sp_s { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_sp_hi { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_sp_lw { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public byte cpu_lv { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string cpu_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string cpu_sub_type { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public bool cpu_item_pick_up { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public byte stock { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool corps { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool _0x0f2077926c { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public ushort hp { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public ushort init_damage { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string sub_rule { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public float scale { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public float fly_rate { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool invalid_drop { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool enable_charge_final { get; set; }
-        [Order]
-        // Primary spirit identifier
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string spirit_name { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public short attack { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public short defense { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string attr { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string ability1 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string ability2 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string ability3 { get; set; }
-        [Order]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string ability_personal { get; set; }
     }
 }

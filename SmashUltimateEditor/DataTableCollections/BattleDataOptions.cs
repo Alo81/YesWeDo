@@ -16,6 +16,7 @@ namespace SmashUltimateEditor
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
 
         private List<BattleEvent> _events;
+        private List<string> _recommended_skill;
 
         public BattleDataOptions()
         {
@@ -159,22 +160,34 @@ namespace SmashUltimateEditor
         }
         public List<string> event_type
         {
-            get { return EnumUtil<event_type_opt>.GetValuesSorted(); }
+            get 
+            {
+                return events.Select(x => x.event_type).Distinct().OrderBy(x => x).ToList();
+            }
         }
 
         public List<string> event_label
         {
-            get { return EnumUtil<event_label_opt>.GetValuesSorted(); }
+            get
+            {
+                return events.Select(x => x.event_label).Distinct().OrderBy(x => x).ToList();
+            }
         }
 
         public List<string> event_start_time
         {
-            get { return _dataList.Select(x => x.event1_start_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get
+            {
+                return events.Select(x => x.event_start_time.ToString()).Distinct().OrderBy(x => x).ToList();
+            }
         }
 
         public List<string> event_range_time
         {
-            get { return _dataList.Select(x => x.event1_range_time.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get
+            {
+                return events.Select(x => x.event_range_time.ToString()).Distinct().OrderBy(x => x).ToList();
+            }
         }
 
         public List<BattleEvent> events
@@ -344,9 +357,40 @@ namespace SmashUltimateEditor
             get { return _dataList.Select(x => x._0x18404d4ecb).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<string>recommended_skill
+
+        public List<string> recommended_skill
         {
-            get { return EnumUtil<ability_opt>.GetValuesSorted(); }
+            get
+            {
+                if (_recommended_skill is null)
+                {
+                    _recommended_skill = new List<string>();
+
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill1).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill2).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill3).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill4).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill5).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill6).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill7).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill8).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill9).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill10).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill11).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill12).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill13).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill1).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill2).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill3).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill4).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill5).Distinct()));
+                    _recommended_skill.Add("");
+
+                    _recommended_skill = _recommended_skill.Distinct().OrderBy(x => x).ToList();
+                    //
+                }
+                return _recommended_skill;
+            }
         }
         public List<string> recommended_skill1
         {
@@ -403,7 +447,7 @@ namespace SmashUltimateEditor
 
         public List<string> un_recommended_skill
         {
-            get { return EnumUtil<ability_opt>.GetValuesSorted(); }
+            get { return recommended_skill; }
         }
         public List<string> un_recommended_skill1
         {

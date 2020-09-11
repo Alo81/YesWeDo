@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmashUltimateEditor.DataTables.ui_item_db
 {
-    public class Item : DataTbl, IDataTbl
+    public class Item : DataTbl
     {
 
         // This may end up clashing.... We may need further determination if there are other db_roots in the future.  

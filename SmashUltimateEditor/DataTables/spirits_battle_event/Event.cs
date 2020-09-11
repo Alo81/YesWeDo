@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace SmashUltimateEditor.DataTables
 {
-    public class Event : DataTbl, IDataTbl
+    public class Event : DataTbl
     {
         // Default empty XML_NAME where it is not an actual XML element.
         internal static string XML_NAME = "";
@@ -43,7 +43,7 @@ namespace SmashUltimateEditor.DataTables
 
     public class PowerUpEvent : ValueEvent
     {
-        internal static string XML_NAME = "powerup_param";
+        internal static new string XML_NAME = "powerup_param";
         [Order]
         public string power_type { get; set; }
     }

@@ -35,11 +35,15 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             get { return _dataList.Select(x => x.ui_spirit_id).Distinct().OrderBy(x => x).ToList(); }
         }
+        public List<string> unlockable_fighters
+        {
+            get { return _dataList.Select(x => x.chara_id).Distinct().OrderBy(x => x).ToList(); }
+        }
         public bool IsUnlockableFighter(string ui_spirit_id)
         {
             string fighter = _dataList.Where(x => x.ui_spirit_id == ui_spirit_id).Select(x => x.chara_id).FirstOrDefault();  // Get the fighter for the spirit.
             
-            return fighter == default(string) ?     // If it didn't match, not unlockable.  
+            return fighter == default ?     // If it didn't match, not unlockable.  
                 false 
                 : 
                 _dataList.Where(x => x.chara_id == fighter).First().ui_spirit_id == ui_spirit_id;   // If it matches, its a spirit linked to an unlockable.  Only first instance will be actually unlockable fighter.

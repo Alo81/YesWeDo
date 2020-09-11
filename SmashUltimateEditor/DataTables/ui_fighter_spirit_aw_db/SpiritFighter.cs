@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db
 {
-    public class SpiritFighter : DataTbl, IDataTbl
+    public class SpiritFighter : DataTbl
     {
         // This may end up clashing.... We may need further determination if there are other db_roots in the future.  
         internal static string XML_NAME = "db_root";

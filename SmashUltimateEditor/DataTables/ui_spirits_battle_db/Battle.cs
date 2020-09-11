@@ -1,16 +1,19 @@
 ﻿using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
 using SmashUltimateEditor.Helpers;
+using SmashUltimateEditor.UI;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace SmashUltimateEditor
 {
-    public class Battle : DataTbl, IDataTbl
+    public class Battle : DataTbl
     {
         internal static string XML_NAME = "battle_data_tbl";
 

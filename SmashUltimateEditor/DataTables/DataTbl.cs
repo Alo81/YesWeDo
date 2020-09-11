@@ -265,33 +265,6 @@ namespace SmashUltimateEditor.DataTables
                     lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
                     lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
                 }
-                else if (Defs.MII_MOVES.Contains(field.Name.ToUpper()))
-                {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    List<String> miiFighterMoves = new List<String>();
-                    //string fighter = this.GetValueFromName("fighter_kind");
-                    // Is this a mii fighter?  If so, use his moves.  Otherwise, just use default moves.  
-                    // int mod = Defs.miiFighterMod.ContainsKey(fighter) ? Defs.miiFighterMod[fighter] : 0;
-                    int mod = 0;
-
-                    for (int i = 0; i < 3; i++)
-                    {
-                        // THIS IS HARDCODED.  FIX.  (?)
-                        miiFighterMoves.Add(Extensions.EnumUtil<Enums.mii_sp_n_opt>.GetByValue(i + mod));
-                    }
-                    lb.SetComboBox(field.Name, miiFighterMoves, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
-                }
-                // If boolean, our range can be true/false. 
-                else if (field.PropertyType == typeof(bool))
-                {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    List<String> boolNames = new List<String>()
-                {
-                    "false",
-                    "true"
-                };
-                    lb.SetComboBox(field.Name, boolNames, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
-                }
                 //Else - use a combo box with preset list.  
                 else
                 {

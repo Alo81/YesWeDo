@@ -14,7 +14,7 @@ using System.Xml.Linq;
 namespace SmashUltimateEditor
 {
 
-    public class Fighter : DataTbl, IDataTbl
+    public class Fighter : DataTbl
     {
         internal static string XML_NAME = "fighter_data_tbl";
 

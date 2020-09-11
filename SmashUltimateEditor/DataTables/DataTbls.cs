@@ -490,7 +490,7 @@ namespace SmashUltimateEditor
             }
 
             var combo = ((ComboBox)sender);
-            SetEventLabelOptions(combo, tabs.SelectedTab);
+            SetEventLabelOptions(combo, tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab);
         }
         public void SetEventLabelOptions(ComboBox combo, TabPage page)
         {

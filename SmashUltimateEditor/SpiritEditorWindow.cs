@@ -90,63 +90,74 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                try
+                OpenDbWithFileName(openDialog.FileName);
+            }
+        }
+
+        public void OpenDbWithFileName(string fileName)
+        {
+
+            try
+            {
+                var battles = new BattleDataOptions();
+                var fighters = new FighterDataOptions();
+                var events = new EventDataOptions();
+                var items = new ItemDataOptions();
+                var spiritFighters = new SpiritFighterDataOptions();
+
+                var results = dataTbls.ReadXML(fileName);
+
+                battles.SetBattles(results.GetBattles());
+                fighters.SetFighters(results.GetFighters());
+                events.SetEvents(results.GetEvents());
+                items.SetItems(results.GetItems());
+                spiritFighters.SetSpiritFighters(results.GetSpiritFighters());
+
+                if (battles.GetCount() > 0)
                 {
-                    var battles = new BattleDataOptions();
-                    var fighters = new FighterDataOptions();
-                    var events = new EventDataOptions();
-                    var items = new ItemDataOptions();
-                    var spiritFighters = new SpiritFighterDataOptions();
+                    dataTbls.EmptySpiritData();
+                    dataTbls.battleData = battles;
+                    dataTbls.fighterData = fighters;
+                    var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
 
-                    var results = dataTbls.ReadXML(openDialog.FileName);
+                    buildFighterDataTab(battle_id);
 
-                    battles.SetBattles(results.GetBattles());
-                    fighters.SetFighters(results.GetFighters());
-                    events.SetEvents(results.GetEvents());
-                    items.SetItems(results.GetItems());
-                    spiritFighters.SetSpiritFighters(results.GetSpiritFighters());
-
-                    if (battles.GetCount() > 0)
-                    {
-                        dataTbls.EmptySpiritData();
-                        dataTbls.battleData = battles;
-                        dataTbls.fighterData = fighters;
-                        var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
-
-                        buildFighterDataTab(battle_id);
-
-                        MessageBox.Show(String.Format("Opened Battle Data."));
-                    }
-                    if(events.GetCount() > 0)
-                    {
-                        dataTbls.eventData = events;
-                        dataTbls.UpdateEventsForDbValues();
-
-                        MessageBox.Show(String.Format("Opened Event Data."));
-                    }
-                    if (items.GetCount() > 0)
-                    {
-                        dataTbls.itemData = items;
-                        var itemEvents = dataTbls.itemData.GetAsEvents();
-                        dataTbls.eventData.AddUniqueEvents(itemEvents);
-
-                        MessageBox.Show(String.Format("Opened Item Data."));
-                    }
-                    if (spiritFighters.GetCount() > 0)
-                    {
-                        dataTbls.spiritFighterData = spiritFighters;
-
-                        MessageBox.Show(String.Format("Opened Spirit Fighter Data."));
-                    }
-
+                    MessageBox.Show(String.Format("Opened Battle Data."));
                 }
-                catch (Exception ex)
+                if (events.GetCount() > 0)
                 {
-                    MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
-                    return;
+                    dataTbls.eventData = events;
+                    dataTbls.UpdateEventsForDbValues();
+
+                    MessageBox.Show(String.Format("Opened Event Data."));
+                }
+                if (items.GetCount() > 0)
+                {
+                    dataTbls.itemData = items;
+                    var itemEvents = dataTbls.itemData.GetAsEvents();
+                    dataTbls.eventData.AddUniqueEvents(itemEvents);
+
+                    MessageBox.Show(String.Format("Opened Item Data."));
+                }
+                if (spiritFighters.GetCount() > 0)
+                {
+                    dataTbls.spiritFighterData = spiritFighters;
+
+                    MessageBox.Show(String.Format("Opened Spirit Fighter Data."));
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
+                return;
+            }
+
             dataTbls.RefreshTabs();
+        }
+
+        public void LoadAllFiles()
+        {
+
         }
 
         private void SaveFile_Click(object sender, EventArgs e)

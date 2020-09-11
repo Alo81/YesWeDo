@@ -132,7 +132,6 @@ namespace SmashUltimateEditor
         // Exclude event options from randomized, as we'll set it programatically elsewhere from a list of existing events.  
         public static List<string> EXCLUDED_RANDOMIZED = new List<string>(EVENT_OPTIONS)
         {
-            "aw_flap_delay",
             "battle_id",
             "appear_rule_time",
             "appear_rule_count"

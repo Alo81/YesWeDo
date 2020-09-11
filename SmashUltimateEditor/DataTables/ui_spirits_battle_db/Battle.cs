@@ -225,6 +225,13 @@ namespace SmashUltimateEditor
                 points[pageNum] = currentPos;
             }
 
+            for (int i = 0; i < subControl.TabPages.Count; i++)
+            {
+                var subPage = subControl.TabPages[i];
+                dataTbls.SetEventOnChange(ref subPage);
+                subControl.TabPages[i] = subPage;
+            }
+
             return topLevelPage;
         }
 

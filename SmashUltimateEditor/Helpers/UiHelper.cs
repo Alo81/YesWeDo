@@ -62,9 +62,31 @@ namespace SmashUltimateEditor.Helpers
             MessageBox.Show(    String.Concat(message, String.Format("{0} - {1}", method.Name, method.DeclaringType.Name)  )   );
         }
 
+        public static string ListToCSV(List<string> strings)
+        {
+            var csv = "";
+            if (strings != null)
+            {
+                foreach (string text in strings)
+                {
+                    csv += text + ",";
+                }
+                if (csv.Length > 0)
+                {
+                    csv = csv.Substring(0, csv.Length - 1);
+                }
+            }
+
+            return csv;
+        }
+
         public static void PopUpMessage(string message)
         {
             MessageBox.Show(message);
+        }
+        public static void SetInformativeLabel(ref Label label, string message)
+        {
+            label.Text = message;
         }
     }
 }

@@ -88,12 +88,14 @@ namespace SmashUltimateEditor
         {
             var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
             var result = openDialog.ShowDialog();
-            List<string> dbType;
+            List<string> dbTypes;
+            string dbTypeCSV = "";
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                dbType = OpenDbWithFileName(openDialog.FileName);
-                UiHelper.PopUpMessage($"Opened {dbType}");
+                dbTypes = OpenDbWithFileName(openDialog.FileName);
+                dbTypeCSV = UiHelper.ListToCSV(dbTypes);
+                UiHelper.PopUpMessage($"Opened {dbTypeCSV}");
             }
         }
 
@@ -162,22 +164,17 @@ namespace SmashUltimateEditor
             var directory = config.file_directory_preload;
             var fileNames = Directory.GetFiles(directory);
             var dbTypes = new List<string>();
-            var fileNamesCSV = "";
+            string dbTypeCSV;
 
             foreach (string fileName in fileNames)
             {
                 dbTypes.AddRange(OpenDbWithFileName(fileName));
             }
-
-            foreach(string dbType in dbTypes)
-            {
-                fileNamesCSV += "\r\n" + dbType + ",";
-            }
+            dbTypeCSV = UiHelper.ListToCSV(dbTypes);
 
             if (fileNames.Length > 0)
             {
-                fileNamesCSV = fileNamesCSV.Substring(0, fileNamesCSV.Length - 1);
-                UiHelper.PopUpMessage($"Loaded files: {fileNamesCSV}");
+                UiHelper.SetInformativeLabel(ref labelInformative, $"Loaded files: {dbTypeCSV}");
             }
         }
 

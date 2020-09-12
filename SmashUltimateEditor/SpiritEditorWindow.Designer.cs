@@ -73,6 +73,7 @@ namespace SmashUltimateEditor
             this.labelSeed = new System.Windows.Forms.Label();
             this.checkBoxEncrypt = new System.Windows.Forms.CheckBox();
             this.checkBoxDecrypt = new System.Windows.Forms.CheckBox();
+            this.labelInformative = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -98,7 +99,7 @@ namespace SmashUltimateEditor
             this.tabControlData.Location = new System.Drawing.Point(10, 82);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(1103, 926);
+            this.tabControlData.Size = new System.Drawing.Size(1103, 911);
             this.tabControlData.TabIndex = 5;
             // 
             // btnAddFighter
@@ -399,11 +400,22 @@ namespace SmashUltimateEditor
             this.checkBoxDecrypt.UseVisualStyleBackColor = true;
             this.checkBoxDecrypt.CheckedChanged += new System.EventHandler(this.checkBoxDecrypt_CheckedChanged);
             // 
+            // labelInformative
+            // 
+            this.labelInformative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelInformative.AutoSize = true;
+            this.labelInformative.Location = new System.Drawing.Point(12, 996);
+            this.labelInformative.Name = "labelInformative";
+            this.labelInformative.Size = new System.Drawing.Size(0, 15);
+            this.labelInformative.TabIndex = 14;
+            // 
             // SpiritEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 1020);
+            this.Controls.Add(this.labelInformative);
             this.Controls.Add(this.checkBoxDecrypt);
             this.Controls.Add(this.checkBoxEncrypt);
             this.Controls.Add(this.labelSeed);
@@ -470,6 +482,7 @@ namespace SmashUltimateEditor
         private Label labelSeed;
         private CheckBox checkBoxEncrypt;
         private CheckBox checkBoxDecrypt;
+        private Label labelInformative;
     }
 }
 

@@ -10,7 +10,7 @@ namespace SmashUltimateEditor
     {   
         #region randomizer
         public const int CHAOS = 50;
-        public const int BOSS_CHECK = 20;
+        public const int BOSS_CHECK = 50;
 
         public const float BOSS_SCALE_MOD = 1.35F;
         public const float BOSS_ATTACK_MOD = 2;

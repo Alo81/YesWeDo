@@ -366,6 +366,7 @@ namespace SmashUltimateEditor
                 {
                     _recommended_skill = new List<string>();
 
+                    _recommended_skill.Add("");
                     _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill1).Distinct()));
                     _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill2).Distinct()));
                     _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill3).Distinct()));
@@ -384,7 +385,6 @@ namespace SmashUltimateEditor
                     _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill3).Distinct()));
                     _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill4).Distinct()));
                     _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill5).Distinct()));
-                    _recommended_skill.Add("");
 
                     _recommended_skill = _recommended_skill.Distinct().OrderBy(x => x).ToList();
                     //

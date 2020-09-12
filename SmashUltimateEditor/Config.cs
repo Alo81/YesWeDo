@@ -18,6 +18,7 @@ namespace SmashUltimateEditor
         public string file_directory_custom_battles;
         public string file_directory_encr;
         public string file_directory_randomized;
+        public string file_directory_preload;
 
         public string file_location;
         public string file_location_custom_battles;
@@ -54,9 +55,10 @@ namespace SmashUltimateEditor
                 Console.WriteLine("Error reading app settings");
             }
 
-            file_directory_custom_battles = file_directory + @"CustomBattles\";
-            file_directory_encr = file_directory + @"Encrypted\";
-            file_directory_randomized = file_directory + @"Randomized\";
+            file_directory_custom_battles = file_directory_custom_battles ?? file_directory + @"CustomBattles\";
+            file_directory_encr = file_directory_encr ?? file_directory + @"Encrypted\";
+            file_directory_randomized = file_directory_randomized ?? file_directory + @"Randomized\";
+            file_directory_preload = file_directory_preload ?? file_directory + @"PreLoad\";
 
             file_location = file_directory + file_name;
             file_location_custom_battles = file_directory_custom_battles + file_name;

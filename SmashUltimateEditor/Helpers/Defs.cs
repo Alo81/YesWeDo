@@ -155,6 +155,7 @@ namespace SmashUltimateEditor
         };
 
         public static List<string> EXCLUDED_FIGHTERS = new List<string>(BOSSES) {"ui_chara_random", ""};
+        public static List<string> EXCLUDED_UNLOCKABLE_FIGHTERS = new List<string>() {"ui_chara_kirby"};
 
         public static List<string> MII_MOVES = new List<string>()
         {

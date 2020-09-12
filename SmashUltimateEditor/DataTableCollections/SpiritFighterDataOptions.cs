@@ -9,6 +9,7 @@ namespace SmashUltimateEditor.DataTableCollections
     public class SpiritFighterDataOptions
     {
         public List<SpiritFighter> _dataList;
+        private List<SpiritFighter> _unlockableFighters;
 
         public SpiritFighterDataOptions()
         {
@@ -35,13 +36,38 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             get { return _dataList.Select(x => x.ui_spirit_id).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> unlockable_fighters
+        public List<SpiritFighter> unlockable_fighters
         {
-            get { return _dataList.Select(x => x.chara_id).Distinct().OrderBy(x => x).ToList(); }
+            get
+            {
+                if (_unlockableFighters is null)
+                {
+                    BuildUnlockableFighters();
+                }
+                return _unlockableFighters;
+            }
         }
+        public List<string> unlockable_fighters_string
+        {
+            get
+            {
+                if (_unlockableFighters is null)
+                {
+                    BuildUnlockableFighters();
+                }
+                return _unlockableFighters.Select(x => x.chara_id).ToList();
+            }
+        }
+
+        private void BuildUnlockableFighters()
+        {
+            _unlockableFighters = _dataList.OrderBy(x => x.chara_id).ToList();
+            _unlockableFighters.RemoveAll(x => Defs.EXCLUDED_UNLOCKABLE_FIGHTERS.Contains(x.chara_id));
+        }
+
         public bool IsUnlockableFighter(string ui_spirit_id)
         {
-            string fighter = _dataList.Where(x => x.ui_spirit_id == ui_spirit_id).Select(x => x.chara_id).FirstOrDefault();  // Get the fighter for the spirit.
+            string fighter = unlockable_fighters.Where(x => x.ui_spirit_id == ui_spirit_id).Select(x => x.chara_id).FirstOrDefault();  // Get the fighter for the spirit.
             
             return fighter == default ?     // If it didn't match, not unlockable.  
                 false 

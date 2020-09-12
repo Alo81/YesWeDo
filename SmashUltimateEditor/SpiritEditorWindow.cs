@@ -29,6 +29,7 @@ namespace SmashUltimateEditor
             dataTbls.decrypt = checkBoxDecrypt.Checked;
 
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
+            LoadAllFiles();
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -87,14 +88,16 @@ namespace SmashUltimateEditor
         {
             var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
             var result = openDialog.ShowDialog();
+            List<string> dbType;
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                OpenDbWithFileName(openDialog.FileName);
+                dbType = OpenDbWithFileName(openDialog.FileName);
+                UiHelper.PopUpMessage($"Opened {dbType}");
             }
         }
 
-        public void OpenDbWithFileName(string fileName)
+        public List<string> OpenDbWithFileName(string fileName)
         {
 
             try
@@ -104,6 +107,7 @@ namespace SmashUltimateEditor
                 var events = new EventDataOptions();
                 var items = new ItemDataOptions();
                 var spiritFighters = new SpiritFighterDataOptions();
+                var fileDbType = new List<string>();
 
                 var results = dataTbls.ReadXML(fileName);
 
@@ -122,42 +126,59 @@ namespace SmashUltimateEditor
 
                     buildFighterDataTab(battle_id);
 
-                    MessageBox.Show(String.Format("Opened Battle Data."));
+                    fileDbType.Add("Battle");
                 }
                 if (events.GetCount() > 0)
                 {
                     dataTbls.eventData = events;
                     dataTbls.UpdateEventsForDbValues();
 
-                    MessageBox.Show(String.Format("Opened Event Data."));
+                    fileDbType.Add("Event");
                 }
                 if (items.GetCount() > 0)
                 {
                     dataTbls.itemData = items;
                     var itemEvents = dataTbls.itemData.GetAsEvents();
                     dataTbls.eventData.AddUniqueEvents(itemEvents);
-
-                    MessageBox.Show(String.Format("Opened Item Data."));
+                    fileDbType.Add("Item");
                 }
                 if (spiritFighters.GetCount() > 0)
                 {
                     dataTbls.spiritFighterData = spiritFighters;
-
-                    MessageBox.Show(String.Format("Opened Spirit Fighter Data."));
+                    fileDbType.Add("Spirit Fighter");
                 }
+                return fileDbType;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
-                return;
+                return null;
             }
-
-            dataTbls.RefreshTabs();
         }
 
         public void LoadAllFiles()
         {
+            var config = new Config();
+            var directory = config.file_directory_preload;
+            var fileNames = Directory.GetFiles(directory);
+            var dbTypes = new List<string>();
+            var fileNamesCSV = "";
 
+            foreach (string fileName in fileNames)
+            {
+                dbTypes.AddRange(OpenDbWithFileName(fileName));
+            }
+
+            foreach(string dbType in dbTypes)
+            {
+                fileNamesCSV += "\r\n" + dbType + ",";
+            }
+
+            if (fileNames.Length > 0)
+            {
+                fileNamesCSV = fileNamesCSV.Substring(0, fileNamesCSV.Length - 1);
+                UiHelper.PopUpMessage($"Loaded files: {fileNamesCSV}");
+            }
         }
 
         private void SaveFile_Click(object sender, EventArgs e)

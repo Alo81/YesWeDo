@@ -265,22 +265,23 @@ namespace SmashUltimateEditor
             FighterDataOptions randomizedFighters = new FighterDataOptions();
             Fighter randomizedFighter;
             int fighterCount;
-            List<string> unlockableFighters = spiritFighterData.chara_id;
+            List<string> unlockableFighters = spiritFighterData.unlockable_fighters_string;
 
             SetupRandomizeProgress();
 
             foreach (Battle battle in battleData.GetBattles())
             {
                 battle.Randomize(ref rnd, this);
-
-                // Save after randomizing, as we'll be setting battle_Type to HP, and modifying fighter to make one a boss.  
-                var isUnlockableFighterType = spiritFighterData.IsUnlockableFighter(battle.battle_id);
-
                 // If lose escort, need at least 2 fighters.  
                 fighterCount = battle.IsLoseEscort() ?
                     RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)]
                     :
                     RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
+
+                // Save after randomizing, as cleanup will modify it.  
+                var isUnlockableFighterType = spiritFighterData.IsUnlockableFighter(battle.battle_id);
+                var isBossType = battle.IsBossType();
+
 
                 battle.Cleanup(ref rnd, fighterCount, this);
 
@@ -293,7 +294,7 @@ namespace SmashUltimateEditor
 
                     var isMain = i == 0;     // Set first fighter to main.  
                     var isUnlockableFighter = isMain && isUnlockableFighterType;     // If unlockable fighter, we will explicitly set a fighter to match the spirit.  
-                    var isBoss = isMain && battle.IsBossType();     // Set first fighter to main.  
+                    var isBoss = isMain && isBossType;     // Set first fighter to main.  
                     var isLoseEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
 
                     randomizedFighter = battle.GetNewFighter();
@@ -307,7 +308,7 @@ namespace SmashUltimateEditor
                     }
 
                     randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss, unlockableFighter);
-                    fighterSum += randomizedFighter.stock;
+                    fighterSum += randomizedFighter.stock == 0 ? 1 : randomizedFighter.stock;
 
                     randomizedFighters.AddFighter(randomizedFighter);
                     progress.PerformStep();

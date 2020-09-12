@@ -61,5 +61,10 @@ namespace SmashUltimateEditor.Helpers
 
             MessageBox.Show(    String.Concat(message, String.Format("{0} - {1}", method.Name, method.DeclaringType.Name)  )   );
         }
+
+        public static void PopUpMessage(string message)
+        {
+            MessageBox.Show(message);
+        }
     }
 }

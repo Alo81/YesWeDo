@@ -130,31 +130,34 @@ namespace SmashUltimateEditor
 
         public void Save(string fileLocation)
         {
-            Save(battleData, fighterData, fileLocation);
+            Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation));
         }
         public void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            Save(battleData, fighterData, FileLocation);
+            Save(battleData, fighterData, Path.GetDirectoryName(FileLocation), Path.GetFileName(FileLocation));
         }
 
         // This isn't following proper standard.  Fix it.  
         public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            Save(battleData, fighterData, config.file_directory_randomized + config.file_name_encr);
+            Save(battleData, fighterData, config.file_directory_randomized, config.file_name_encr);
         }
 
         // We should make it so directory and name are passed separately.  That way we can build a modified name, or add a modified directory.  
-        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name = "")
+        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name)
         {
             SaveLocal();
+            fileLocation += @"\";
             if (encrypt)
             {
-                SaveToEncryptedFile(battleData, fighterData, fileLocation);
+                SaveToEncryptedFile(battleData, fighterData, fileLocation + file_name);
             }
 
             if(decrypt)
             {
-                SaveToFile(battleData, fighterData, fileLocation + "_unencr");
+                var directory = fileLocation + @"Unencrypted\";
+                Directory.CreateDirectory(directory);
+                SaveToFile(battleData, fighterData, directory + file_name + "_unencr");
             }
         }
 
@@ -177,23 +180,10 @@ namespace SmashUltimateEditor
             SaveFighters();
         }
 
-        public void ImportBattle(string file_loc)
+        public void ImportBattle(BattleDataOptions battles, FighterDataOptions fighters)
         {
-
-            var battles = new BattleDataOptions();
-            var fighters = new FighterDataOptions();
-            var results = ReadXML(file_loc);
-            
-            battles.SetBattles(results.GetBattles());
-            fighters.SetFighters(results.GetFighters());
-
             battleData.ReplaceBattles(battles);
             fighterData.ReplaceFighters(fighters);
-
-            var battle_id = battles.GetBattleAtIndex(0).battle_id;
-
-            SetSelectedBattle(battle_id);
-            SetSelectedFighters(battle_id);
         }
 
         public void SaveBattle()

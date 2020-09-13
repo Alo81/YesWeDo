@@ -33,6 +33,14 @@ namespace SmashUltimateEditor.DataTables
             return dataList.Count;
         }
 
+        public void SetBattleIdsForAll(string battle_id)
+        {
+            foreach(var dataTbl in dataList)
+            {
+                dataTbl.SetValueFromName("battle_id", battle_id);
+            }
+        }
+
         public List<IDataTbl> GetOfType(Type type)
         {
             return dataList.Where(x => x.GetType() == type).ToList();

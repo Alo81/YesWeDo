@@ -47,6 +47,7 @@ namespace SmashUltimateEditor
             this.SaveAsFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportBattleFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.importBattleOverFile = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportBattles = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportBattlesFromFolderFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -143,6 +144,7 @@ namespace SmashUltimateEditor
             this.SaveAsFile,
             this.toolStripSeparator1,
             this.ExportBattleFile,
+            this.importBattleOverFile,
             this.ImportBattles,
             this.ImportBattlesFromFolderFile,
             this.toolStripSeparator2,
@@ -196,12 +198,19 @@ namespace SmashUltimateEditor
             this.ExportBattleFile.Text = "&Export Battle";
             this.ExportBattleFile.Click += new System.EventHandler(this.ExportBattleFile_Click);
             // 
+            // importBattleOverFile
+            // 
+            this.importBattleOverFile.Name = "importBattleOverFile";
+            this.importBattleOverFile.Size = new System.Drawing.Size(215, 22);
+            this.importBattleOverFile.Text = "Import Battle Over Current";
+            this.importBattleOverFile.Click += new System.EventHandler(this.ImportBattleOverFile_Click);
+            // 
             // ImportBattles
             // 
             this.ImportBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ImportBattles.Name = "ImportBattles";
             this.ImportBattles.Size = new System.Drawing.Size(215, 22);
-            this.ImportBattles.Text = "Import Battle";
+            this.ImportBattles.Text = "Import Battle(s)";
             this.ImportBattles.Click += new System.EventHandler(this.ImportBattle_Click);
             // 
             // ImportBattlesFromFolderFile
@@ -483,6 +492,7 @@ namespace SmashUltimateEditor
         private CheckBox checkBoxEncrypt;
         private CheckBox checkBoxDecrypt;
         private Label labelInformative;
+        private ToolStripMenuItem importBattleOverFile;
     }
 }
 

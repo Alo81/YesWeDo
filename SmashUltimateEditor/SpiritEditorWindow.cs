@@ -209,7 +209,6 @@ namespace SmashUltimateEditor
             FighterDataOptions fighters = new FighterDataOptions();
             fighters.AddFighters(dataTbls.selectedFighters);
 
-
             var saveDialog = new SaveFileDialog()
             {
                 Title = "Export Spirit Battle",
@@ -221,8 +220,10 @@ namespace SmashUltimateEditor
             var result = saveDialog.ShowDialog();
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
-                dataTbls.Save(singleBattle, fighters, saveDialog.FileName);
+                dataTbls.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName));
             }
+
+            UiHelper.PopUpMessage("Export complete.");
         }
 
         private void ImportBattle_Click(object sender, EventArgs e)
@@ -232,10 +233,46 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                dataTbls.ImportBattle(importDialog.FileName);
-                dataTbls.RefreshTabs();
+                var battles = new BattleDataOptions();
+                var fighters = new FighterDataOptions();
+                var results = dataTbls.ReadXML(importDialog.FileName);
+
+                battles.SetBattles(results.GetBattles());
+                fighters.SetFighters(results.GetFighters());
+
+                dataTbls.ImportBattle(battles, fighters);
+
+                var battle_id = battles.GetBattleAtIndex(0).battle_id;
+                dropdownSpiritData.SelectedItem = battle_id;
+
+                UiHelper.PopUpMessage("Import complete.");
             }
         }
+        private void ImportBattleOverFile_Click(object sender, EventArgs e)
+        {
+            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory };
+            var result = importDialog.ShowDialog();
+
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
+            {
+                var battles = new BattleDataOptions();
+                var fighters = new FighterDataOptions();
+                var results = dataTbls.ReadXML(importDialog.FileName);
+
+                results.SetBattleIdsForAll(dataTbls.selectedBattle.battle_id);
+
+                battles.SetBattles(results.GetBattles());
+                fighters.SetFighters(results.GetFighters());
+
+                dataTbls.ImportBattle(battles, fighters);
+
+                var battle_id = battles.GetBattleAtIndex(0).battle_id;
+                dropdownSpiritData.SelectedItem = battle_id;
+
+                UiHelper.PopUpMessage("Import complete.");
+            }
+        }
+
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
             var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
@@ -263,10 +300,12 @@ namespace SmashUltimateEditor
                         dataTbls.SetSelectedBattle(battle_id);
                         dataTbls.SetSelectedFighters(battle_id);
                     }
-
                 }
             }
-            dataTbls.RefreshTabs();
+            var selected_battle_id = dataTbls.selectedBattle.battle_id;
+            dropdownSpiritData.SelectedItem = selected_battle_id;
+
+            UiHelper.PopUpMessage("Import complete.");
         }
 
         private void RandomizeAllTool_Click(object sender, EventArgs e)

@@ -15,10 +15,19 @@ namespace SmashUltimateEditor
 
         public List<Fighter> _dataList;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
+        internal static Type underlyingType = typeof(Fighter);
 
         public FighterDataOptions()
         {
             _dataList = new List<Fighter>();
+        }
+        public void SetData(List<IDataTbl> inEvents)
+        {
+            _dataList = inEvents.OfType<Fighter>().ToList();
+        }
+        public static Type GetUnderlyingType()
+        {
+            return underlyingType;
         }
         public int GetCount()
         {

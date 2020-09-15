@@ -1,6 +1,8 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
+using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
+using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
@@ -89,12 +91,11 @@ namespace SmashUltimateEditor
             var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
             var result = openDialog.ShowDialog();
             List<string> dbTypes;
-            string dbTypeCSV = "";
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
                 dbTypes = OpenDbWithFileName(openDialog.FileName);
-                dbTypeCSV = UiHelper.ListToCSV(dbTypes);
+                var dbTypeCSV = UiHelper.ListToCSV(dbTypes);
                 UiHelper.PopUpMessage($"Opened {dbTypeCSV}");
             }
         }
@@ -104,20 +105,15 @@ namespace SmashUltimateEditor
 
             try
             {
-                var battles = new BattleDataOptions();
-                var fighters = new FighterDataOptions();
-                var events = new EventDataOptions();
-                var items = new ItemDataOptions();
-                var spiritFighters = new SpiritFighterDataOptions();
                 var fileDbType = new List<string>();
 
-                var results = dataTbls.ReadXML(fileName);
+                var results = XmlHelper.ReadXML(fileName);
 
-                battles.SetBattles(results.GetBattles());
-                fighters.SetFighters(results.GetFighters());
-                events.SetEvents(results.GetEvents());
-                items.SetItems(results.GetItems());
-                spiritFighters.SetSpiritFighters(results.GetSpiritFighters());
+                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                EventDataOptions events = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
+                ItemDataOptions items = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
+                SpiritFighterDataOptions spiritFighters = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
 
                 if (battles.GetCount() > 0)
                 {
@@ -200,13 +196,13 @@ namespace SmashUltimateEditor
             }
         }
 
-        // Modify this to use a dialog prompt so we can choose where to save it.  
         private void ExportBattleFile_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
             BattleDataOptions singleBattle = new BattleDataOptions();
-            singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
             FighterDataOptions fighters = new FighterDataOptions();
+
+            singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
             fighters.AddFighters(dataTbls.selectedFighters);
 
             var saveDialog = new SaveFileDialog()
@@ -233,12 +229,10 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var battles = new BattleDataOptions();
-                var fighters = new FighterDataOptions();
-                var results = dataTbls.ReadXML(importDialog.FileName);
+                var results = XmlHelper.ReadXML(importDialog.FileName);
 
-                battles.SetBattles(results.GetBattles());
-                fighters.SetFighters(results.GetFighters());
+                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
 
                 dataTbls.ImportBattle(battles, fighters);
 
@@ -255,14 +249,12 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var battles = new BattleDataOptions();
-                var fighters = new FighterDataOptions();
-                var results = dataTbls.ReadXML(importDialog.FileName);
+                var results = XmlHelper.ReadXML(importDialog.FileName);
 
                 results.SetBattleIdsForAll(dataTbls.selectedBattle.battle_id);
 
-                battles.SetBattles(results.GetBattles());
-                fighters.SetFighters(results.GetFighters());
+                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
 
                 dataTbls.ImportBattle(battles, fighters);
 
@@ -281,14 +273,11 @@ namespace SmashUltimateEditor
             if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
                 var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
-
-                var battles = new BattleDataOptions();
-                var fighters = new FighterDataOptions();
                 foreach (string file in files)
                 {
-                    var results = dataTbls.ReadXML(file);
-                    battles.SetBattles(results.GetBattles());
-                    fighters.SetFighters(results.GetFighters());
+                    var results = XmlHelper.ReadXML(file);
+                    BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                    FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
 
                     dataTbls.battleData.ReplaceBattles(battles);
                     dataTbls.fighterData.ReplaceFighters(fighters);

@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using static SmashUltimateEditor.Extensions;
+using static SmashUltimateEditor.ObjectExtension;
 
 namespace SmashUltimateEditor.DataTables
 {
@@ -150,12 +151,12 @@ namespace SmashUltimateEditor.DataTables
             if ((checkRequired && (Defs.REQUIRED_PARAMS.Contains(field.Name)))
                 || RandomizerHelper.ChancePass(dataTbls.config.chaos, ref rnd))
             {
-                SetValueFromName(field.Name, value);
+                this.SetValueFromName(field.Name, value);
             }
             else if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
             {
                 // Set floats to mode value?
-                SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(GetType(), field.Name));
+                this.SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(GetType(), field.Name));
             }
         }
 
@@ -204,12 +205,12 @@ namespace SmashUltimateEditor.DataTables
                 var value = combo?.SelectedItem?.ToString() ?? "";
                 
                 value = EnumChecker(value, combo.Name);
-                SetValueFromName(combo.Name, value);
+                this.SetValueFromName(combo.Name, value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
                 if(!String.IsNullOrWhiteSpace(text.Text))
-                    SetValueFromName(text.Name, text.Text);
+                    this.SetValueFromName(text.Name, text.Text);
             }
         }
 
@@ -217,7 +218,7 @@ namespace SmashUltimateEditor.DataTables
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
-                var value = GetPropertyValueFromName(combo.Name);
+                var value = this.GetPropertyValueFromName(combo.Name);
                 value = EnumChecker(value, combo.Name);
 
                 combo.SelectedIndex = combo.Items.IndexOf(value);
@@ -225,7 +226,7 @@ namespace SmashUltimateEditor.DataTables
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
-                text.Text = GetPropertyValueFromName(text.Name);
+                text.Text = this.GetPropertyValueFromName(text.Name);
             }
             if(GetType().Name == "Fighter")
             {
@@ -242,7 +243,7 @@ namespace SmashUltimateEditor.DataTables
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>().Where(x => Regex.IsMatch(x.Name, "event.*type")))
             {
-                var value = GetPropertyValueFromName(combo.Name);
+                var value = this.GetPropertyValueFromName(combo.Name);
                 value = EnumChecker(value, combo.Name);
 
                 dataTbls.SetEventLabelOptions(combo, page);
@@ -300,36 +301,11 @@ namespace SmashUltimateEditor.DataTables
 
             return page;
         }
-        public string GetPropertyValueFromName(string name)
-        {
-            return this.GetType().GetProperty(name).GetValue(this)?.ToString().ToLower() ?? "";
-        }
-        public string GetFieldValueFromName(string name)
-        {
-            return this?.GetType()?.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(this)?.ToString()?.ToLower() ?? "";
-        }
         public Tuple<float, float> GetRangeFromName(string name)
         {
             float min = float.Parse(typeof(Defs).GetProperty(name.ToUpper()+"_MIN").GetValue(this).ToString());
             float max = float.Parse(typeof(Defs).GetProperty(name.ToUpper() + "_MAX").GetValue(this).ToString());
             return new Tuple<float, float>(min, max);
-        }
-
-        public void SetValueFromName(string name, string val)
-        {
-            PropertyInfo field = this.GetType().GetProperty(name);
-            // If val is null, interpret as empty string for our purposes.  
-            val ??= "";
-
-            try
-            {
-                field.SetValue(this, Convert.ChangeType(val, field.PropertyType));
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
-                throw ex;
-            }
         }
 
         public string ValuableValue (string val)
@@ -384,7 +360,7 @@ namespace SmashUltimateEditor.DataTables
                 }
                 attribute = reader.GetAttribute("hash");
                 reader.Read();
-                SetValueFromName(DataParse.ImportNameFixer(attribute), reader.Value);
+                this.SetValueFromName(DataParse.ImportNameFixer(attribute), reader.Value);
             }
             return;
         }

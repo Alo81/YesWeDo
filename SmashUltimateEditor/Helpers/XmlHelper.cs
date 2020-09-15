@@ -3,8 +3,11 @@ using SmashUltimateEditor.DataTables;
 using SmashUltimateEditor.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -34,6 +37,128 @@ namespace SmashUltimateEditor.Helpers
             {
                 reader.Read();
             }
+        }
+
+        public static DataOptions ReadXML(string fileName)
+        {
+            bool parseData = false;
+            bool firstPass = false;
+            bool sharedXmlName;
+            IDataTbl dataTable;
+            var results = new DataOptions();
+
+            // Copy the stream to memory, so we're not holding the resource open.  
+            MemoryStream stream = new MemoryStream();
+
+            using (Stream fileStream = new FileStream(fileName, FileMode.Open))
+            {
+                fileStream.CopyTo(stream);
+                stream.Position = 0;
+            }
+
+            XmlReader reader = XmlReader.Create(stream);
+
+            try
+            {
+                reader.Read();
+                // Read the whole file.  
+                while (!reader.EOF)
+                {
+                    dataTable = DataTbl.GetDataTblFromXmlName(reader?.GetAttribute("hash"));
+
+                    if (dataTable != null)
+                    {
+                        parseData = true;
+                        firstPass = true;
+                        sharedXmlName = dataTable.GetType() == typeof(DataTbl);
+
+                        if (sharedXmlName)
+                        {
+                            MemoryStream firstLevelCopy = new MemoryStream();
+                            // Store the position, read from the beginning, restore the position.
+                            var position = stream.Position;
+                            stream.Position = 0;
+                            dataTable = DataTbl.DetermineXmlTypeFromFirstLevel(stream);
+                            stream.Position = position;
+                        }
+                    }
+
+                    if (parseData)
+                    {
+                        // Read until start of data.  
+                        XmlHelper.ReadUntilName(reader, stopper: "struct");
+
+                        // Lists have index values, so keep reading until we've left the list.  
+                        // Added first pass to handle when a struct is not in a list.  
+                        while (firstPass || reader.GetAttribute("index") != null)
+                        {
+                            dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
+                            dataTable.BuildFromXml(reader);
+
+                            results.AddDataTbl(dataTable);
+
+                            XmlHelper.ReadUntilNodeType(reader, node: XmlNodeType.Element);
+
+                            firstPass = false;
+                        }
+
+                        //Left the list.  Don't parse the next lines.  
+                        parseData = false;
+                        Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
+
+                        continue;
+                    }
+
+                    reader.Read();
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static XDocument BuildXml(BattleDataOptions battleData, FighterDataOptions fighterData)
+        {
+
+            var type = fighterData.GetFighters().GetType().Name.ToLower();
+            type = type.Remove(type.Length - 2);
+
+            XDocument doc =
+                new XDocument(new XDeclaration("1.0", "utf-8", null),
+                    new XElement("struct",
+                        // <list hash="battle_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement(type,
+                        new XAttribute("hash", battleData.GetXmlName()),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            battleData.GetBattles().Select(battle =>
+                            battle.GetAsXElement(battleData.GetBattleIndex(battle)
+                            )
+                            )
+                        ),
+                        // <list hash="fighter_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement(type,
+                        new XAttribute("hash", fighterData.GetXmlName()),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            fighterData.GetFighters().Select(fighter =>
+                            fighter.GetAsXElement(fighterData.GetFighterIndex(fighter)
+                            )
+                            )
+                        )
+                    )
+                );
+
+            return doc;
+        }
+
+        public static void WriteXmlToFile(string fileName, XDocument xmlDoc)
+        {
+            using StreamWriter writer = new StreamWriter(fileName);
+
+            writer.Write(xmlDoc.Declaration.ToString() + "\r\n" + xmlDoc.ToString());
+            writer.Close();
+            writer.Dispose();
         }
 
         /*

@@ -119,7 +119,7 @@ namespace SmashUltimateEditor
             Fighter newCopy = new Fighter();
             foreach(PropertyInfo property in GetType().GetProperties())
             {
-                newCopy.SetValueFromName(property.Name, GetPropertyValueFromName(property.Name));
+                newCopy.SetValueFromName(property.Name, this.GetPropertyValueFromName(property.Name));
             }
 
             return newCopy;

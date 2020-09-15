@@ -13,8 +13,8 @@ namespace SmashUltimateEditor.DataTables
 
         public string GetTypeName()
         {
-            string typeName = GetFieldValueFromName("TYPE_NAME");
-            return typeName == "" ? (GetFieldValueFromName("XML_NAME").Replace("_param", "")) : typeName;
+            string typeName = this.GetFieldValueFromName("TYPE_NAME");
+            return typeName == "" ? (this.GetFieldValueFromName("XML_NAME").Replace("_param", "")) : typeName;
         }
     }
 

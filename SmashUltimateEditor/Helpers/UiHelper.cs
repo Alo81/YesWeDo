@@ -54,6 +54,31 @@ namespace SmashUltimateEditor.Helpers
             return b;
         }
 
+        public static void DisableFighterButton(ref TabPage page)
+        {
+            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            button.Enabled = false;
+        }
+
+        public static void EnableFighterButton(ref TabPage page)
+        {
+            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            button.Enabled = true;
+        }
+
+        public static void SetupRandomizeProgress(ref ProgressBar progress, int max)
+        {
+            progress.Visible = true;
+            progress.Minimum = 0;
+            progress.Maximum = max;
+            progress.Value = progress.Minimum;
+            progress.Step = 1;
+        }
+
+        public static void SetPageName(ref TabPage page, string tabName, int collectionIndex)
+        {
+            page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
+        }
         public static void PopUpCallingClass(string message = "Error from: ")
         {
             int skipFrames = 1;

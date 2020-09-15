@@ -6,14 +6,23 @@ using System.Text;
 
 namespace SmashUltimateEditor.DataTableCollections
 {
-    public class SpiritFighterDataOptions
+    public class SpiritFighterDataOptions : BaseDataOptions, IDataOptions
     {
         public List<SpiritFighter> _dataList;
         private List<SpiritFighter> _unlockableFighters;
+        internal static Type underlyingType = typeof(SpiritFighter);
 
         public SpiritFighterDataOptions()
         {
             _dataList = new List<SpiritFighter>();
+        }
+        public void SetData(List<IDataTbl> inData)
+        {
+            _dataList = inData.OfType<SpiritFighter>().ToList();
+        }
+        public static Type GetUnderlyingType()
+        {
+            return underlyingType;
         }
 
         public void SetSpiritFighters(List<SpiritFighter> spiritFighters)

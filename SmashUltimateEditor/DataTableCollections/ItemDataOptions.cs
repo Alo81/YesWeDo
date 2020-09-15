@@ -11,10 +11,19 @@ namespace SmashUltimateEditor.DataTableCollections
     {
         public List<Item> _dataList;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
+        internal static Type underlyingType = typeof(Item);
 
         public ItemDataOptions()
         {
             _dataList = new List<Item>();
+        }
+        public void SetData(List<IDataTbl> inData)
+        {
+            _dataList = inData.OfType<Item>().ToList();
+        }
+        public static Type GetUnderlyingType()
+        {
+            return underlyingType;
         }
         public int GetCount()
         {

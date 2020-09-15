@@ -18,7 +18,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using static SmashUltimateEditor.DataTables.DataTbl;
+using SmashUltimateEditor.DataTables.ui_item_db;
 using static System.Windows.Forms.TabControl;
+using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
 
 namespace SmashUltimateEditor
 {
@@ -32,7 +34,6 @@ namespace SmashUltimateEditor
 
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
-        public Fighter selectedFighter;
         public Queue<TabPage> tabStorage = new Queue<TabPage>();
 
         public Config config;
@@ -64,35 +65,24 @@ namespace SmashUltimateEditor
             }
         }
 
-    public bool HasEnoughPages { get { return tabs.TabPages.Count >= pageCount; } }
-        public string FileLocation
-        {
-            get
-            {
-                return encrypt ? config.file_location_encr : config.file_location;
-            }
-        }
+        public bool HasEnoughPages { get { return tabs.TabPages.Count >= pageCount; } }
 
         public DataTbls()
         {
-            battleData = new BattleDataOptions();
-            fighterData = new FighterDataOptions();
-            eventData = new EventDataOptions();
-            itemData = new ItemDataOptions();
-            spiritFighterData = new SpiritFighterDataOptions();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
-            selectedFighter = new Fighter();
             config = new Config();
 
             encrypt = false;
             decrypt = false;
 
-            var results = ReadXML(config.file_location);
-            //ref battleData, ref fighterData
-            battleData.SetBattles(results.GetBattles());
-            fighterData.SetFighters(results.GetFighters());
-            eventData.SetEvents(results.GetEvents());
+            var results = XmlHelper.ReadXML(config.file_location);
+
+            battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+            fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+            eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
+            itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
+            spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
         }
 
         public void EmptySpiritData()
@@ -125,7 +115,7 @@ namespace SmashUltimateEditor
 
         public void Save()
         {
-            Save(FileLocation);
+            Save(config.file_location);
         }
 
         public void Save(string fileLocation)
@@ -134,16 +124,14 @@ namespace SmashUltimateEditor
         }
         public void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            Save(battleData, fighterData, Path.GetDirectoryName(FileLocation), Path.GetFileName(FileLocation));
+            Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
         }
 
-        // This isn't following proper standard.  Fix it.  
         public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
             Save(battleData, fighterData, config.file_directory_randomized, config.file_name_encr);
         }
 
-        // We should make it so directory and name are passed separately.  That way we can build a modified name, or add a modified directory.  
         public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name)
         {
             SaveLocal();
@@ -163,40 +151,36 @@ namespace SmashUltimateEditor
 
         public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, EventDataOptions eventData = null)
         {
-            var doc = BuildXml(battleData, fighterData);
+            var doc = XmlHelper.BuildXml(battleData, fighterData);
 
             AssmebleEncrypted(doc.ToXmlDocument(), fileLocation);
         }
 
         public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData,  string fileLocation, EventDataOptions eventData = null)
         {
-            var doc = BuildXml(battleData, fighterData);
-            WriteXmlToFile(fileLocation, doc);
+            var doc = XmlHelper.BuildXml(battleData, fighterData);
+            XmlHelper.WriteXmlToFile(fileLocation, doc);
         }
-
+        public void SetSaveTabChange(object sender, EventArgs e)
+        {
+            SaveLocal();
+        }
         public void SaveLocal()
         {
             SaveBattle();
             SaveFighters();
         }
-
-        public void ImportBattle(BattleDataOptions battles, FighterDataOptions fighters)
-        {
-            battleData.ReplaceBattles(battles);
-            fighterData.ReplaceFighters(fighters);
-        }
-
         public void SaveBattle()
         {
             TabPage battlePage = tabs.TabPages.Count > 0 ? tabs.TabPages[0] : null;
             // No battle?
-            if(battlePage is null)
+            if (battlePage is null)
             {
                 return;
             }
             // Update fields on page, then fields on subpages. 
             selectedBattle.UpdateTblValues(battlePage);
-            foreach(TabPage subPage in battlePage.Controls.OfType<TabControl>().First().TabPages)
+            foreach (TabPage subPage in battlePage.Controls.OfType<TabControl>().First().TabPages)
             {
                 // No battle?
                 if (subPage is null)
@@ -221,11 +205,11 @@ namespace SmashUltimateEditor
                 return;
             }
 
-            for (int i = 0; i< fighterPages.Count-1; i++)
+            for (int i = 0; i < fighterPages.Count - 1; i++)
             {
                 // Match on tab index, which is assigned to Fighter when it updates page values.  
                 // Update fields on page, then fields on subpages. 
-                selectedFighters[i].UpdateTblValues(fighterPages[i+1]);
+                selectedFighters[i].UpdateTblValues(fighterPages[i + 1]);
 
                 foreach (TabPage subPage in fighterPages[i + 1].Controls.OfType<TabControl>().First().TabPages)
                 {
@@ -239,14 +223,22 @@ namespace SmashUltimateEditor
                 }
             }
         }
-
-        public void SetupRandomizeProgress()
+        public void SetRemoveFighterButtonMethod(ref Button b)
         {
-            progress.Visible = true;
-            progress.Minimum = 0;
-            progress.Maximum = battleData.GetCount() * 4;
-            progress.Value = progress.Minimum;
-            progress.Step = 1;
+            b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
+        }
+        public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
+        {
+            int index = Int32.Parse(((Button)sender).Name);
+            selectedFighters.Remove(fighterData.GetFighterAtIndex(index));
+            fighterData.RemoveFighterAtIndex(index);
+            RefreshTabs();
+        }
+
+        public void ImportBattle(BattleDataOptions battles, FighterDataOptions fighters)
+        {
+            battleData.ReplaceBattles(battles);
+            fighterData.ReplaceFighters(fighters);
         }
 
         public void RandomizeAll(int seed = -1)
@@ -257,7 +249,7 @@ namespace SmashUltimateEditor
             int fighterCount;
             List<string> unlockableFighters = spiritFighterData.unlockable_fighters_string;
 
-            SetupRandomizeProgress();
+            UiHelper.SetupRandomizeProgress(ref progress, battleData.GetCount()*4);
 
             foreach (Battle battle in battleData.GetBattles())
             {
@@ -315,25 +307,7 @@ namespace SmashUltimateEditor
             SaveRandomized(battleData, randomizedFighters);
             RefreshTabs();
             progress.Visible = false;
-            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", config.chaos.ToString(), FileLocation + "_Randomized"));
-        }
-
-        public void RemoveFighterFromButtonNamedIndex(object sender, EventArgs e)
-        {
-            int index = Int32.Parse(((Button)sender).Name);
-            selectedFighters.Remove(fighterData.GetFighterAtIndex(index));
-            fighterData.RemoveFighterAtIndex(index);
-            RefreshTabs();
-        }
-        
-        public void SetRemoveFighterButtonMethod(ref Button b)
-        {
-            b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
-        }
-
-        public void SetSaveTabChange(object sender, EventArgs e)
-        {
-            SaveLocal();
+            MessageBox.Show(String.Format("Spirit Battles Randomized.\r\nChaos: {0}. \r\nLocation: {1}", config.chaos.ToString(), config.file_directory_randomized));
         }
         
         public void RefreshTabs()
@@ -352,7 +326,7 @@ namespace SmashUltimateEditor
                 // Battle
                 if (i == 0)
                 {
-                    SetPageName(ref page, selectedBattle.battle_id, battleData.GetBattleIndex(selectedBattle));
+                    UiHelper.SetPageName(ref page, selectedBattle.battle_id, battleData.GetBattleIndex(selectedBattle));
 
                     TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
                     for (int j = 0; j < subPages.Count; j++)
@@ -364,8 +338,7 @@ namespace SmashUltimateEditor
                 }
                 else
                 {
-
-                    SetPageName(ref page, selectedFighters[i-1].fighter_kind, fighterData.GetFighterIndex(selectedFighters[i-1]));
+                    UiHelper.SetPageName(ref page, selectedFighters[i-1].fighter_kind, fighterData.GetFighterIndex(selectedFighters[i-1]));
                     TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
                     for (int j = 0; j < subPages.Count; j++)
                     {
@@ -373,9 +346,9 @@ namespace SmashUltimateEditor
                         if (i == 1 && j == 0)
                         {
                             if (tabCount == 2)
-                                DisableFighterButton(ref subPage);
+                                UiHelper.DisableFighterButton(ref subPage);
                             else
-                                EnableFighterButton(ref subPage);
+                                UiHelper.EnableFighterButton(ref subPage);
                         }
                         UpdateFighterPageValues(ref subPage, i);
                         subPages[j] = subPage;
@@ -385,26 +358,6 @@ namespace SmashUltimateEditor
 
             HideTabs();
         }
-
-        public void SetPageName(ref TabPage page, string tabName, int collectionIndex)
-        {
-            page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
-        }
-
-        public void UpdateBattlePageValues(ref TabPage page, int i = 0)
-        {
-            var collectionIndex = battleData.GetBattleIndex(selectedBattle);
-            selectedBattle.CorrectEventLabels(ref page, this);
-            selectedBattle.UpdatePageValues(ref page, i, collectionIndex);
-
-        }
-        
-        public void UpdateFighterPageValues(ref TabPage page, int i)
-        {
-            var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
-            selectedFighters[i - 1].UpdatePageValues(ref page, i, collectionIndex);
-        }
-
         public void BuildEmptyTabs()
         {
             TabPage page;
@@ -433,22 +386,24 @@ namespace SmashUltimateEditor
 
         public void ShowTabs()
         {
-            while(tabStorage.Count > 0 && !HasEnoughPages)
+            while (tabStorage.Count > 0 && !HasEnoughPages)
             {
                 tabs.TabPages.Add(tabStorage.Dequeue());
             }
         }
 
-        public void DisableFighterButton(ref TabPage page)
+        public void UpdateBattlePageValues(ref TabPage page, int i = 0)
         {
-            Button button = page.Controls.OfType<Button>().FirstOrDefault();
-            button.Enabled = false;
-        }
+            var collectionIndex = battleData.GetBattleIndex(selectedBattle);
+            selectedBattle.CorrectEventLabels(ref page, this);
+            selectedBattle.UpdatePageValues(ref page, i, collectionIndex);
 
-        public void EnableFighterButton(ref TabPage page)
+        }
+        
+        public void UpdateFighterPageValues(ref TabPage page, int i)
         {
-            Button button = page.Controls.OfType<Button>().FirstOrDefault();
-            button.Enabled = true;
+            var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
+            selectedFighters[i - 1].UpdatePageValues(ref page, i, collectionIndex);
         }
 
         public void SetEventTypeForPage(ref TabPage page)
@@ -475,54 +430,18 @@ namespace SmashUltimateEditor
 
         public void SetEventLabelOptions(object sender, EventArgs e = null)
         {
-            if(eventData.GetCount() == 0)
+            if (eventData.GetCount() == 0)
             {
                 return;
             }
 
             var combo = ((ComboBox)sender);
-            SetEventLabelOptions(combo, tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab);
+            eventData.SetEventLabelOptions(combo, tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab);
         }
+
         public void SetEventLabelOptions(ComboBox combo, TabPage page)
         {
-            if (eventData.GetCount() == 0)
-            {
-                return;
-            }
-
-            var labelType = combo?.SelectedItem?.ToString();
-            var labelComboName = "event#_label";
-
-            foreach (char character in combo.Name)
-            {
-                if (Char.IsDigit(character))
-                {
-                    labelComboName = labelComboName.Replace('#', character);
-                    break;
-                }
-            }
-
-            SetEventLabelOptions(labelComboName, labelType, page);
-        }
-        public void SetEventLabelOptions(string labelComboName, string labelType, TabPage page)
-        {
-            if (eventData.GetCount() == 0)
-            {
-                return;
-            }
-
-            var controls = page.Controls.OfType<ComboBox>();
-
-            var labels = eventData.GetLabelsOfType(labelType);
-
-            foreach (ComboBox control in controls)
-            {
-                if (control.Name == labelComboName)
-                {
-                    control.DataSource = labels;
-                    return;
-                }
-            }
+            eventData.SetEventLabelOptions(combo, page);
         }
 
         public void SetSelectedBattle(string battle_id)
@@ -536,14 +455,11 @@ namespace SmashUltimateEditor
 
         public List<string> GetOptionsFromTypeAndName(Type type, string name)
         {
-            Type fighterType = fighterData.GetContainerType();
-            Type battleType = battleData.GetContainerType();
-
-            if (type == fighterType)
+            if (type == typeof(Fighter))
             {
                 return fighterData.GetOptionsFromName(name) ?? new List<string>();
             }
-            if (type == battleType)
+            if (type == typeof(Battle))
             {
                 return battleData.GetOptionsFromName(name) ?? new List<string>();
             }
@@ -571,131 +487,6 @@ namespace SmashUltimateEditor
             string mode = groups.First(g => g.Count() == maxCount).Key;
 
             return mode;
-        }
-
-        // Methods
-        public DataOptions ReadXML(string fileName)
-        {
-            bool parseData = false;
-            bool firstPass = false;
-            bool sharedXmlName;
-            IDataTbl dataTable;
-            var results = new DataOptions();
-
-            // Copy the stream to memory, so we're not holding the resource open.  
-            MemoryStream stream = new MemoryStream();
-
-            using (Stream fileStream = new FileStream(fileName, FileMode.Open))
-            {
-                fileStream.CopyTo(stream);
-                stream.Position = 0;
-            }
-
-            XmlReader reader = XmlReader.Create(stream);
-
-            try
-            {
-                reader.Read();
-                // Read the whole file.  
-                while (!reader.EOF)
-                {
-                    dataTable = GetDataTblFromXmlName(reader?.GetAttribute("hash"));
-
-                    if(dataTable != null)
-                    {
-                        parseData = true;
-                        firstPass = true;
-                        sharedXmlName = dataTable.GetType() == typeof(DataTbl);
-
-                        if (sharedXmlName)
-                        {
-                            MemoryStream firstLevelCopy = new MemoryStream();
-                            // Store the position, read from the beginning, restore the position.
-                            var position = stream.Position;
-                            stream.Position = 0;
-                            dataTable = DetermineXmlTypeFromFirstLevel(stream);
-                            stream.Position = position;
-                        }
-                    }
-
-                    if (parseData)
-                    {
-                        // Read until start of data.  
-                        XmlHelper.ReadUntilName(reader, stopper: "struct");
-
-                        // Lists have index values, so keep reading until we've left the list.  
-                        // Added first pass to handle when a struct is not in a list.  
-                        while (firstPass || reader.GetAttribute("index") != null)
-                        {
-                            dataTable = (IDataTbl)Activator.CreateInstance(dataTable.GetType());
-                            dataTable.BuildFromXml(reader);
-
-                            results.AddDataTbl(dataTable);
-
-                            XmlHelper.ReadUntilNodeType(reader, node: XmlNodeType.Element);
-
-                            firstPass = false;
-                        }
-
-                        //Left the list.  Don't parse the next lines.  
-                        parseData = false;
-                        Console.WriteLine("{0} Table Complete.", dataTable.GetType().ToString());
-                        
-                        continue;
-                    }
-
-                    reader.Read();
-                }
-                return results;
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-
-
-        public XDocument BuildXml(BattleDataOptions battleData, FighterDataOptions fighterData)
-        {
-
-            var type = fighterData.GetFighters().GetType().Name.ToLower();
-            type = type.Remove(type.Length - 2);
-
-            XDocument doc =
-                new XDocument(new XDeclaration("1.0", "utf-8", null),
-                    new XElement("struct",
-                        // <list hash="battle_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
-                        new XElement(type, 
-                        new XAttribute("hash", battleData.GetXmlName()),
-                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
-                            battleData.GetBattles().Select(battle =>
-                            battle.GetAsXElement(battleData.GetBattleIndex(battle)
-                            )
-                            )
-                        ),
-                        // <list hash="fighter_data_tbl">	// <*DataList.Type* hash="*DataTbl.Type*">
-                        new XElement(type,
-                        new XAttribute("hash", fighterData.GetXmlName()),
-                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
-                            fighterData.GetFighters().Select(fighter =>
-                            fighter.GetAsXElement(fighterData.GetFighterIndex(fighter)
-                            )
-                            )
-                        )
-                    )
-                );
-
-            return doc;
-        }
-
-        public void WriteXmlToFile(string fileName, XDocument xmlDoc)
-        {
-            using StreamWriter writer = new StreamWriter(fileName);
-
-            writer.Write(xmlDoc.Declaration.ToString() + "\r\n" + xmlDoc.ToString());
-            writer.Close();
-            writer.Dispose();
         }
 
         #region PRC Cryptography

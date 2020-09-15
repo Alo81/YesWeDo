@@ -22,12 +22,12 @@ namespace SmashUltimateEditor
         {
             var eventNum = String.Format("event{0}_", index);
             // event1_type, event1_ label,  event1_ start_time, event1_ range_time, event1_ count, event1_ damage
-            SetValueFromName(eventNum + "type", randEvent.event_type);
-            SetValueFromName(eventNum + "label", randEvent.event_label);
-            SetValueFromName(eventNum + "start_time", randEvent.event_start_time.ToString());
-            SetValueFromName(eventNum + "range_time", randEvent.event_range_time.ToString());
-            SetValueFromName(eventNum + "count", randEvent.event_count.ToString());
-            SetValueFromName(eventNum + "damage", randEvent.event_damage.ToString());
+            this.SetValueFromName(eventNum + "type", randEvent.event_type);
+            this.SetValueFromName(eventNum + "label", randEvent.event_label);
+            this.SetValueFromName(eventNum + "start_time", randEvent.event_start_time.ToString());
+            this.SetValueFromName(eventNum + "range_time", randEvent.event_range_time.ToString());
+            this.SetValueFromName(eventNum + "count", randEvent.event_count.ToString());
+            this.SetValueFromName(eventNum + "damage", randEvent.event_damage.ToString());
         }
 
         public Fighter GetNewFighter()
@@ -112,13 +112,13 @@ namespace SmashUltimateEditor
                 foreach(var hazardRelief in Defs.HAZARD_SKILLS[stage_attr])
                 {
                     var skill = String.Format("recommended_skill{0}", i++);
-                    SetValueFromName(skill, hazardRelief);
+                    this.SetValueFromName(skill, hazardRelief);
                 }
                 i += 3; // We want to keep some randomized skills regardless.  
                 while(i <= 13)
                 {
                     var skill = String.Format("recommended_skill{0}", i++);
-                    SetValueFromName(skill, "");
+                    this.SetValueFromName(skill, "");
                 }
             }
         }
@@ -160,7 +160,7 @@ namespace SmashUltimateEditor
             Battle newCopy = new Battle();
             foreach (PropertyInfo property in GetType().GetProperties())
             {
-                newCopy.SetValueFromName(property.Name, GetPropertyValueFromName(property.Name));
+                newCopy.SetValueFromName(property.Name, this.GetPropertyValueFromName(property.Name));
             }
 
             return newCopy;

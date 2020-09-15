@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using static SmashUltimateEditor.Fighter;
@@ -65,6 +67,35 @@ namespace SmashUltimateEditor
             {
                 nodeReader.MoveToContent();
                 return XDocument.Load(nodeReader);
+            }
+        }
+    }
+
+    public static class ObjectExtension
+    {
+        public static string GetPropertyValueFromName(this object obj, string name)
+        {
+            return obj.GetType().GetProperty(name).GetValue(obj)?.ToString().ToLower() ?? "";
+        }
+        public static string GetFieldValueFromName(this object obj, string name)
+        {
+            return obj?.GetType()?.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(obj)?.ToString()?.ToLower() ?? "";
+        }
+
+        public static void SetValueFromName(this object obj, string name, string val)
+        {
+            PropertyInfo field = obj.GetType().GetProperty(name);
+            // If val is null, interpret as empty string for our purposes.  
+            val ??= "";
+
+            try
+            {
+                field.SetValue(obj, Convert.ChangeType(val, field.PropertyType));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
+                throw ex;
             }
         }
     }

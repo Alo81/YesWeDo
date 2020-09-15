@@ -14,6 +14,7 @@ namespace SmashUltimateEditor
     {
         public List<Battle> _dataList;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
+        internal static Type underlyingType = typeof(Battle);
 
         private List<BattleEvent> _events;
         private List<string> _recommended_skill;
@@ -21,6 +22,14 @@ namespace SmashUltimateEditor
         public BattleDataOptions()
         {
             _dataList = new List<Battle>();
+        }
+        public void SetData(List<IDataTbl> inData)
+        {
+            _dataList = inData.OfType<Battle>().ToList();
+        }
+        public static Type GetUnderlyingType()
+        {
+            return underlyingType;
         }
         public int GetCount()
         {

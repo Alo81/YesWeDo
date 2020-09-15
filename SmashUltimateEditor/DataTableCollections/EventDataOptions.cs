@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace SmashUltimateEditor.DataTableCollections
 {
@@ -11,10 +12,19 @@ namespace SmashUltimateEditor.DataTableCollections
     {
         public List<Event> _dataList;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
+        public static Type underlyingType = typeof(Event);
 
         public EventDataOptions()
         {
             _dataList = new List<Event>();
+        }
+        internal static Type GetUnderlyingType()
+        {
+            return underlyingType;
+        }
+        public void SetData(List<IDataTbl> inEvents)
+        {
+            _dataList = inEvents.OfType<Event>().ToList();
         }
         public int GetCount()
         {
@@ -89,6 +99,7 @@ namespace SmashUltimateEditor.DataTableCollections
                 }
             }
         }
+
         public void SetEvents(List<Event> inEvents)
         {
             _dataList = inEvents;
@@ -104,6 +115,48 @@ namespace SmashUltimateEditor.DataTableCollections
         public void ReplaceEventAtIndex(int index, Event newEvent)
         {
             _dataList[index] = newEvent;
+        }
+
+        public void SetEventLabelOptions(ComboBox combo, TabPage page)
+        {
+            if (GetCount() == 0)
+            {
+                return;
+            }
+
+            var labelType = combo?.SelectedItem?.ToString();
+            var labelComboName = "event#_label";
+
+            foreach (char character in combo.Name)
+            {
+                if (Char.IsDigit(character))
+                {
+                    labelComboName = labelComboName.Replace('#', character);
+                    break;
+                }
+            }
+
+            SetEventLabelOptions(labelComboName, labelType, page);
+        }
+        public void SetEventLabelOptions(string labelComboName, string labelType, TabPage page)
+        {
+            if (GetCount() == 0)
+            {
+                return;
+            }
+
+            var controls = page.Controls.OfType<ComboBox>();
+
+            var labels = GetLabelsOfType(labelType);
+
+            foreach (ComboBox control in controls)
+            {
+                if (control.Name == labelComboName)
+                {
+                    control.DataSource = labels;
+                    return;
+                }
+            }
         }
 
         public List<string> event_type

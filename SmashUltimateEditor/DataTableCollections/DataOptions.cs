@@ -53,7 +53,7 @@ namespace SmashUltimateEditor.DataTables
 
         public List<IDataTbl> GetOfType(Type type)
         {
-            return dataList.Where(x => x.GetType() == type).ToList();
+            return dataList.Where(x => x.GetType().IsAssignableFrom(type) || x.GetType().IsSubclassOf(type)).ToList();
         }
         public List<Battle> GetBattles()
         {

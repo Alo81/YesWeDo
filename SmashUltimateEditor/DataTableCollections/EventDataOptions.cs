@@ -12,7 +12,7 @@ namespace SmashUltimateEditor.DataTableCollections
     {
         public List<Event> _dataList;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
-        public static Type underlyingType = typeof(Event);
+        internal static Type underlyingType = typeof(Event);
 
         public EventDataOptions()
         {

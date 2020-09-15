@@ -18,7 +18,7 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             _dataList = new List<Event>();
         }
-        internal static Type GetUnderlyingType()
+        public static Type GetUnderlyingType()
         {
             return underlyingType;
         }

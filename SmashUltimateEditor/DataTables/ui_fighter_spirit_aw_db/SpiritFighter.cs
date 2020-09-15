@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db
+﻿namespace SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db
 {
     public class SpiritFighter : DataTbl
     {

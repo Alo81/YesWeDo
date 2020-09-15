@@ -1,26 +1,17 @@
 ﻿using paracobNET;
 using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
+using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
+using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using static SmashUltimateEditor.DataTables.DataTbl;
-using SmashUltimateEditor.DataTables.ui_item_db;
 using static System.Windows.Forms.TabControl;
-using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
 
 namespace SmashUltimateEditor
 {
@@ -52,7 +43,16 @@ namespace SmashUltimateEditor
                 var page = Battle.BuildEmptyPage(this);
                 SetEventOnChange(ref page);
                 if(eventData.GetCount() != 0)
-                    SetEventTypeForPage(ref page);
+                {
+                    var pages = UiHelper.GetPagesAsList(page);
+                    for(int i = 0; i < pages.Count; i++)
+                    {
+                        var subpage = pages[i];
+                        if(subpage != null)
+                            SetEventOnChange(ref subpage);
+                        pages[i] = subpage;
+                    }
+                }
                 return page;
             } 
         }
@@ -101,14 +101,26 @@ namespace SmashUltimateEditor
             for(int i = 0; i < tabs.TabCount; i++)
             {
                 var page = tabs.TabPages[i];
-                SetEventTypeForPage(ref page);
+                var pages = UiHelper.GetPagesAsList(page);
+                for(int j = 0; j < pages.Count; j++)
+                {
+                    var subPage = pages[j];
+                    if(subPage != null)
+                        SetEventTypeForPage(ref subPage);
+                }
             }
 
             // Stored pages.
             for (int i = 0; i < tabStorage.Count; i++)
             {
                 var page = tabStorage.Dequeue();
-                SetEventTypeForPage(ref page);
+                var pages = UiHelper.GetPagesAsList(page);
+                for (int j = 0; j < pages.Count; j++)
+                {
+                    var subPage = pages[j];
+                    if (subPage != null)
+                        SetEventTypeForPage(ref subPage);
+                }
                 tabStorage.Enqueue(page);
             }
         }
@@ -436,7 +448,9 @@ namespace SmashUltimateEditor
             }
 
             var combo = ((ComboBox)sender);
-            eventData.SetEventLabelOptions(combo, tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab);
+            var page = tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab;
+            if(page != null)
+                eventData.SetEventLabelOptions(combo, page);
         }
 
         public void SetEventLabelOptions(ComboBox combo, TabPage page)

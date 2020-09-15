@@ -8,8 +8,6 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Xml;
-using System.Xml.Linq;
 using static SmashUltimateEditor.Enums;
 
 namespace SmashUltimateEditor

@@ -6,14 +6,9 @@ using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SmashUltimateEditor
@@ -32,6 +27,7 @@ namespace SmashUltimateEditor
 
             buildFighterDataTab(dataTbls.battleData.battle_id.First());
             LoadAllFiles();
+            dataTbls.UpdateEventsForDbValues();
         }
 
         private void buildFighterDataTab(string battle_id)

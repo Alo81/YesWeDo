@@ -1,16 +1,10 @@
-﻿using paracobNET;
-using SmashUltimateEditor.DataTableCollections;
+﻿using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
 using SmashUltimateEditor.DataTables.ui_item_db;
-using SmashUltimateEditor.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using static SmashUltimateEditor.DataTables.DataTbl;
 
 namespace SmashUltimateEditor.DataTables
 {

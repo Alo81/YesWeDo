@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-
-namespace SmashUltimateEditor.DataTables
+﻿namespace SmashUltimateEditor.DataTables
 {
     public class Event : DataTbl
     {

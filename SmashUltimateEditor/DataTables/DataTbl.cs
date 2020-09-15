@@ -1,22 +1,16 @@
-﻿using paracobNET;
-using SmashUltimateEditor.Helpers;
-using SmashUltimateEditor.Interfaces;
+﻿using SmashUltimateEditor.Helpers;
 using SmashUltimateEditor.UI;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using static SmashUltimateEditor.Extensions;
-using static SmashUltimateEditor.ObjectExtension;
 
 namespace SmashUltimateEditor.DataTables
 {

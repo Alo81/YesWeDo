@@ -1,12 +1,8 @@
-﻿using SmashUltimateEditor.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SmashUltimateEditor.Helpers
@@ -103,6 +99,19 @@ namespace SmashUltimateEditor.Helpers
             }
 
             return csv;
+        }
+        public static List<TabPage> GetPagesAsList(TabPage page)
+        {
+            List<TabPage> pages = new List<TabPage>();
+
+            pages.Add(page);
+            var subPages = page.Controls.OfType<TabControl>().First().TabPages;
+            foreach(TabPage subPage in subPages)
+            {
+                pages.Add(subPage);
+            }
+
+            return pages;
         }
 
         public static void PopUpMessage(string message)

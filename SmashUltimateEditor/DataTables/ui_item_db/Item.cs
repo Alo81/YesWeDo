@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmashUltimateEditor.DataTables.ui_item_db
+﻿namespace SmashUltimateEditor.DataTables.ui_item_db
 {
     public class Item : DataTbl
     {

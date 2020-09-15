@@ -3,7 +3,6 @@ using SmashUltimateEditor.DataTables.ui_item_db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace SmashUltimateEditor.DataTableCollections
 {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SmashUltimateEditor.DataTableCollections
 {
@@ -6,6 +8,7 @@ namespace SmashUltimateEditor.DataTableCollections
     {
         public List<IDataTbl> dataList { get;}
 
+        public int GetCount();
         public void SetData(List<IDataTbl> inData);
     }
 }

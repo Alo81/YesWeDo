@@ -53,7 +53,7 @@ namespace SmashUltimateEditor
                 hp = hold;
             }
 
-            if(isLoseEscort && hp < Defs.ALLY_LOW_HP_CUTOFF)
+            if(isLoseEscort && (hp - init_damage) < Defs.ALLY_LOW_HP_CUTOFF)
             {
                 // Losing from low health escorts sucks.  Either add HP, or add Stocks. 
                 if(RandomizerHelper.ChancePass(50, ref rnd))

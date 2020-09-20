@@ -18,6 +18,12 @@ namespace SmashUltimateEditor
         public SpiritEditorWindow()
         {
             InitializeComponent();
+            //this.
+            // this.DataContext = // Must be a window for this to work(?)  Essentially for us to data bind.  Have an intermediary object that has all the data to be maniuplated.  
+            // Convert to getting all objects from Factorys?
+            // Genericize UI from actual logic with a ViewModel
+            // Implement unit tests.  
+
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
@@ -91,6 +97,7 @@ namespace SmashUltimateEditor
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
                 dbTypes = OpenDbWithFileName(openDialog.FileName);
+                dataTbls.RefreshTabs();
                 var dbTypeCSV = UiHelper.ListToCSV(dbTypes);
                 UiHelper.PopUpMessage($"Opened {dbTypeCSV}");
             }
@@ -98,47 +105,44 @@ namespace SmashUltimateEditor
 
         public List<string> OpenDbWithFileName(string fileName)
         {
-
             try
             {
                 var fileDbType = new List<string>();
 
                 var results = XmlHelper.ReadXML(fileName);
 
-                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
-                EventDataOptions events = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
-                ItemDataOptions items = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
-                SpiritFighterDataOptions spiritFighters = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
-
-                if (battles.GetCount() > 0)
+                if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() + results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
                 {
-                    dataTbls.EmptySpiritData();
-                    dataTbls.battleData = battles;
-                    dataTbls.fighterData = fighters;
-                    var battle_id = dataTbls.battleData.GetBattleAtIndex(0).battle_id;
-
-                    buildFighterDataTab(battle_id);
-
-                    fileDbType.Add("Battle");
+                    if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() > 0)
+                    {
+                        dataTbls.battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                        fileDbType.Add("Battle");
+                    }
+                    if (results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
+                    {
+                        dataTbls.fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                        fileDbType.Add("Fighter");
+                    }
+                    
+                    buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
                 }
-                if (events.GetCount() > 0)
+                if (results.GetDataOptionsFromUnderlyingType(typeof(Event)).GetCount() > 0)
                 {
-                    dataTbls.eventData = events;
+                    dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
                     dataTbls.UpdateEventsForDbValues();
 
                     fileDbType.Add("Event");
                 }
-                if (items.GetCount() > 0)
+                if (results.GetDataOptionsFromUnderlyingType(typeof(Item)).GetCount() > 0)
                 {
-                    dataTbls.itemData = items;
+                    dataTbls.itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
                     var itemEvents = dataTbls.itemData.GetAsEvents();
                     dataTbls.eventData.AddUniqueEvents(itemEvents);
                     fileDbType.Add("Item");
                 }
-                if (spiritFighters.GetCount() > 0)
+                if (results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter)).GetCount() > 0)
                 {
-                    dataTbls.spiritFighterData = spiritFighters;
+                    dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
                     fileDbType.Add("Spirit Fighter");
                 }
                 return fileDbType;

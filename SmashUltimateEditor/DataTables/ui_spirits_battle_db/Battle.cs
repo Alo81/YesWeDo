@@ -34,14 +34,14 @@ namespace SmashUltimateEditor
         }
 
         // Make an event object dawg.  
-        public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls)
+        public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls, bool isUnlockableFighterType = false)
         {
             bool isBossType = IsBossType();
             EventSet(ref rnd, dataTbls);
             HazardCheck();
             BossCheck();
             HealthCheck(ref rnd, dataTbls);
-            TimerCheck(fighterCount);
+            TimerCheck(fighterCount, isUnlockableFighterType);
             BattlePowerCheck(ref rnd, isBossType);
         }
 
@@ -129,8 +129,12 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void TimerCheck(int count)
+        public void TimerCheck(int count, bool isUnlockableFighterType)
         {
+            if (isUnlockableFighterType)
+            {
+                battle_type = battle_type.Replace("_time", "");
+            }
             if (count > Defs.FIGHTER_COUNT_TIMER_CUTOFF)
             {
                 battle_time_sec += (ushort)(count * Defs.FIGHTER_COUNT_TIMER_ADD);

@@ -17,11 +17,57 @@ namespace SmashUltimateEditor
 {
     public partial class DataTbls
     {
-        public BattleDataOptions battleData;
-        public FighterDataOptions fighterData;
-        public EventDataOptions eventData;
-        public ItemDataOptions itemData;
-        public SpiritFighterDataOptions spiritFighterData;
+        public List<IDataOptions> dataOptions;
+
+        public BattleDataOptions battleData
+        {
+            get { return (BattleDataOptions)GetOptionsOfType(typeof(BattleDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public FighterDataOptions fighterData
+        {
+            get { return (FighterDataOptions)GetOptionsOfType(typeof(FighterDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public EventDataOptions eventData
+        {
+            get { return (EventDataOptions)GetOptionsOfType(typeof(EventDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public ItemDataOptions itemData
+        {
+            get { return (ItemDataOptions)GetOptionsOfType(typeof(ItemDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public SpiritFighterDataOptions spiritFighterData
+        {
+            get { return (SpiritFighterDataOptions)GetOptionsOfType(typeof(SpiritFighterDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+
+        public IDataOptions GetOptionsOfType(Type type)
+        {
+            return dataOptions.Where(x => x.GetType() == type).First();
+        }
+
+        public void AddDataOptions(IDataOptions options)
+        {
+            dataOptions.Add(options);
+        }
+        public IDataOptions GetDataOptions(IDataOptions options)
+        {
+            return GetOptionsOfType(options.GetType());
+        }
+        public void RemoveDataOptions(IDataOptions options)
+        {
+            IDataOptions oldOptions = GetOptionsOfType(options.GetType());
+            dataOptions.Remove(oldOptions);
+        }
+        public void UpdateDataOptions(IDataOptions options)
+        {
+            RemoveDataOptions(options);
+            dataOptions.Add(options);
+        }
 
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
@@ -69,6 +115,7 @@ namespace SmashUltimateEditor
 
         public DataTbls()
         {
+            dataOptions = new List<IDataOptions>();
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             config = new Config();
@@ -78,15 +125,21 @@ namespace SmashUltimateEditor
 
             var results = XmlHelper.ReadXML(config.file_location);
 
-            battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-            fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
-            eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
-            itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
-            spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
+            foreach(Type child in DataTbl.GetChildrenTypes())
+            {
+                IDataOptions opt = results.GetDataOptionsFromUnderlyingType(child);
+
+                if(opt != null)
+                {
+                    dataOptions.Add(opt);
+                }
+            }
         }
 
         public void EmptySpiritData()
         {
+            var options = dataOptions.OfType<BattleDataOptions>();
+
             battleData = new BattleDataOptions();
             fighterData = new FighterDataOptions();
         }
@@ -277,7 +330,7 @@ namespace SmashUltimateEditor
                 var isBossType = battle.IsBossType();
 
 
-                battle.Cleanup(ref rnd, fighterCount, this);
+                battle.Cleanup(ref rnd, fighterCount, this, isUnlockableFighterType);
 
                 progress.PerformStep();
 

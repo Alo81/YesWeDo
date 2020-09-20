@@ -2,13 +2,14 @@
 using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
 using SmashUltimateEditor.DataTables.ui_item_db;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
 namespace SmashUltimateEditor.DataTables
 {
-    public class DataOptions : BaseDataOptions, IDataOptions//, IXmlType
+    public class DataOptions : IDataOptions//, IXmlType
     {
         //public ParamType TypeKey { get; } = ParamType.list;
         // Try this more?
@@ -82,7 +83,7 @@ namespace SmashUltimateEditor.DataTables
                                     && type.IsAssignableFrom(t) && t != type
                                     && (Type)t?.GetField("underlyingType", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)
                                     ?.GetValue(null) == underlyingType) ?? null;
-            if (child is null)
+            if (child is null || child.Count() == 0)
             {
                 return null;
             }

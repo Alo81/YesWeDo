@@ -1,6 +1,7 @@
 ﻿using SmashUltimateEditor.Helpers;
 using SmashUltimateEditor.UI;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -63,7 +64,7 @@ namespace SmashUltimateEditor.DataTables
             {
                 return null;
             }
-            else if(child.Count() > 1)
+            else if (child.Count() > 1)
             {
                 return new DataTbl();
             }
@@ -138,7 +139,7 @@ namespace SmashUltimateEditor.DataTables
 
         public void SaveRandomizedField(ref Random rnd, PropertyInfo field, string value, DataTbls dataTbls, bool checkRequired = true)
         {
-            if(value is null)
+            if (value is null)
             {
                 return;
             }
@@ -197,13 +198,13 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = combo?.SelectedItem?.ToString() ?? "";
-                
+
                 value = EnumChecker(value, combo.Name);
                 this.SetValueFromName(combo.Name, value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
-                if(!String.IsNullOrWhiteSpace(text.Text))
+                if (!String.IsNullOrWhiteSpace(text.Text))
                     this.SetValueFromName(text.Name, text.Text);
             }
         }
@@ -222,10 +223,10 @@ namespace SmashUltimateEditor.DataTables
             {
                 text.Text = this.GetPropertyValueFromName(text.Name);
             }
-            if(GetType().Name == "Fighter")
+            if (GetType().Name == "Fighter")
             {
                 Button b = page.Controls.OfType<Button>().FirstOrDefault();
-                if(!(b == default))
+                if (!(b == default))
                 {
                     b.Name = collectionIndex.ToString();
                 }
@@ -297,12 +298,12 @@ namespace SmashUltimateEditor.DataTables
         }
         public Tuple<float, float> GetRangeFromName(string name)
         {
-            float min = float.Parse(typeof(Defs).GetProperty(name.ToUpper()+"_MIN").GetValue(this).ToString());
+            float min = float.Parse(typeof(Defs).GetProperty(name.ToUpper() + "_MIN").GetValue(this).ToString());
             float max = float.Parse(typeof(Defs).GetProperty(name.ToUpper() + "_MAX").GetValue(this).ToString());
             return new Tuple<float, float>(min, max);
         }
 
-        public string ValuableValue (string val)
+        public string ValuableValue(string val)
         {
             return val == "none" ? "" : val;
         }
@@ -357,6 +358,18 @@ namespace SmashUltimateEditor.DataTables
                 this.SetValueFromName(DataParse.ImportNameFixer(attribute), reader.Value);
             }
             return;
+        }
+
+        public static IEnumerable<Type> GetChildrenTypes()
+        {
+            var type = typeof(DataTbl);
+
+            var children = Assembly.GetExecutingAssembly().GetTypes().Where
+                (t => t.IsClass && 
+                type.IsAssignableFrom(t) && 
+                t != type);
+
+            return children;
         }
     }
 }

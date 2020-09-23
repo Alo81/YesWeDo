@@ -69,16 +69,29 @@ namespace SmashUltimateEditor
             else
             {
                 var properties = GetType().GetProperties();
-                var event_types = dataTbls.eventData.event_type;
+                IDataTbl pulledEvent = dataTbls.eventData.GetRandomEvent(ref rand);
+
                 var randEvent = new BattleEvent();
+
+                // Chance to get a random event from label, vs random event from event type.  Should help spread things out hopefully. 
+                if (RandomizerHelper.ChancePass(Defs.EVENT_CHECK, ref rand))
+                {
+                    randEvent.event_type = ((Event)pulledEvent).GetTypeName();
+                    randEvent.event_label = pulledEvent.GetPropertyValueFromName("label");
+                }
+                else
+                {
+                    var event_types = dataTbls.eventData.event_type;
+                    randEvent.event_type = event_types[rand.Next(event_types.Count)];
+
+                    var labels = dataTbls.eventData.GetLabelsOfType(randEvent.event_type);
+                    randEvent.event_label = labels[rand.Next(labels.Count)];
+                }
+
                 randEvent.event_count = Byte.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_count").FirstOrDefault(), ref rand, dataTbls, true));
                 randEvent.event_damage = UInt16.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_damage").FirstOrDefault(), ref rand, dataTbls, true));
                 randEvent.event_start_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_start_time").FirstOrDefault(), ref rand, dataTbls, true));
                 randEvent.event_range_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_range_time").FirstOrDefault(), ref rand, dataTbls, true));
-                randEvent.event_type = event_types[rand.Next(event_types.Count)];
-
-                var labels = dataTbls.eventData.GetLabelsOfType(randEvent.event_type);
-                randEvent.event_label = labels[rand.Next(labels.Count)];
 
                 return randEvent;
             }
@@ -172,6 +185,7 @@ namespace SmashUltimateEditor
         {
             Type type = typeof(Battle);
             TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
+            topLevelPage.Name = Top_Level_Page.Battle.ToString();
             List<Point> points = new List<Point>();
             TabControl subControl = new TabControl();
 
@@ -187,8 +201,9 @@ namespace SmashUltimateEditor
 
             for (int i = 0; i < Enum.GetNames(typeof(Battle_Page)).Length; i++)
             {
-                subControl.TabPages.Add(UiHelper.GetEmptyTabPage(i));
-                subControl.TabPages[i].Name = subControl.TabPages[i].Text = ((Battle_Page)i).ToString();
+                var emptyPage = UiHelper.GetEmptyTabPage(i);
+                emptyPage.Name = emptyPage.Text = ((Battle_Page)i).ToString();
+                subControl.TabPages.Add(emptyPage);
                 points.Add(new Point(0, 0));
             }
 

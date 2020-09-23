@@ -125,6 +125,8 @@ namespace SmashUltimateEditor
         {
             Type type = typeof(Fighter);
             TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
+            topLevelPage.Name = Top_Level_Page.Fighters.ToString();
+
             List<Point> points = new List<Point>();
             TabControl subControl = new TabControl();
 

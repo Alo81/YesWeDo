@@ -234,17 +234,16 @@ namespace SmashUltimateEditor.DataTables
             this.pageIndex = pageIndex;
         }
 
-        public void CorrectEventLabels(ref TabPage page, DataTbls dataTbls)
+        public void CorrectEventTypeAndLabels(ref TabPage page, DataTbls dataTbls)
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>().Where(x => Regex.IsMatch(x.Name, "event.*type")))
             {
                 var value = this.GetPropertyValueFromName(combo.Name);
-                value = EnumChecker(value, combo.Name);
 
-                dataTbls.SetEventLabelOptions(combo, page);
+                dataTbls.SetEventLabelOptions(combo, ref page);
 
-                combo.SelectedIndex = combo.Items.IndexOf(value);
-                combo.Text = value;
+                //combo.SelectedIndex = combo.Items.IndexOf(value);
+                //combo.Text = value;
             }
         }
 
@@ -367,6 +366,15 @@ namespace SmashUltimateEditor.DataTables
             var children = Assembly.GetExecutingAssembly().GetTypes().Where
                 (t => t.IsClass && 
                 type.IsAssignableFrom(t) && 
+                t != type);
+
+            return children;
+        }
+        public static IEnumerable<Type> GetChildrenTypes(Type type)
+        {
+            var children = Assembly.GetExecutingAssembly().GetTypes().Where
+                (t => t.IsClass &&
+                type.IsAssignableFrom(t) &&
                 t != type);
 
             return children;

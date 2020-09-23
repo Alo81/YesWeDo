@@ -36,7 +36,7 @@ namespace SmashUltimateEditor.Helpers
                 Location = new System.Drawing.Point(4, 24),
                 Padding = new System.Windows.Forms.Padding(3),
                 TabIndex = page,
-                UseVisualStyleBackColor = true, 
+                UseVisualStyleBackColor = true,
                 AutoScroll = true
             };
             return tabPage;

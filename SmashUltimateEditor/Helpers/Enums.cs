@@ -2,7 +2,11 @@
 {
     class Enums
     {
-    #region FighterDataTbl
+        public enum Top_Level_Page
+        {
+            Battle,
+            Fighters
+        }
         public enum Fighter_Page
         {
             Basics,
@@ -16,6 +20,8 @@
             Skills,
             Unknowns
         }
+
+        #region FighterDataTbl
 
         public enum entry_type_opt
         {

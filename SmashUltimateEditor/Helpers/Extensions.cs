@@ -73,11 +73,23 @@ namespace SmashUltimateEditor
     {
         public static string GetPropertyValueFromName(this object obj, string name)
         {
-            return obj.GetType().GetProperty(name).GetValue(obj)?.ToString().ToLower() ?? "";
+            return obj?.GetType()?.GetProperty(name)?.GetValue(obj)?.ToString()?.ToLower() ?? "";
         }
         public static string GetFieldValueFromName(this object obj, string name)
         {
             return obj?.GetType()?.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(obj)?.ToString()?.ToLower() ?? "";
+        }
+
+        public static IEnumerable<Type> GetChildrenTypes(this object obj)
+        {
+            var type = obj.GetType();
+
+            var children = Assembly.GetExecutingAssembly().GetTypes().Where
+                (t => t.IsClass &&
+                type.IsAssignableFrom(t) &&
+                t != type);
+
+            return children;
         }
 
         public static void SetValueFromName(this object obj, string name, string val)

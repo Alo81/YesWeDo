@@ -8,6 +8,7 @@ namespace SmashUltimateEditor
         #region randomizer
         public const int CHAOS = 50;
         public const int BOSS_CHECK = 50;
+        public const int EVENT_CHECK = 50;
 
         public const float BOSS_SCALE_MOD = 1.35F;
         public const float BOSS_ATTACK_MOD = 2;
@@ -19,11 +20,11 @@ namespace SmashUltimateEditor
 
         public const ushort PLAYER_LOW_HP_CUTOFF = 30;
         public const ushort PLAYER_LOW_HP_MOD = 30;
-        public const ushort ALLY_LOW_HP_CUTOFF = 35;
-        public const ushort ALLY_LOW_HP_MOD = 40;
+        public const ushort ALLY_LOW_HP_CUTOFF = 55;
+        public const ushort ALLY_LOW_HP_MOD = 55;
         public const byte ALLY_LOW_STOCK_MOD = 2;
 
-        public const int FIGHTER_COUNT_STOCK_CUTOFF = 3;
+        public const int FIGHTER_COUNT_STOCK_CUTOFF = 2;
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_ADD = 8;   //How many seconds to add?
         #endregion
@@ -82,6 +83,14 @@ namespace SmashUltimateEditor
             { "poison_floor",   new List<string>() { "poison_heal", "poison_invalid", "poison_half" } },
             { "sleep_floor",    new List<string>() { "sleep_invalid" } },
             { "wind_area",      new List<string>() { "wind_invalid", "wind_half" } }
+        };
+
+        public static Dictionary<string, string> relatedFields = new Dictionary<string, string>()
+        {
+            { "event#_label",   "event#_type"},
+            { "event1_label",   "event1_type"},
+            { "event2_label",   "event2_type"},
+            { "event3_label",   "event3_type"}
         };
 
         public static List<string> FLOAT_VALUES = new List<string>()

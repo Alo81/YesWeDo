@@ -238,6 +238,10 @@ namespace SmashUltimateEditor
         public void SaveBattle()
         {
             TabPage battlePage = tabs.TabPages.Count > 0 ? tabs.TabPages[0] : null;
+            if(selectedBattle.battle_id == "aisya")
+            {
+                var x = "";
+            }
             // No battle?
             if (battlePage is null)
             {
@@ -460,9 +464,7 @@ namespace SmashUltimateEditor
         public void UpdateBattlePageValues(ref TabPage page, int i = 0)
         {
             var collectionIndex = battleData.GetBattleIndex(selectedBattle);
-            selectedBattle.CorrectEventLabels(ref page, this);
             selectedBattle.UpdatePageValues(ref page, i, collectionIndex);
-
         }
         
         public void UpdateFighterPageValues(ref TabPage page, int i)
@@ -501,14 +503,28 @@ namespace SmashUltimateEditor
             }
 
             var combo = ((ComboBox)sender);
-            var page = tabs.SelectedTab.Controls.OfType<TabControl>().First().SelectedTab;
-            if(page != null)
-                eventData.SetEventLabelOptions(combo, page);
+            for(int i = 0; i < tabs.TabPages.Count; i++)
+            {
+                var superPage = tabs.TabPages[i];
+                if(superPage.Name == Enums.Top_Level_Page.Battle.ToString())
+                {
+                    var subPages = superPage.Controls.OfType<TabControl>().First().TabPages;
+                    for (int j = 0; j < subPages.Count; j++)
+                    {
+                        var subPage = subPages[j];
+                        if (subPage?.Name == Enums.Battle_Page.Events.ToString())
+                        {
+                            eventData.SetEventLabelOptions(combo, ref subPage);
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
-        public void SetEventLabelOptions(ComboBox combo, TabPage page)
+        public void SetEventLabelOptions(ComboBox combo, ref TabPage page)
         {
-            eventData.SetEventLabelOptions(combo, page);
+            eventData.SetEventLabelOptions(combo, ref page);
         }
 
         public void SetSelectedBattle(string battle_id)

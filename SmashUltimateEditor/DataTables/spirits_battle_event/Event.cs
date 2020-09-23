@@ -3,7 +3,7 @@
     public class Event : DataTbl
     {
         // Default empty XML_NAME where it is not an actual XML element.
-        internal static string XML_NAME = "";
+        internal static string XML_NAME = "no_event";
         internal static string TYPE_NAME = XML_NAME.Replace("_param", "");
 
         public string GetTypeName()
@@ -13,6 +13,15 @@
         }
     }
 
+    public class ExternalEvent : Event
+    {
+        internal new string TYPE_NAME;
+
+        public ExternalEvent(string type_name = "")
+        {
+            TYPE_NAME = type_name;
+        }
+    }
     public class LabelEvent : Event
     {
         [Order]

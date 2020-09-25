@@ -172,7 +172,7 @@ namespace SmashUltimateEditor.DataTableCollections
                 if (control.Name == labelComboName)
                 {
                     // Save value off.  Change datasource.  Set the value.  
-                    var value = control.SelectedItem;
+                    var value = control.Text;
                     control.DataSource = labels;
                     if (control.Items.Contains(value ?? ""))
                     {

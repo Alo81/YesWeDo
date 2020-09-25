@@ -10,13 +10,24 @@ namespace SmashUltimateEditor.Helpers
         public static void GetCountPerField(DataTbls tbl, string field)
         {
             var battles = tbl.battleData.GetBattles();
+            var fighters = tbl.fighterData.GetFighters();
 
-            var results = battles.GroupBy(x => x.event1_type)
+            var battleStats = battles.GroupBy(x => x.GetPropertyValueFromName(field))
               .Select(g => new
               {
                   Field = g.Key,
-                  Count = g.Select(l => l.event1_type).Count()
+                  Count = g.Select(l => l.GetPropertyValueFromName(field)).Count()
               }).OrderByDescending(x => x.Count);
+
+            if(battleStats.Count() <= 1)
+            {
+                var fighterStats = fighters.GroupBy(x => x.GetPropertyValueFromName(field))
+                  .Select(g => new
+                  {
+                      Field = g.Key,
+                      Count = g.Select(l => l.GetPropertyValueFromName(field)).Count()
+                  }).OrderByDescending(x => x.Count);
+            }
         }
     }
 }

@@ -113,6 +113,36 @@ namespace SmashUltimateEditor.Helpers
 
             return pages;
         }
+        public static List<TabPage> GetPagesFromTabControl(TabControl tabControl)
+        {
+            List<TabPage> pages = new List<TabPage>();
+
+            var controlPages = tabControl.TabPages;
+
+            foreach(TabPage page in controlPages)
+            {
+                pages.Add(page);
+            }
+
+            return pages;
+        }
+        public static List<TabPage> GetAllPagesFromTabControl(TabControl tabControl)
+        {
+            List<TabPage> pages = new List<TabPage>();
+
+            var controlPages = tabControl.TabPages;
+
+            foreach (TabPage page in controlPages)
+            {
+                pages.Add(page);
+                foreach (TabControl subTabs in page.Controls.OfType<TabControl>())
+                {
+                    pages.AddRange(GetAllPagesFromTabControl(subTabs));
+                }
+            }
+
+            return pages;
+        }
 
         public static void PopUpMessage(string message)
         {

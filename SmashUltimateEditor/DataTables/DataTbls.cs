@@ -521,6 +521,37 @@ namespace SmashUltimateEditor
                 }
             }
         }
+        public void SetMiiFighterSpecials(object sender, EventArgs e = null)
+        {
+            var combo = ((ComboBox)sender);
+
+            if (!Defs.miiFighterMod.ContainsKey((string)combo.SelectedValue))
+            {
+                return;
+            }
+
+            // For fighters, we care about unique instances, cuz there can be more than one.  How do we handle?  
+            var allTabs = UiHelper.GetPagesFromTabControl(tabs);
+
+            for (int i = 0; i < allTabs.Count; i++)
+            {
+                var page = allTabs[i];
+                if (page.Name == Enums.Top_Level_Page.Fighters.ToString())
+                {
+                    var subPages = UiHelper.GetAllPagesFromTabControl(tabs);
+                    for (int j = 0; j < subPages.Count; j++)
+                    {
+                        var subPage = subPages[j];
+                        if (subPage?.Name == Enums.Fighter_Page.Mii.ToString())
+                        {
+                            // Get current fighter_kind
+                            //Fighter.SetMiiFighterSpecials(combo, ref subPage);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
 
         public void SetEventLabelOptions(ComboBox combo, ref TabPage page)
         {

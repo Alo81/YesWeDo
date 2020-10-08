@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Enums;
+using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
@@ -108,6 +109,29 @@ namespace SmashUltimateEditor
                 defense = (short)(defense * Defs.BOSS_DEFENSE_MOD);
                 hp = hp < Defs.BOSS_HP_CUTOFF ? (ushort)(hp * Defs.BOSS_LOW_HP_MOD) : (ushort)(hp + Defs.BOSS_HIGH_HP_MOD);
                 cpu_lv = (byte)(cpu_lv + Defs.BOSS_CPU_LVL_ADD > Defs.CPU_LV_MAX ? Defs.CPU_LV_MAX : cpu_lv + Defs.BOSS_CPU_LVL_ADD);
+            }
+        }
+
+        public static void SetMiiFighterSpecials(ref TabPage subPage, Enums.mii_brawler_mod mod)
+        {
+            foreach(var combo in subPage.Controls.OfType<ComboBox>())
+            {
+                if (Defs.MII_MOVES.Contains(combo.Name))
+                {
+                    List<string> labels = new List<string>();
+                    for(int i = 0; i < 4; i++)
+                    {
+                        labels.Add(EnumUtil<Enums.mii_sp_hi_opt>.GetByValue(i * (int)mod));
+                    }
+                    // Save value off.  Change datasource.  Set the value.  
+                    var value = combo.Text;
+                    combo.DataSource = labels;
+                    if (combo.Items.Contains(value ?? ""))
+                    {
+                        combo.SelectedItem = value;
+                    }
+                    return;
+                }
             }
         }
 

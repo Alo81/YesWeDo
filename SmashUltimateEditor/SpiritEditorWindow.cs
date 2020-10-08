@@ -56,7 +56,10 @@ namespace SmashUltimateEditor
         private async void btnAddFighter_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
-            Fighter newFighter = dataTbls.selectedFighters[0].Copy();
+            int selectedTab = dataTbls.tabs.SelectedIndex;
+            selectedTab += selectedTab > 0 ? -1 : 0;
+
+            Fighter newFighter = dataTbls.selectedFighters[selectedTab].Copy();
 
             dataTbls.fighterData.AddFighter(newFighter);
             dataTbls.selectedFighters.Add(newFighter);

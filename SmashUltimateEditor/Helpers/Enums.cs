@@ -1,6 +1,6 @@
 ﻿namespace SmashUltimateEditor
 {
-    class Enums
+    public class Enums
     {
         public enum Top_Level_Page
         {

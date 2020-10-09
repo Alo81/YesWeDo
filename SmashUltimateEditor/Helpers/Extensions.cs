@@ -102,10 +102,18 @@ namespace SmashUltimateEditor
             {
                 field.SetValue(obj, Convert.ChangeType(val, field.PropertyType));
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
-                throw ex;
+                try
+                {
+                    var numVal = val == "" ? "0" : val;
+                    field.SetValue(obj, Convert.ChangeType(numVal, field.PropertyType));
+                }
+                catch(Exception ex2)
+                {
+                    MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex2.Message));
+                    throw ex2;
+                }
             }
         }
     }

@@ -232,7 +232,7 @@ namespace SmashUltimateEditor
         public ushort appear_rule_time { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public ushort appear_rule_count { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public byte color { get; set; }
@@ -266,7 +266,7 @@ namespace SmashUltimateEditor
         public bool corps { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool _0x0f2077926c { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public ushort hp { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public ushort init_damage { get; set; }

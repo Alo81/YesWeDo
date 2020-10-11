@@ -45,8 +45,8 @@ namespace SmashUltimateEditor
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
-            StatsHelper.GetCountPerField(dataTbls, "event1_type");
-            StatsHelper.GetCountPerField(dataTbls, "fighter_kind");
+            StatsHelper.GetCountPerField(dataTbls, "battle_id");
+            StatsHelper.GetCountPerField(dataTbls, "stock");
             dataTbls.SaveLocal();
             dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
             dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);

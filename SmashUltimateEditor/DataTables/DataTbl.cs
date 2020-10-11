@@ -198,6 +198,10 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = combo?.SelectedItem?.ToString() ?? "";
+                if (value.Equals(""))
+                {
+                    value = combo?.Text ?? "";
+                }
 
                 value = EnumChecker(value, combo.Name);
                 this.SetValueFromName(combo.Name, value);

@@ -9,8 +9,8 @@
         }
         public enum Fighter_Page
         {
-            Basics,
             Attributes,
+            Basics,
             Mii
         }
         public enum Battle_Page

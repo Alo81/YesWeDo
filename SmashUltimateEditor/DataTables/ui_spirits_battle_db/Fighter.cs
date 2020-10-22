@@ -17,12 +17,12 @@ namespace SmashUltimateEditor
     {
         internal static string XML_NAME = "fighter_data_tbl";
 
-        public void Cleanup(ref Random rnd, bool isMain, bool isLoseEscort, List<string> fighters, bool isBoss = false, string unlockableFighter = null)
+        public void Cleanup(ref Random rnd, bool isMain, bool isEscort, List<string> fighters, bool isBoss = false, string unlockableFighter = null)
         {
             // Post Randomize fighter modifiers
             var realBoss = BossTypeCheck(isBoss, ref rnd);
-            EntryCheck(isMain, isLoseEscort, realBoss);
-            HealthCheck(isLoseEscort, ref rnd);
+            EntryCheck(isMain, isEscort, realBoss);
+            HealthCheck(isEscort, ref rnd);
             FighterCheck(fighters, realBoss, unlockableFighter, ref rnd);
             BossCheck(isBoss&(!realBoss));
         }
@@ -54,17 +54,14 @@ namespace SmashUltimateEditor
                 hp = hold;
             }
 
-            if(isLoseEscort && (hp - init_damage) < Defs.ALLY_LOW_HP_CUTOFF)
+            if(isLoseEscort)
             {
                 // Losing from low health escorts sucks.  Either add HP, or add Stocks. 
                 if(RandomizerHelper.ChancePass(50, ref rnd))
                 {
                     hp += Defs.ALLY_LOW_HP_MOD;
                 }
-                else
-                {
-                    stock += Defs.ALLY_LOW_STOCK_MOD;
-                }
+                stock += Defs.ALLY_LOW_STOCK_MOD;
             }
         }
 

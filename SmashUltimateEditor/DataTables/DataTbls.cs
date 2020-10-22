@@ -332,7 +332,7 @@ namespace SmashUltimateEditor
                 // Save after randomizing, as cleanup will modify it.  
                 var isUnlockableFighterType = spiritFighterData.IsUnlockableFighter(battle.battle_id);
                 var isBossType = battle.IsBossType();
-
+                var isLoseEscort = battle.IsLoseEscort();
 
                 battle.Cleanup(ref rnd, fighterCount, this, isUnlockableFighterType);
 
@@ -346,7 +346,7 @@ namespace SmashUltimateEditor
                     var isMain = i == 0;     // Set first fighter to main.  
                     var isUnlockableFighter = isMain && isUnlockableFighterType;     // If unlockable fighter, we will explicitly set a fighter to match the spirit.  
                     var isBoss = isMain && isBossType;     // Set first fighter to main.  
-                    var isLoseEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
+                    var isEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
 
                     randomizedFighter = battle.GetNewFighter();
                     randomizedFighter.Randomize(ref rnd, this);
@@ -358,7 +358,7 @@ namespace SmashUltimateEditor
                         unlockableFighters.RemoveAt(fighterIndex);
                     }
 
-                    randomizedFighter.Cleanup(ref rnd, isMain, isLoseEscort, fighterData.Fighters, isBoss, unlockableFighter);
+                    randomizedFighter.Cleanup(ref rnd, isMain, isEscort, fighterData.Fighters, isBoss, unlockableFighter);
                     fighterSum += randomizedFighter.stock == 0 ? 1 : randomizedFighter.stock;
 
                     randomizedFighters.AddFighter(randomizedFighter);

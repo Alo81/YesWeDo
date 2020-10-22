@@ -221,7 +221,7 @@ namespace SmashUltimateEditor.DataTables
                 value = EnumChecker(value, combo.Name);
 
                 combo.SelectedIndex = combo.Items.IndexOf(value);
-                combo.Text = value;
+                combo.Text = combo.SelectedText = value;
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {

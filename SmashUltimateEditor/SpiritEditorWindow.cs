@@ -274,33 +274,39 @@ namespace SmashUltimateEditor
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
             var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
-            openDialog.ShowDialog();
-
-            if (!String.IsNullOrWhiteSpace(openDialog?.FileName))
+            var result = openDialog.ShowDialog();
+            try
             {
-                var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
-                foreach (string file in files)
+                if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
                 {
-                    var results = XmlHelper.ReadXML(file);
-                    BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                    FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
-
-                    dataTbls.battleData.ReplaceBattles(battles);
-                    dataTbls.fighterData.ReplaceFighters(fighters);
-
-                    var battle_id = battles.GetBattleAtIndex(0).battle_id;
-
-                    if (dataTbls.selectedBattle.battle_id == battle_id)
+                    var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
+                    foreach (string file in files)
                     {
-                        dataTbls.SetSelectedBattle(battle_id);
-                        dataTbls.SetSelectedFighters(battle_id);
+                        var results = XmlHelper.ReadXML(file);
+                        BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                        FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+
+                        dataTbls.battleData.ReplaceBattles(battles);
+                        dataTbls.fighterData.ReplaceFighters(fighters);
+
+                        var battle_id = battles.GetBattleAtIndex(0).battle_id;
+
+                        if (dataTbls.selectedBattle.battle_id == battle_id)
+                        {
+                            dataTbls.SetSelectedBattle(battle_id);
+                            dataTbls.SetSelectedFighters(battle_id);
+                        }
                     }
                 }
-            }
-            var selected_battle_id = dataTbls.selectedBattle.battle_id;
-            dropdownSpiritData.SelectedItem = selected_battle_id;
+                var selected_battle_id = dataTbls.selectedBattle.battle_id;
+                dropdownSpiritData.SelectedItem = selected_battle_id;
 
-            UiHelper.PopUpMessage("Import complete.");
+                UiHelper.PopUpMessage("Import complete.");
+            }
+            catch 
+            { 
+                UiHelper.PopUpMessage("Couldn't import battles due to error."); 
+            };
         }
 
         private void RandomizeAllTool_Click(object sender, EventArgs e)

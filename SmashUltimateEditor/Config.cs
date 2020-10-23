@@ -25,6 +25,7 @@ namespace SmashUltimateEditor
         public bool encrypt;
         public bool decrypt;
         public int chaos;
+        public int randomizer_iterations;
 
         public Config()
         {
@@ -51,6 +52,7 @@ namespace SmashUltimateEditor
                 Console.WriteLine("Error reading app settings");
             }
 
+            randomizer_iterations = randomizer_iterations < 1 ? 1 : randomizer_iterations;
             file_directory_custom_battles = String.IsNullOrEmpty(file_directory_custom_battles) ? file_directory + @"CustomBattles\" : file_directory_custom_battles;
             file_directory_encr = String.IsNullOrEmpty(file_directory_encr) ? file_directory + @"Encrypted\" : file_directory_encr;
             file_directory_randomized = String.IsNullOrEmpty(file_directory_randomized) ? file_directory + @"Randomized\" : file_directory_randomized; 

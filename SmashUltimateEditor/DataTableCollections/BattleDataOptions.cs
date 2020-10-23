@@ -19,6 +19,10 @@ namespace SmashUltimateEditor
         {
             _dataList = new List<Battle>();
         }
+        public BattleDataOptions(List<Battle> battles)
+        {
+            _dataList = battles;
+        }
         public void SetData(List<IDataTbl> inData)
         {
             _dataList = inData.OfType<Battle>().ToList();
@@ -53,6 +57,20 @@ namespace SmashUltimateEditor
         public List<Battle> GetBattles()
         {
             return _dataList;
+        }
+        public List<Battle> GetBattlesCopy()
+        {
+            List<Battle> battlesCopy = new List<Battle>();
+            foreach (Battle battle in _dataList)
+            {
+                battlesCopy.Add(battle.Copy());
+            }
+
+            return battlesCopy;
+        }
+        public BattleDataOptions Copy()
+        {
+            return new BattleDataOptions(GetBattlesCopy());
         }
 
         public void AddBattle(Battle newBattle)

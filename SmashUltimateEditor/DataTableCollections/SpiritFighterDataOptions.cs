@@ -33,6 +33,10 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             return _dataList.Count;
         }
+        public bool HasData()
+        {
+            return GetCount() > 0;
+        }
 
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
 

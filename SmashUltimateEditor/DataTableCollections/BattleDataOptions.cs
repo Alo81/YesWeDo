@@ -35,6 +35,10 @@ namespace SmashUltimateEditor
         {
             return _dataList.Count();
         }
+        public bool HasData()
+        {
+            return GetCount() > 0;
+        }
 
         public Battle GetBattle(string battle_id)
         {
@@ -70,7 +74,11 @@ namespace SmashUltimateEditor
         }
         public BattleDataOptions Copy()
         {
-            return new BattleDataOptions(GetBattlesCopy());
+            var copy = new BattleDataOptions(GetBattlesCopy());
+            copy._events = events;
+            copy._recommended_skill = _recommended_skill;
+
+            return copy;
         }
 
         public void AddBattle(Battle newBattle)

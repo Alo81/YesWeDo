@@ -31,7 +31,10 @@ namespace SmashUltimateEditor
             dataTbls.encrypt = checkBoxEncrypt.Checked;
             dataTbls.decrypt = checkBoxDecrypt.Checked;
 
-            buildFighterDataTab(dataTbls.battleData.battle_id.First());
+            if (dataTbls.battleData.HasData())
+            {
+                buildFighterDataTab(dataTbls?.battleData?.battle_id?.First());
+            }
             LoadAllFiles();
             dataTbls.UpdateEventsForDbValues();
         }
@@ -164,7 +167,16 @@ namespace SmashUltimateEditor
         {
             var config = new Config();
             var directory = config.file_directory_preload;
-            var fileNames = Directory.GetFiles(directory);
+            string[] fileNames;
+            try
+            {
+                fileNames = Directory.GetFiles(directory);
+            }
+            catch(Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+                return;
+            }
             var dbTypes = new List<string>();
             string dbTypeCSV;
 

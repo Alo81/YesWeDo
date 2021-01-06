@@ -28,6 +28,10 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             return _dataList.Count;
         }
+        public bool HasData()
+        {
+            return GetCount() > 0;
+        }
 
         // There could be overlap on name_id.  Worth considering.  
         public Item GetItem(string name)

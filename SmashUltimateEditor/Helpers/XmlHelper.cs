@@ -46,14 +46,24 @@ namespace SmashUltimateEditor.Helpers
 
             // Copy the stream to memory, so we're not holding the resource open.  
             MemoryStream stream = new MemoryStream();
+            XmlReader reader;
 
-            using (Stream fileStream = new FileStream(fileName, FileMode.Open))
+            try
             {
-                fileStream.CopyTo(stream);
-                stream.Position = 0;
-            }
 
-            XmlReader reader = XmlReader.Create(stream);
+                using (Stream fileStream = new FileStream(fileName, FileMode.Open))
+                {
+                    fileStream.CopyTo(stream);
+                    stream.Position = 0;
+                }
+
+                reader = XmlReader.Create(stream);
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+                return new DataOptions();
+            }
 
             try
             {

@@ -31,6 +31,10 @@ namespace SmashUltimateEditor
         {
             return _dataList.Count();
         }
+        public bool HasData()
+        {
+            return GetCount() > 0;
+        }
         public List<Fighter> GetFightersByBattleId(string battle_id)
         {
             return _dataList.Where(x => x.battle_id == battle_id).ToList();

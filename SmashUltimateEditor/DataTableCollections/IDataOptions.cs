@@ -9,6 +9,7 @@ namespace SmashUltimateEditor.DataTableCollections
         public List<IDataTbl> dataList { get;}
 
         public int GetCount();
+        public bool HasData();
         public void SetData(List<IDataTbl> inData);
     }
 }

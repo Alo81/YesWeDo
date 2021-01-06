@@ -44,6 +44,10 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             return _dataList.Count;
         }
+        public bool HasData()
+        {
+            return GetCount() > 0;
+        }
 
         public Event GetEvent(Type type, string label)
         {

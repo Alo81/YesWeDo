@@ -170,6 +170,7 @@ namespace SmashUltimateEditor
             string[] fileNames;
             try
             {
+                Directory.CreateDirectory(directory);
                 fileNames = Directory.GetFiles(directory);
             }
             catch(Exception ex)

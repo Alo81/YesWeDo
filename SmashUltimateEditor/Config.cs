@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SmashUltimateEditor.Helpers;
+using System;
 using System.Configuration;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -7,6 +9,30 @@ namespace SmashUltimateEditor
 {
     public class Config
     {
+        public string file_directory_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory); }
+        }
+        public string custom_battles_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory_custom_battles); }
+        }
+        public string encr_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory_encr); }
+        }
+        public string unencr_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory_unencr); }
+        }
+        public string randomized_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory_randomized); }
+        }
+        public string preload_sub
+        {
+            get { return UiHelper.GetLastFolder(file_directory_preload); }
+        }
 
         public string file_name;
         public string file_name_encr;
@@ -14,11 +40,13 @@ namespace SmashUltimateEditor
         public string file_directory;
         public string file_directory_custom_battles;
         public string file_directory_encr;
+        public string file_directory_unencr;
         public string file_directory_randomized;
         public string file_directory_preload;
 
         public string file_location;
         public string file_location_encr;
+        public string file_location_unencr;
 
         public string labels_file_location;
 
@@ -53,14 +81,18 @@ namespace SmashUltimateEditor
             }
 
             randomizer_iterations = randomizer_iterations < 1 ? 1 : randomizer_iterations;
+            file_name = String.IsNullOrEmpty(file_name) ? @"ui_spirits_battle_db.prc" : file_name;
+            file_name_encr = String.IsNullOrEmpty(file_name_encr) ? file_name : file_name_encr;
             file_directory_custom_battles = String.IsNullOrEmpty(file_directory_custom_battles) ? file_directory + @"CustomBattles\" : file_directory_custom_battles;
             file_directory_encr = String.IsNullOrEmpty(file_directory_encr) ? file_directory + @"Encrypted\" : file_directory_encr;
+            file_directory_unencr = String.IsNullOrEmpty(file_directory_unencr) ? file_directory + @"Unencrypted\" : file_directory_unencr;
             file_directory_randomized = String.IsNullOrEmpty(file_directory_randomized) ? file_directory + @"Randomized\" : file_directory_randomized; 
-            file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + @"PreLoad\" : file_directory_preload; 
+            file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + @"Preload\" : file_directory_preload; 
             labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + @"ParamLabels.csv" : labels_file_location; 
 
             file_location = file_directory + file_name;
             file_location_encr = file_directory_encr + file_name_encr;
+            file_location_unencr = file_directory_unencr + file_name;
         }
 
 

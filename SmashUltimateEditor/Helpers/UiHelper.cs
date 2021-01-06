@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -142,6 +143,11 @@ namespace SmashUltimateEditor.Helpers
             }
 
             return pages;
+        }
+
+        public static string GetLastFolder(string path)
+        {
+            return new DirectoryInfo(path).Name;
         }
 
         public static void PopUpMessage(string message)

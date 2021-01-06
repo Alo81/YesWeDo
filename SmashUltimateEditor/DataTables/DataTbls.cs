@@ -202,17 +202,27 @@ namespace SmashUltimateEditor
         {
             SaveLocal();
             fileLocation += @"\";
+
+            // Save the version for local editing. 
+            Directory.CreateDirectory(fileLocation);
+            SaveToFile(battleData, fighterData, fileLocation + file_name);
+
+            // Save an encrypted version for direct placement on SD card. 
             if (encrypt)
             {
-                SaveToEncryptedFile(battleData, fighterData, fileLocation + file_name);
+                var encrLoc = fileLocation + config.encr_sub + @"\";
+                Directory.CreateDirectory(encrLoc);
+                SaveToEncryptedFile(battleData, fighterData, encrLoc + file_name);
             }
 
-            if(decrypt)
+            // Save a decrypted version separate from the editable mod file.  Does this make sense?  Maybe not?  If not, we should remove the checkbox too.  
+            /*
+            if (decrypt)
             {
-                var directory = fileLocation + @"Unencrypted\";
-                Directory.CreateDirectory(directory);
-                SaveToFile(battleData, fighterData, directory + file_name + "_unencr");
+                Directory.CreateDirectory(config.file_directory_unencr);
+                SaveToFile(battleData, fighterData, config.file_directory_unencr + file_name);
             }
+            */
         }
 
         public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, EventDataOptions eventData = null)
@@ -328,7 +338,7 @@ namespace SmashUltimateEditor
                 randomizedBattleData = battleData.Copy();
                 List<string> unlockableFighters = spiritFighterData.unlockable_fighters_string;
 
-                UiHelper.SetupRandomizeProgress(ref progress, randomizedBattleData.GetCount()*4);
+                UiHelper.SetupRandomizeProgress(ref progress, randomizedBattleData.GetCount());
 
                 foreach (Battle battle in randomizedBattleData.GetBattles())
                 {
@@ -345,8 +355,6 @@ namespace SmashUltimateEditor
                     var isLoseEscort = battle.IsLoseEscort();
 
                     battle.Cleanup(ref rnd, fighterCount, this, isUnlockableFighterType);
-
-                    progress.PerformStep();
 
                     var fighterSum = 0;
                     for (int i = 0; i < fighterCount; i++)
@@ -372,7 +380,6 @@ namespace SmashUltimateEditor
                         fighterSum += randomizedFighter.stock == 0 ? 1 : randomizedFighter.stock;
 
                         randomizedFighters.AddFighter(randomizedFighter);
-                        progress.PerformStep();
                     }
                     // Do a total fighter check, and adjust stock accordingly. 
                     if (fighterSum > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
@@ -382,6 +389,8 @@ namespace SmashUltimateEditor
                             randomizedFighters.GetFighterAtIndex(i).StockCheck(fighterSum);
                         }
                     }
+
+                    progress.PerformStep();
                 }
                 SaveRandomized(randomizedBattleData, randomizedFighters, iteration);
             }
@@ -627,7 +636,17 @@ namespace SmashUltimateEditor
             labelName = config.labels_file_location;
             stringToHashLabels = new OrderedDictionary<string, ulong>();
             if (!string.IsNullOrEmpty(labelName))
-                stringToHashLabels = LabelIO.GetStringHashDict(labelName);
+            {
+                try
+                {
+                    stringToHashLabels = LabelIO.GetStringHashDict(labelName);
+                }
+                catch(Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return;
+                }
+            }
 
             file = new ParamFile(Node2ParamStruct(doc.DocumentElement));
 

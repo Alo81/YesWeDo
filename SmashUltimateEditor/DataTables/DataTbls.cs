@@ -192,10 +192,12 @@ namespace SmashUltimateEditor
             Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
         }
 
-        public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData, int iteration = 0)
+        public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData, int seed = -1, int iteration = 0)
         {
             // Do multiple randomizers, in case an impossible battle happens.  
-            Save(battleData, fighterData, config.file_directory_randomized, iteration > 0 ? String.Concat(config.file_name_encr, $"_{iteration}") : config.file_name_encr);
+            var fileName = config.file_name_encr;
+            fileName = String.Concat(fileName, iteration > 0 ? $" {iteration}" : "");   // If iterations, append iteration to end.  
+            Save(battleData, fighterData, config.file_directory_randomized + seed, fileName);
         }
 
         public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name)
@@ -392,7 +394,7 @@ namespace SmashUltimateEditor
 
                     progress.PerformStep();
                 }
-                SaveRandomized(randomizedBattleData, randomizedFighters, iteration);
+                SaveRandomized(randomizedBattleData, randomizedFighters, seed, iteration);
             }
             RefreshTabs();
             progress.Visible = false;

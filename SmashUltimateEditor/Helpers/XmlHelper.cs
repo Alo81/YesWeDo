@@ -75,12 +75,20 @@ namespace SmashUltimateEditor.Helpers
                 stream.Dispose();
                 stream = new MemoryStream();
 
-                // Try opening again, and decrypting this time.
-                XmlDocument doc = DataTbls.DisassembleEncrypted(fileName, fileLocationLabels);
-                doc.Save(stream);
-                stream.Position = 0;
-                reader = XmlReader.Create(stream);
-                reader.Read();
+                try
+                {
+                    // Try opening again, and decrypting this time.
+                    XmlDocument doc = DataTbls.DisassembleEncrypted(fileName, fileLocationLabels);
+                    doc.Save(stream);
+                    stream.Position = 0;
+                    reader = XmlReader.Create(stream);
+                    reader.Read();
+                }
+                catch (Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return new DataOptions();
+                }
             }
 
             try

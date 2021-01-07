@@ -203,15 +203,15 @@ namespace SmashUltimateEditor
             if (unencrypted)
             {
                 // Save the version for local editing. 
-                Directory.CreateDirectory(fileLocation);
-                SaveToFile(battleData, fighterData, fileLocation + fileName);
+                var unencrLoc = fileLocation + config.unencr_sub + @"\";
+                Directory.CreateDirectory(unencrLoc);
+                SaveToFile(battleData, fighterData, unencrLoc + fileName);
             }
             if (encrypted)
             {
                 // Save an encrypted version for direct placement on SD card. 
-                var encrLoc = fileLocation + config.encr_sub + @"\";
-                Directory.CreateDirectory(encrLoc);
-                SaveToEncryptedFile(battleData, fighterData, encrLoc + fileName);
+                Directory.CreateDirectory(fileLocation);
+                SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
             }
         }
 

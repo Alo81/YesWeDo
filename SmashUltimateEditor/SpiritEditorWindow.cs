@@ -28,8 +28,6 @@ namespace SmashUltimateEditor
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
-            dataTbls.encrypt = checkBoxEncrypt.Checked;
-            dataTbls.decrypt = checkBoxDecrypt.Checked;
 
             if (dataTbls.battleData.HasData())
             {
@@ -196,22 +194,24 @@ namespace SmashUltimateEditor
         private void SaveFile_Click(object sender, EventArgs e)
         {
             dataTbls.Save();
+            UiHelper.SetInformativeLabel(ref labelInformative, $"File saved.");
         }
 
         private void SaveAsFile_Click(object sender, EventArgs e)
         {
             var saveDialog = new SaveFileDialog() 
             { 
-                Title = String.Format("Save {0} Spirit Battles", dataTbls.encrypt ? "Encrypted" : "Unencrypted"), 
+                Title = String.Format("Save Spirit Battles"), 
                 Filter = "PRC|*.prc*", 
-                FileName = dataTbls.encrypt ? dataTbls.config.file_name_encr : dataTbls.config.file_name, 
-                InitialDirectory = dataTbls.encrypt ? dataTbls.config.file_directory_encr : dataTbls.config.file_directory 
+                FileName = dataTbls.config.file_name_encr, 
+                InitialDirectory = dataTbls.config.file_directory 
             };
 
             var result = saveDialog.ShowDialog();
             if(!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
                 dataTbls.Save(saveDialog.FileName);
+                UiHelper.SetInformativeLabel(ref labelInformative, $"File saved.");
             }
         }
 
@@ -235,7 +235,7 @@ namespace SmashUltimateEditor
             var result = saveDialog.ShowDialog();
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
-                dataTbls.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName));
+                dataTbls.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
             }
 
             UiHelper.PopUpMessage("Export complete.");
@@ -341,16 +341,6 @@ namespace SmashUltimateEditor
             {
                 return RandomizerHelper.GetRandomInt();
             }
-        }
-
-        private void checkBoxEncrypt_CheckedChanged(object sender, EventArgs e)
-        {
-            dataTbls.encrypt = checkBoxEncrypt.Checked;
-        }
-
-        private void checkBoxDecrypt_CheckedChanged(object sender, EventArgs e)
-        {
-            dataTbls.decrypt = checkBoxDecrypt.Checked;
         }
     }
 }

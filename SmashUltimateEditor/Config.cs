@@ -49,9 +49,6 @@ namespace SmashUltimateEditor
         public string file_location_unencr;
 
         public string labels_file_location;
-
-        public bool encrypt;
-        public bool decrypt;
         public int chaos;
         public int randomizer_iterations;
 

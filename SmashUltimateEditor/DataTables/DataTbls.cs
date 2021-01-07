@@ -77,8 +77,6 @@ namespace SmashUltimateEditor
 
         public TabControl tabs;
         public ProgressBar progress;
-        public bool encrypt;
-        public bool decrypt;
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
@@ -119,9 +117,6 @@ namespace SmashUltimateEditor
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             config = new Config();
-
-            encrypt = false;
-            decrypt = false;
 
             var results = XmlHelper.ReadXML(config.file_location);
 
@@ -200,31 +195,24 @@ namespace SmashUltimateEditor
             Save(battleData, fighterData, config.file_directory_randomized + seed, fileName);
         }
 
-        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string file_name)
+        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true)
         {
             SaveLocal();
             fileLocation += @"\";
 
-            // Save the version for local editing. 
-            Directory.CreateDirectory(fileLocation);
-            SaveToFile(battleData, fighterData, fileLocation + file_name);
-
-            // Save an encrypted version for direct placement on SD card. 
-            if (encrypt)
+            if (unencrypted)
             {
+                // Save the version for local editing. 
+                Directory.CreateDirectory(fileLocation);
+                SaveToFile(battleData, fighterData, fileLocation + fileName);
+            }
+            if (encrypted)
+            {
+                // Save an encrypted version for direct placement on SD card. 
                 var encrLoc = fileLocation + config.encr_sub + @"\";
                 Directory.CreateDirectory(encrLoc);
-                SaveToEncryptedFile(battleData, fighterData, encrLoc + file_name);
+                SaveToEncryptedFile(battleData, fighterData, encrLoc + fileName);
             }
-
-            // Save a decrypted version separate from the editable mod file.  Does this make sense?  Maybe not?  If not, we should remove the checkbox too.  
-            /*
-            if (decrypt)
-            {
-                Directory.CreateDirectory(config.file_directory_unencr);
-                SaveToFile(battleData, fighterData, config.file_directory_unencr + file_name);
-            }
-            */
         }
 
         public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, EventDataOptions eventData = null)

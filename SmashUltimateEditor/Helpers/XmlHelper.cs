@@ -36,7 +36,7 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
-        public static DataOptions ReadXML(string fileName)
+        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "")
         {
             bool parseData = false;
             bool firstPass = false;
@@ -50,7 +50,6 @@ namespace SmashUltimateEditor.Helpers
 
             try
             {
-
                 using (Stream fileStream = new FileStream(fileName, FileMode.Open))
                 {
                     fileStream.CopyTo(stream);
@@ -68,6 +67,24 @@ namespace SmashUltimateEditor.Helpers
             try
             {
                 reader.Read();
+            }
+            catch
+            {
+                // Close and dispose reader and stream.
+                reader.Dispose();
+                stream.Dispose();
+                stream = new MemoryStream();
+
+                // Try opening again, and decrypting this time.
+                XmlDocument doc = DataTbls.DisassembleEncrypted(fileName, fileLocationLabels);
+                doc.Save(stream);
+                stream.Position = 0;
+                reader = XmlReader.Create(stream);
+                reader.Read();
+            }
+
+            try
+            {
                 // Read the whole file.  
                 while (!reader.EOF)
                 {

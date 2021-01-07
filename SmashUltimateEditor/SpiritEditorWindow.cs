@@ -115,7 +115,7 @@ namespace SmashUltimateEditor
             {
                 var fileDbType = new List<string>();
 
-                var results = XmlHelper.ReadXML(fileName);
+                var results = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
 
                 if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() + results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
                 {
@@ -248,7 +248,7 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var results = XmlHelper.ReadXML(importDialog.FileName);
+                var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
 
                 BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
                 FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
@@ -268,7 +268,7 @@ namespace SmashUltimateEditor
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var results = XmlHelper.ReadXML(importDialog.FileName);
+                var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
 
                 results.SetBattleIdsForAll(dataTbls.selectedBattle.battle_id);
 
@@ -295,7 +295,7 @@ namespace SmashUltimateEditor
                     var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
                     foreach (string file in files)
                     {
-                        var results = XmlHelper.ReadXML(file);
+                        var results = XmlHelper.ReadXML(file, dataTbls.config.labels_file_location);
                         BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
                         FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
 

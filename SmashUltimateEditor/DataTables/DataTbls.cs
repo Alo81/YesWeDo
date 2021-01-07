@@ -118,7 +118,7 @@ namespace SmashUltimateEditor
             selectedBattle = new Battle();
             config = new Config();
 
-            var results = XmlHelper.ReadXML(config.file_location);
+            var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location);
 
             foreach(Type child in DataTbl.GetChildrenTypes())
             {
@@ -620,6 +620,34 @@ namespace SmashUltimateEditor
         static string labelName { get; set; }
         static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
         static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
+
+        public static XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "")
+        {
+            labelName = labelsFileLocation;
+            hashToStringLabels = new OrderedDictionary<ulong, string>();
+
+            if (!string.IsNullOrEmpty(labelName))
+            {
+                try
+                {
+                    hashToStringLabels = LabelIO.GetHashStringDict(labelName);
+                }
+                catch (Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return new XmlDocument();
+                }
+            }
+
+            file = new ParamFile();
+            file.Open(fileLocation);
+
+            xml = new XmlDocument();
+            xml.AppendChild(xml.CreateXmlDeclaration("1.0", "UTF-8", null));
+            xml.AppendChild(ParamStruct2Node(file.Root));
+
+            return xml;
+        }
 
         void AssmebleEncrypted(XmlDocument doc, string fileLocation)
         {

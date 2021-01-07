@@ -60,7 +60,7 @@ namespace SmashUltimateEditor.DataTables
                                     && type.IsAssignableFrom(t) && t != type
                                     && (string)t?.GetField("XML_NAME", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)
                                     ?.GetValue(null) == className) ?? null;
-            if (child is null)
+            if (child is null || child.Count() == 0)
             {
                 return null;
             }

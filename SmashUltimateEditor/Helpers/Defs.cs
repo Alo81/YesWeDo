@@ -45,6 +45,7 @@ namespace SmashUltimateEditor
         {
             "APPEAR_RULE_TIME",
             "APPEAR_RULE_COUNT",
+            "COLOR",
             "CPU_LV",
             "STOCK",
             "HP",
@@ -187,6 +188,11 @@ namespace SmashUltimateEditor
         public static ushort APPEAR_RULE_COUNT_MIN  { get; } = 0;
         public static ushort APPEAR_RULE_COUNT_MAX { get; } = 8;
         public static ushort APPEAR_RULE_COUNT_SANE { get; } = 8;
+
+        // Technically, 7 doesn't ever get used (?)
+        public static byte COLOR_MIN { get; } = 0;
+        public static byte COLOR_MAX { get; } = 7;
+        public static byte COLOR_SANE { get; } = 0;
 
         public static byte CPU_LV_MIN  { get; } = 1;
         public static byte CPU_LV_MAX { get; } = 101;

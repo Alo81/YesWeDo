@@ -111,10 +111,9 @@ namespace SmashUltimateEditor
 
         public List<string> OpenDbWithFileName(string fileName)
         {
+            var fileDbType = new List<string>();
             try
             {
-                var fileDbType = new List<string>();
-
                 var results = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
 
                 if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() + results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
@@ -152,13 +151,13 @@ namespace SmashUltimateEditor
                     dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
                     fileDbType.Add("Spirit Fighter");
                 }
-                return fileDbType;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
-                return null;
             }
+
+            return fileDbType;
         }
 
         public void LoadAllFiles()

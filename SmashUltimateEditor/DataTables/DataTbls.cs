@@ -172,7 +172,6 @@ namespace SmashUltimateEditor
                 tabStorage.Enqueue(page);
             }
         }
-
         public void Save()
         {
             Save(config.file_location);
@@ -180,53 +179,10 @@ namespace SmashUltimateEditor
 
         public void Save(string fileLocation)
         {
-            Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation));
-        }
-        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
-        {
-            Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
+            SaveLocal();    // Save immediately before sending battle and fighter data.  
+            FileHelper.Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation));
         }
 
-        public void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData, int seed = -1, int iteration = 0)
-        {
-            // Do multiple randomizers, in case an impossible battle happens.  
-            var fileName = config.file_name_encr;
-            fileName = String.Concat(fileName, iteration > 0 ? $" {iteration}" : "");   // If iterations, append iteration to end.  
-            Save(battleData, fighterData, config.file_directory_randomized + seed, fileName);
-        }
-
-        public void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true)
-        {
-            SaveLocal();
-            fileLocation += @"\";
-
-            if (unencrypted)
-            {
-                // Save the version for local editing. 
-                var unencrLoc = fileLocation + config.unencr_sub + @"\";
-                Directory.CreateDirectory(unencrLoc);
-                SaveToFile(battleData, fighterData, unencrLoc + fileName);
-            }
-            if (encrypted)
-            {
-                // Save an encrypted version for direct placement on SD card. 
-                Directory.CreateDirectory(fileLocation);
-                SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
-            }
-        }
-
-        public void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, EventDataOptions eventData = null)
-        {
-            var doc = XmlHelper.BuildXml(battleData, fighterData);
-
-            AssmebleEncrypted(doc.ToXmlDocument(), fileLocation);
-        }
-
-        public void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData,  string fileLocation, EventDataOptions eventData = null)
-        {
-            var doc = XmlHelper.BuildXml(battleData, fighterData);
-            XmlHelper.WriteXmlToFile(fileLocation, doc);
-        }
         public void SetSaveTabChange(object sender, EventArgs e)
         {
             SaveLocal();
@@ -239,10 +195,6 @@ namespace SmashUltimateEditor
         public void SaveBattle()
         {
             TabPage battlePage = tabs.TabPages.Count > 0 ? tabs.TabPages[0] : null;
-            if(selectedBattle.battle_id == "aisya")
-            {
-                var x = "";
-            }
             // No battle?
             if (battlePage is null)
             {
@@ -382,7 +334,7 @@ namespace SmashUltimateEditor
 
                     progress.PerformStep();
                 }
-                SaveRandomized(randomizedBattleData, randomizedFighters, seed, iteration);
+                FileHelper.SaveRandomized(randomizedBattleData, randomizedFighters, seed, iteration);
             }
             RefreshTabs();
             progress.Visible = false;
@@ -612,180 +564,5 @@ namespace SmashUltimateEditor
 
             return mode;
         }
-
-        #region PRC Cryptography
-
-        static ParamFile file { get; set; }
-        static XmlDocument xml { get; set; }
-        static string labelName { get; set; }
-        static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
-        static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
-
-        public static XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "")
-        {
-            labelName = labelsFileLocation;
-            hashToStringLabels = new OrderedDictionary<ulong, string>();
-
-            if (!string.IsNullOrEmpty(labelName))
-            {
-                try
-                {
-                    hashToStringLabels = LabelIO.GetHashStringDict(labelName);
-                }
-                catch (Exception ex)
-                {
-                    UiHelper.PopUpMessage(ex.Message);
-                    return new XmlDocument();
-                }
-            }
-
-            file = new ParamFile();
-            file.Open(fileLocation);
-
-            xml = new XmlDocument();
-            xml.AppendChild(xml.CreateXmlDeclaration("1.0", "UTF-8", null));
-            xml.AppendChild(ParamStruct2Node(file.Root));
-
-            return xml;
-        }
-
-        void AssmebleEncrypted(XmlDocument doc, string fileLocation)
-        {
-            labelName = config.labels_file_location;
-            stringToHashLabels = new OrderedDictionary<string, ulong>();
-            if (!string.IsNullOrEmpty(labelName))
-            {
-                try
-                {
-                    stringToHashLabels = LabelIO.GetStringHashDict(labelName);
-                }
-                catch(Exception ex)
-                {
-                    UiHelper.PopUpMessage(ex.Message);
-                    return;
-                }
-            }
-
-            file = new ParamFile(Node2ParamStruct(doc.DocumentElement));
-
-            file.Save(fileLocation);
-        }
-
-        static XmlNode Param2Node(IParam param)
-        {
-            switch (param.TypeKey)
-            {
-                case ParamType.@struct:
-                    return ParamStruct2Node(param as ParamStruct);
-                case ParamType.list:
-                    return ParamArray2Node(param as ParamList);
-                default:
-                    return ParamValue2Node(param as ParamValue);
-            }
-        }
-
-        static XmlNode ParamStruct2Node(ParamStruct structure)
-        {
-            XmlNode xmlNode = xml.CreateElement(ParamType.@struct.ToString());
-            foreach (var node in structure.Nodes)
-            {
-                XmlNode childNode = Param2Node(node.Value);
-                XmlAttribute attr = xml.CreateAttribute("hash");
-                attr.Value = Hash40Util.FormatToString(node.Key, hashToStringLabels);
-                childNode.Attributes.Append(attr);
-                xmlNode.AppendChild(childNode);
-            }
-            return xmlNode;
-        }
-
-        static XmlNode ParamArray2Node(ParamList array)
-        {
-            XmlNode xmlNode = xml.CreateElement(ParamType.list.ToString());
-            XmlAttribute mainAttr = xml.CreateAttribute("size");
-            mainAttr.Value = array.Nodes.Count.ToString();
-            xmlNode.Attributes.Append(mainAttr);
-            for (int i = 0; i < array.Nodes.Count; i++)
-            {
-                XmlNode childNode = Param2Node(array.Nodes[i]);
-                XmlAttribute attr = xml.CreateAttribute("index");
-                attr.Value = i.ToString();
-                childNode.Attributes.Append(attr);
-                xmlNode.AppendChild(childNode);
-            }
-            return xmlNode;
-        }
-
-        static XmlNode ParamValue2Node(ParamValue value)
-        {
-            XmlNode xmlNode = xml.CreateElement(value.TypeKey.ToString());
-            XmlText text = xml.CreateTextNode(value.ToString(hashToStringLabels));
-            xmlNode.AppendChild(text);
-            return xmlNode;
-        }
-
-        static IParam Node2Param(XmlNode node)
-        {
-            try
-            {
-                if (!Enum.IsDefined(typeof(ParamType), node.Name)) 
-                {
-                    //throw new FormatException($"\"{node.Name}\" is not a valid param type");
-                }
-                ParamType type = (ParamType)Enum.Parse(typeof(ParamType), node.Name);
-                switch (type)
-                {
-                    case ParamType.@struct:
-                        return Node2ParamStruct(node);
-                    case ParamType.list:
-                        return Node2ParamArray(node);
-                    default:
-                        return Node2ParamValue(node, type);
-                }
-            }
-            catch (Exception e)
-            {
-                //recursively add param node context to exceptions until we exit
-                string trace = "Trace: " + node.Name;
-                foreach (XmlAttribute attr in node.Attributes)
-                    trace += $" ({attr.Name}=\"{attr.Value}\")";
-                string message = trace + Environment.NewLine + e.Message;
-                if (e.InnerException == null)
-                    throw new Exception(message, e);
-                else
-                    throw new Exception(message, e.InnerException);
-            }
-        }
-
-        static ParamStruct Node2ParamStruct(XmlNode node)
-        {
-            Hash40Pairs<IParam> childParams = new Hash40Pairs<IParam>();
-            foreach (XmlNode child in node.ChildNodes)
-                childParams.Add(child.Attributes["hash"].Value, stringToHashLabels, Node2Param(child));
-            return new ParamStruct(childParams);
-        }
-
-        static ParamList Node2ParamArray(XmlNode node)
-        {
-            int count = node.ChildNodes.Count;
-            List<IParam> children = new List<IParam>(count);
-            for (int i = 0; i < count; i++)
-                children.Add(Node2Param(node.ChildNodes[i]));
-            return new ParamList(children);
-        }
-
-        static ParamValue Node2ParamValue(XmlNode node, ParamType type)
-        {
-            ParamValue param = new ParamValue(type);
-            param.SetValue(node.InnerText, stringToHashLabels);
-            return param;
-        }
-
-        enum BuildMode
-        {
-            Disassemble,
-            Assemble,
-            Invalid
-        }
-        #endregion
     }
 }

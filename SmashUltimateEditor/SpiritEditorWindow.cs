@@ -235,7 +235,7 @@ namespace SmashUltimateEditor
             var result = saveDialog.ShowDialog();
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
-                dataTbls.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
+                FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
             }
 
             UiHelper.PopUpMessage("Export complete.");

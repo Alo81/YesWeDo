@@ -78,7 +78,7 @@ namespace SmashUltimateEditor.Helpers
                 try
                 {
                     // Try opening again, and decrypting this time.
-                    XmlDocument doc = DataTbls.DisassembleEncrypted(fileName, fileLocationLabels);
+                    XmlDocument doc = PrcCrypto.DisassembleEncrypted(fileName, fileLocationLabels);
                     doc.Save(stream);
                     stream.Position = 0;
                     reader = XmlReader.Create(stream);

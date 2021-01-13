@@ -39,6 +39,14 @@ namespace SmashUltimateEditor
         public const int COLUMNS = 4;
         #endregion
 
+        #region Files
+        public static List<Tuple<string, string>> files = new List<Tuple<string, string>>()
+        {
+            new Tuple<string, string>("ui_spirits_battle_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("ui_fighter_spirit_aw_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("spirits_battle_event.prc", @"\ui\param\spirits\")
+        };
+        #endregion
 
         #region Spirit Battles
         public static List<string> RANGE_VALUES = new List<string>()

@@ -85,7 +85,7 @@ namespace SmashUltimateEditor
             file_directory_unencr = String.IsNullOrEmpty(file_directory_unencr) ? file_directory + @"Unencrypted\" : file_directory_unencr;
             file_directory_randomized = String.IsNullOrEmpty(file_directory_randomized) ? file_directory + @"Randomized\" : file_directory_randomized; 
             file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + @"Preload\" : file_directory_preload; 
-            labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + @"ParamLabels.csv" : labels_file_location; 
+            labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + @"ParamLabels.csv" : labels_file_location;
 
             file_location = file_directory + file_name;
             file_location_encr = file_directory_encr + file_name_encr;

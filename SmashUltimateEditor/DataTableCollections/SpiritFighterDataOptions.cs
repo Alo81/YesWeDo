@@ -67,7 +67,7 @@ namespace SmashUltimateEditor.DataTableCollections
                 {
                     BuildUnlockableFighters();
                 }
-                return _unlockableFighters.Select(x => x.chara_id).ToList();
+                return _unlockableFighters.Select(x => x.chara_id).Distinct().ToList();
             }
         }
 

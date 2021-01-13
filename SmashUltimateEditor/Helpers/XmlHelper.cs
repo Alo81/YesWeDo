@@ -112,6 +112,11 @@ namespace SmashUltimateEditor.Helpers
                             stream.Position = 0;
                             dataTable = DataTbl.DetermineXmlTypeFromFirstLevel(stream);
                             stream.Position = position;
+
+                            if(dataTable == null)
+                            {
+                                parseData = false;
+                            }
                         }
                     }
 

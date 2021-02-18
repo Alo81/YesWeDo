@@ -237,68 +237,6 @@ namespace SmashUltimateEditor.DataTables
             }
             this.pageIndex = pageIndex;
         }
-
-        public void CorrectEventTypeAndLabels(ref TabPage page, DataTbls dataTbls)
-        {
-            foreach (ComboBox combo in page.Controls.OfType<ComboBox>().Where(x => Regex.IsMatch(x.Name, "event.*type")))
-            {
-                var value = this.GetPropertyValueFromName(combo.Name);
-
-                dataTbls.SetEventLabelOptions(combo, ref page);
-
-                //combo.SelectedIndex = combo.Items.IndexOf(value);
-                //combo.Text = value;
-            }
-        }
-
-        public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)
-        {
-            TabPage page = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
-            Point currentPos = new Point(0, 0);
-            LabelBox lb;
-
-            Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-
-            /* We need to set the button name for real though.  */
-            if (type.Name == "Fighter")
-            {
-                dataTbls.SetRemoveFighterButtonMethod(ref b);
-                page.Controls.Add(b);
-                Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count) };
-                page.Controls.Add(spacer);
-            }
-
-            // GetBattleIndex
-            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
-            {
-                lb = new LabelBox();
-
-                // Range values?  Use a textbox.
-                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
-                {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
-                }
-                //Else - use a combo box with preset list.  
-                else
-                {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
-                }
-
-                page.Controls.Add(lb.label);
-                if (lb.IsComboSet())
-                {
-                    page.Controls.Add(lb.combo);
-                }
-                else if (lb.IsTextboxSet())
-                {
-                    page.Controls.Add(lb.text);
-                }
-            }
-
-            return page;
-        }
         public Tuple<float, float> GetRangeFromName(string name)
         {
             float min = float.Parse(typeof(Defs).GetProperty(name.ToUpper() + "_MIN").GetValue(this).ToString());

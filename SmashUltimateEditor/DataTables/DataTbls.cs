@@ -367,6 +367,7 @@ namespace SmashUltimateEditor
                         subPages[j] = subPage;
                     }
                 }
+                // Fighters
                 else
                 {
                     UiHelper.SetPageName(ref page, selectedFighters[i-1].fighter_kind, fighterData.GetFighterIndex(selectedFighters[i-1]));
@@ -374,9 +375,9 @@ namespace SmashUltimateEditor
                     for (int j = 0; j < subPages.Count; j++)
                     {
                         var subPage = subPages[j];
-                        if (i == 1 && j == 0)
+                        if (i == 1 && j == 0)   //i is first character, j is first tab.  
                         {
-                            if (tabCount == 2)
+                            if (selectedFighters.Count == 1)
                                 UiHelper.DisableFighterButton(ref subPage);
                             else
                                 UiHelper.EnableFighterButton(ref subPage);
@@ -544,16 +545,13 @@ namespace SmashUltimateEditor
 
         public string GetModeFromTypeAndName(Type type, string name)
         {
-            Type fighterType = fighterData.GetContainerType();
-            Type battleType = battleData.GetContainerType();
-
             var options = new List<string>();
 
-            if (type == fighterType)
+            if (type == typeof(Fighter))
             {
                 options = fighterData.GetOptionsFromName(name) ?? new List<string>();
             }
-            if (type == battleType)
+            if (type == typeof(Battle))
             {
                 options = battleData.GetOptionsFromName(name) ?? new List<string>();
             }

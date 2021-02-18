@@ -329,6 +329,11 @@ namespace SmashUltimateEditor
             dataTbls.RandomizeAll(seed);
         }
 
+        private void CloseApplication_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
         private int TryGetSeed()
         {
             try

@@ -19,10 +19,10 @@ namespace SmashUltimateEditor.Helpers
             // Do multiple randomizers, in case an impossible battle happens.  
             var fileName = config.file_name_encr;
             var directory = config.file_directory_randomized + "Randomizer " + seed + " " + iteration;  // Randomizer ### 1
-            Save(battleData, fighterData, directory, fileName, unencrypted:false);
+            Save(battleData, fighterData, directory, fileName, unencrypted:false, randomized:true);
         }
 
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true)
+        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool randomized = false)
         {
             fileLocation += @"\";
 
@@ -36,11 +36,39 @@ namespace SmashUltimateEditor.Helpers
             if (encrypted)
             {
                 // Save an encrypted version for direct placement on SD card. 
-                CopyPreloadFiles(fileLocation);
-                var modFileLocation = fileLocation + GetFilePath(fileName);
-                Directory.CreateDirectory(modFileLocation);
-                SaveToEncryptedFile(battleData, fighterData, modFileLocation + fileName);
+                if (randomized)
+                {
+                    CopyPreloadFiles(fileLocation);
+                    fileLocation += GetFilePath(fileName);
+                }
+                Directory.CreateDirectory(fileLocation);
+                SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
             }
+        }
+
+        // Replace Save calls to calls here.  
+        public static void SaveEncrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool randomized = false)
+        {
+            fileLocation += @"\";
+
+            // Save an encrypted version for direct placement on SD card. 
+            if (randomized)
+            {
+                CopyPreloadFiles(fileLocation);
+                fileLocation += GetFilePath(fileName);
+            }
+            Directory.CreateDirectory(fileLocation);
+            SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
+        }
+
+        public static void SaveUnencrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName)
+        {
+            fileLocation += @"\";
+
+            // Save the version for local editing. 
+            var unencrLoc = fileLocation + config.unencr_sub + @"\";
+            Directory.CreateDirectory(unencrLoc);
+            SaveToFile(battleData, fighterData, unencrLoc + fileName);
         }
 
         public static void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)

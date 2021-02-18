@@ -36,7 +36,7 @@ namespace SmashUltimateEditor.DataTableCollections
         // There could be overlap on name_id.  Worth considering.  
         public Item GetItem(string name)
         {
-            return _dataList.Where(x => x.GetFieldValueFromName("name_id") == name).FirstOrDefault();
+            return _dataList.FirstOrDefault(x => x.GetFieldValueFromName("name_id") == name);
         }
 
         public List<Item> GetItemsOfName(string name)

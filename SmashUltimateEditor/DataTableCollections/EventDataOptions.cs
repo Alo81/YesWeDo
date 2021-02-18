@@ -51,7 +51,7 @@ namespace SmashUltimateEditor.DataTableCollections
 
         public Event GetEvent(Type type, string label)
         {
-            return GetEventsOfType(type).Where(x => x.GetFieldValueFromName("label") == label).FirstOrDefault();
+            return GetEventsOfType(type).FirstOrDefault(x => x.GetFieldValueFromName("label") == label);
         }
         public Event GetRandomEvent(ref Random rand)
         {

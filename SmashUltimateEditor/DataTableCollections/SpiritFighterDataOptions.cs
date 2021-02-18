@@ -79,7 +79,7 @@ namespace SmashUltimateEditor.DataTableCollections
 
         public bool IsUnlockableFighter(string ui_spirit_id)
         {
-            string fighter = unlockable_fighters.Where(x => x.ui_spirit_id == ui_spirit_id).Select(x => x.chara_id).FirstOrDefault();  // Get the fighter for the spirit.
+            string fighter = unlockable_fighters.FirstOrDefault(x => x.ui_spirit_id == ui_spirit_id)?.chara_id;  // Get the fighter for the spirit.
             
             return fighter == default ?     // If it didn't match, not unlockable.  
                 false 

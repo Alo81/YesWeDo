@@ -5,26 +5,45 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static SmashUltimateEditor.Enums;
 
 namespace SmashUltimateEditor.Helpers
 {
     class UiHelper
     {
-        public static Point IncrementPoint(ref Point current, int rowCount)
+        public static Point IncrementPoint(ref Point current, int rowCount, Ui_Element ui)
         {
+            //First added element.  
             if (rowCount == 0 && current.X == 0)
             {
-                current.X = Defs.PADDING;
+                current.X = Defs.LABEL_PADDING;
             }
+            // If we've got a full column
             else if (rowCount > 0 && current.Y != 0 && rowCount % Defs.ROWS == 0)
             {
                 current.X += Defs.BOX_WIDTH > Defs.LABEL_WIDTH ? Defs.BOX_WIDTH : Defs.LABEL_WIDTH;
-                current.X += Defs.PADDING;
+                current.X += Defs.LABEL_PADDING;
                 current.Y = 0;
             }
+            // Add another row.  
             else
             {
-                current.Y += Defs.LABEL_HEIGHT + Defs.PADDING;
+                // Figure out which UI element we have.  
+                switch (ui)
+                {
+                    case Ui_Element.Box:
+                        current.Y += Defs.BOX_HEIGHT + Defs.BOX_PADDING;
+                        break;
+                    case Ui_Element.Button:
+                        current.Y += Defs.BUTTON_HEIGHT + Defs.BUTTON_PADDING;
+                        break;
+                    case Ui_Element.Label:
+                        current.Y += Defs.LABEL_HEIGHT + Defs.LABEL_PADDING;
+                        break;
+                    default:
+                        current.Y += Defs.LABEL_HEIGHT + Defs.LABEL_PADDING;
+                        break;
+                }
             }
             return current;
         }
@@ -45,21 +64,35 @@ namespace SmashUltimateEditor.Helpers
         public static Button GetEmptyRemoveFighterButton(Point pos)
         {
             Button b = new Button();
+            b.Height = Defs.BUTTON_HEIGHT;
+            b.Width = Defs.BUTTON_WIDTH;
             b.Location = pos;
-            b.Text = "Remove Fighter";
+            b.Text = Defs.REMOVE_FIGHTER_STRING;
 
             return b;
         }
 
+        public static IEnumerable<Button> GetButtons(ref TabPage page)
+        {
+            return page.Controls.OfType<Button>();
+        }
+
+        public static Button GetRemoveFighterButtonFromButtons(ref IEnumerable<Button> buttons)
+        {
+            return buttons.FirstOrDefault(x => x.Text == Defs.REMOVE_FIGHTER_STRING);
+        }
+
         public static void DisableFighterButton(ref TabPage page)
         {
-            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            var buttons = GetButtons(ref page);
+            Button button = GetRemoveFighterButtonFromButtons(ref buttons);
             button.Enabled = false;
         }
 
         public static void EnableFighterButton(ref TabPage page)
         {
-            Button button = page.Controls.OfType<Button>().FirstOrDefault();
+            var buttons = GetButtons(ref page);
+            Button button = GetRemoveFighterButtonFromButtons(ref buttons);
             button.Enabled = true;
         }
 

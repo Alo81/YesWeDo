@@ -172,12 +172,12 @@ namespace SmashUltimateEditor
             page = subControl.TabPages[0];
             currentPos = points[0];
 
-            Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
+            Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Button));
 
             /* We need to set the button name for real though.  */
             dataTbls.SetRemoveFighterButtonMethod(ref b);
             page.Controls.Add(b);
-            Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count) };
+            Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label) };
             page.Controls.Add(spacer);
 
             points[0] = currentPos;
@@ -193,14 +193,14 @@ namespace SmashUltimateEditor
                 // Range values?  Use a textbox.
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
 
                 page.Controls.Add(lb.label);

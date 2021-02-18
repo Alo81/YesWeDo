@@ -20,6 +20,13 @@
             Skills,
             Unknowns
         }
+        public enum Ui_Element
+        {
+            Label,
+            Box,
+            Button,
+            Image
+        }
 
         #region FighterDataTbl
 

@@ -88,10 +88,10 @@ namespace SmashUltimateEditor
                     randEvent.event_label = labels[rand.Next(labels.Count)];
                 }
 
-                randEvent.event_count = Byte.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_count").FirstOrDefault(), ref rand, dataTbls, true));
-                randEvent.event_damage = UInt16.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_damage").FirstOrDefault(), ref rand, dataTbls, true));
-                randEvent.event_start_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_start_time").FirstOrDefault(), ref rand, dataTbls, true));
-                randEvent.event_range_time = Int32.Parse(GetRandomFieldValue(properties.Where(x => x.Name == "event1_range_time").FirstOrDefault(), ref rand, dataTbls, true));
+                randEvent.event_count = Byte.Parse(GetRandomFieldValue(properties.FirstOrDefault(x => x.Name == "event1_count"), ref rand, dataTbls, true));
+                randEvent.event_damage = UInt16.Parse(GetRandomFieldValue(properties.FirstOrDefault(x => x.Name == "event1_damage"), ref rand, dataTbls, true));
+                randEvent.event_start_time = Int32.Parse(GetRandomFieldValue(properties.FirstOrDefault(x => x.Name == "event1_start_time"), ref rand, dataTbls, true));
+                randEvent.event_range_time = Int32.Parse(GetRandomFieldValue(properties.FirstOrDefault(x => x.Name == "event1_range_time"), ref rand, dataTbls, true));
 
                 return randEvent;
             }
@@ -187,7 +187,9 @@ namespace SmashUltimateEditor
             TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
             topLevelPage.Name = Top_Level_Page.Battle.ToString();
             List<Point> points = new List<Point>();
+
             TabControl subControl = new TabControl();
+            Button openSpiritImage = new Button();
 
             subControl.Anchor = (((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
@@ -219,14 +221,14 @@ namespace SmashUltimateEditor
                 // Range values?  Use a textbox.
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count));
-                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1));
+                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
 
                 page.Controls.Add(lb.label);

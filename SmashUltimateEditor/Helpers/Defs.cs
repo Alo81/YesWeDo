@@ -32,11 +32,16 @@ namespace SmashUltimateEditor
         #region UI
         public const int LABEL_HEIGHT = 20;
         public const int LABEL_WIDTH = 200 ;
-        public const int PADDING = 5;
+        public const int LABEL_PADDING = 5;
         public const int BOX_HEIGHT = 20 ;
-        public const int BOX_WIDTH = 200 ;
-        public const int ROWS = 26;
+        public const int BOX_WIDTH = 200;
+        public const int BOX_PADDING = 3;
+        public const int BUTTON_HEIGHT = 50;
+        public const int BUTTON_WIDTH = 200;
+        public const int BUTTON_PADDING = 5;
+        public const int ROWS = 18;
         public const int COLUMNS = 4;
+        public const string REMOVE_FIGHTER_STRING = "Remove Fighter";
         #endregion
 
         #region Files
@@ -47,6 +52,13 @@ namespace SmashUltimateEditor
             new Tuple<string, string>("ui_chara_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("spirits_battle_event.prc", @"\ui\param\spirits\")
         };
+        public static List<string> spiritUiLocations = new List<string>()
+        {
+            @"\ui\replace\spirits\spirits_0\",
+            @"\ui\replace\spirits\spirits_1\",
+            @"\ui\replace\spirits\spirits_2\"
+        };
+
         #endregion
 
         #region Spirit Battles

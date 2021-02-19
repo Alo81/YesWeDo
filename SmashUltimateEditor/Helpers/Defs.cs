@@ -30,13 +30,13 @@ namespace SmashUltimateEditor
         #endregion
 
         #region UI
-        public const int LABEL_HEIGHT = 20;
+        public const int LABEL_HEIGHT = 16;
         public const int LABEL_WIDTH = 200 ;
-        public const int LABEL_PADDING = 5;
-        public const int BOX_HEIGHT = 20 ;
+        public const int LABEL_PADDING = 14;
+        public const int BOX_HEIGHT = 23;
         public const int BOX_WIDTH = 200;
-        public const int BOX_PADDING = 3;
-        public const int BUTTON_HEIGHT = 50;
+        public const int BOX_PADDING = -5;
+        public const int BUTTON_HEIGHT = 48;
         public const int BUTTON_WIDTH = 200;
         public const int BUTTON_PADDING = 5;
         public const int ROWS = 18;

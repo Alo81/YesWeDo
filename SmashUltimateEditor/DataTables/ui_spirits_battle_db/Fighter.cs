@@ -142,7 +142,13 @@ namespace SmashUltimateEditor
 
             return newCopy;
         }
+
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
+        {
+            return DataTbl.BuildEmptyPage(dataTbls, typeof(Fighter));
+        }
+
+        public static TabPage BuildEmptyPageOld(DataTbls dataTbls)
         {
             Type type = typeof(Fighter);
             TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
@@ -190,16 +196,16 @@ namespace SmashUltimateEditor
                 page = subControl.TabPages[pageNum];
                 currentPos = points[pageNum];
 
+                lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                
                 // Range values?  Use a textbox.
                 if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
                     lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
                 //Else - use a combo box with preset list.  
                 else
                 {
-                    lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
                     lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }
 

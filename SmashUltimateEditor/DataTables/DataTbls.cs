@@ -449,12 +449,9 @@ namespace SmashUltimateEditor
 
         public void SetEventOnChange(ref TabPage page)
         {
-            foreach(ComboBox control in page.Controls.OfType<ComboBox>())
+            foreach(ComboBox control in page.Controls.OfType<ComboBox>().Where(x => Regex.IsMatch(x.Name, "event.*type")))
             {
-                if (Regex.IsMatch(control.Name, "event.*type"))
-                {
-                    control.SelectedIndexChanged += SetEventLabelOptions;
-                }
+                control.SelectedIndexChanged += SetEventLabelOptions;
             }
         }
 

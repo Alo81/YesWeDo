@@ -18,7 +18,7 @@ namespace SmashUltimateEditor.Helpers
             {
                 current.X = Defs.LABEL_PADDING;
             }
-            // If we've got a full column
+            // If we've got a full column, move to the next one.  
             else if (rowCount > 0 && current.Y != 0 && rowCount % Defs.ROWS == 0)
             {
                 current.X += Defs.BOX_WIDTH > Defs.LABEL_WIDTH ? Defs.BOX_WIDTH : Defs.LABEL_WIDTH;
@@ -46,6 +46,22 @@ namespace SmashUltimateEditor.Helpers
                 }
             }
             return current;
+        }
+
+        public static IEnumerable<string> GetSubpagesFromType(Type type)
+        {
+            if(type == typeof(Battle))
+            {
+                return Enum.GetNames(typeof(Battle_Page));
+            }
+            else if (type == typeof(Fighter))
+            {
+                return Enum.GetNames(typeof(Fighter_Page));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static TabPage GetEmptyTabPage(int page = 0)

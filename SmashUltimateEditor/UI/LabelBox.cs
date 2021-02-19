@@ -19,7 +19,7 @@ namespace SmashUltimateEditor.UI
 
         public void SetLabel(string name, Point pos)
         {
-            SetLabelValue(String.Format("{0}", name));
+            SetLabelValue(name);
             label.Width = Defs.LABEL_WIDTH;
             label.Height = Defs.LABEL_HEIGHT;
             label.Location = pos;
@@ -29,7 +29,7 @@ namespace SmashUltimateEditor.UI
             SetTextBoxValue(value);
             text.Name = name;
             text.Width = Defs.BOX_WIDTH;
-            text.Height = Defs.BOX_HEIGHT;
+            // text.Height = Defs.BOX_HEIGHT; // Height cannot be changed for *Windows Reasons*/
             text.Location = pos;
             //text.TextChanged += DataTbls;
         }
@@ -42,7 +42,7 @@ namespace SmashUltimateEditor.UI
             }
             combo.Name = name;
             combo.Width = Defs.BOX_WIDTH;
-            combo.Height = Defs.BOX_HEIGHT;
+            // combo.Height = Defs.BOX_HEIGHT;  // Height cannot be changed for *Windows Reasons*/
             combo.Location = pos;
         }
 

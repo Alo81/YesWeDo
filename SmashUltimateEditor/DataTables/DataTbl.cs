@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor.DataTables
@@ -320,6 +321,95 @@ namespace SmashUltimateEditor.DataTables
                 t != type);
 
             return children;
+        }
+
+        public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)
+        {
+            TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
+            topLevelPage.Name = Top_Level_Page.Fighters.ToString();
+
+            List<Point> points = new List<Point>();
+            TabControl subControl = new TabControl();
+
+            subControl.Anchor = (((((AnchorStyles.Top | AnchorStyles.Bottom)
+            | AnchorStyles.Left)
+            | AnchorStyles.Right)));
+
+            topLevelPage.Controls.Add(subControl);
+
+            TabPage page;
+            Point currentPos;
+            LabelBox lb;
+
+            // Build out subpages.  
+            foreach(var pageName in UiHelper.GetSubpagesFromType(type))
+            {
+                int pageNum = subControl.TabPages.Count;
+                subControl.TabPages.Add(UiHelper.GetEmptyTabPage(pageNum));
+                subControl.TabPages[pageNum].Name = subControl.TabPages[pageNum].Text = pageName;
+                points.Add(new Point(0, 0));
+            }
+
+            // If fighter, First pass, add button to first page.  
+            if(type == typeof(Fighter))
+            {
+                page = subControl.TabPages[0];
+                currentPos = points[0];
+                Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Button));
+
+                /* We need to set the button name for real though.  */
+                dataTbls.SetRemoveFighterButtonMethod(ref b);
+                page.Controls.Add(b);
+                Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label) };
+                page.Controls.Add(spacer);
+
+                points[0] = currentPos;
+            }
+
+            // GetBattleIndex
+            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
+            {
+                lb = new LabelBox();
+                var pageNum = field.GetCustomAttributes(true).OfType<PageAttribute>().First().Page;
+                page = subControl.TabPages[pageNum];
+                currentPos = points[pageNum];
+
+                lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+
+                // Range values?  Use a textbox.
+                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                {
+                    lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                }
+                //Else - use a combo box with preset list.  
+                else
+                {
+                    lb.SetComboBox(field.Name, dataTbls.GetOptionsFromTypeAndName(type, field.Name), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                }
+
+                page.Controls.Add(lb.label);
+                if (lb.IsComboSet())
+                {
+                    page.Controls.Add(lb.combo);
+                }
+                else if (lb.IsTextboxSet())
+                {
+                    page.Controls.Add(lb.text);
+                }
+
+                points[pageNum] = currentPos;
+            }
+
+            // Set method to update event label options when event changes.  
+            if (type == typeof(Battle))
+            {
+                var eventsPage = (int)Battle_Page.Events;
+                var subPage = subControl.TabPages[eventsPage];
+                dataTbls.SetEventOnChange(ref subPage);
+                subControl.TabPages[eventsPage] = subPage;
+            }
+
+            return topLevelPage;
         }
     }
 }

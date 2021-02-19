@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Enums;
 
@@ -48,6 +49,15 @@ namespace SmashUltimateEditor.Helpers
             return current;
         }
 
+        public static void MovePointToNewColumn(TabPage page, ref Point current)
+        {
+            // Force buttons onto new column.  
+            while (page.Controls.Count % Defs.ROWS != 0)
+            {
+                page.Controls.Add(new Label() { Location = UiHelper.IncrementPoint(ref current, page.Controls.Count, Ui_Element.Label) });
+            }
+        }
+
         public static IEnumerable<string> GetSubpagesFromType(Type type)
         {
             if(type == typeof(Battle))
@@ -82,13 +92,29 @@ namespace SmashUltimateEditor.Helpers
             };
             return tabPage;
         }
-        public static Button GetEmptyRemoveFighterButton(Point pos)
+        public static Button GetEmptyButton()
         {
             Button b = new Button();
             b.Height = Defs.BUTTON_HEIGHT;
             b.Width = Defs.BUTTON_WIDTH;
+
+            return b;
+        }
+
+        public static Button GetEmptyRemoveFighterButton(Point pos)
+        {
+            var b = GetEmptyButton();
             b.Location = pos;
-            b.Text = Defs.REMOVE_FIGHTER_STRING;
+            b.Text = b.Name = Defs.REMOVE_FIGHTER_BUTTON_STRING;
+
+            return b;
+        }
+
+        public static Button GetEmptySpiritImageButton(Point pos)
+        {
+            var b = GetEmptyButton();
+            b.Location = pos;
+            b.Text = Defs.SPIRIT_IMAGE_BUTTON_STRING;
 
             return b;
         }
@@ -100,7 +126,7 @@ namespace SmashUltimateEditor.Helpers
 
         public static Button GetRemoveFighterButtonFromButtons(ref IEnumerable<Button> buttons)
         {
-            return buttons.FirstOrDefault(x => x.Text == Defs.REMOVE_FIGHTER_STRING);
+            return buttons.FirstOrDefault(x => x.Text == Defs.REMOVE_FIGHTER_BUTTON_STRING);
         }
 
         public static void DisableFighterButton(ref TabPage page)

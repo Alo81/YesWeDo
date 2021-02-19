@@ -350,14 +350,15 @@ namespace SmashUltimateEditor.DataTables
                 points.Add(new Point(0, 0));
             }
 
+            // Set to starting points.  
+            currentPos = points[0];
+            page = subControl.TabPages[0];
+
             // If fighter, First pass, add "Remove Fighter" button to first page.  
-            if(type == typeof(Fighter))
+            if (type == typeof(Fighter))
             {
-                page = subControl.TabPages[0];
-                currentPos = points[0];
                 Button b = UiHelper.GetEmptyRemoveFighterButton(UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Button));
 
-                /* We need to set the button name for real though.  */
                 dataTbls.SetRemoveFighterButtonMethod(ref b);
                 page.Controls.Add(b);
                 Label spacer = new Label() { Location = UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label) };
@@ -405,6 +406,27 @@ namespace SmashUltimateEditor.DataTables
             {
                 var subPage = subControl.TabPages[(int)Battle_Page.Events];
                 dataTbls.SetEventOnChange(ref subPage);
+            }
+            // If battle, add Spirit image buttons.  
+            if (type == typeof(Battle))
+            {
+                var pageNum = (int)Battle_Page.Basics;
+                var subPage = subControl.TabPages[pageNum];
+                currentPos = points[pageNum];
+
+                // Force buttons onto new column.  
+                UiHelper.MovePointToNewColumn(subPage, ref currentPos);
+
+                for (int i = 0; i < Defs.spiritUiLocations.Count; i++)
+                {
+                    Button b = UiHelper.GetEmptySpiritImageButton(UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Button));
+                    b.Text = b.Name = b.Text.Replace('#', i.ToString()[0]);
+                    // dataTbls.SetRemoveFighterButtonMethod(ref b);    // Set GetEmprtSpiritImageButtonMethod
+                    subPage.Controls.Add(b);
+
+                    points[pageNum] = currentPos;
+                }
+
             }
 
             return topLevelPage;

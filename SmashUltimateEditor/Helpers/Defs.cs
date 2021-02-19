@@ -41,7 +41,9 @@ namespace SmashUltimateEditor
         public const int BUTTON_PADDING = 5;
         public const int ROWS = 18;
         public const int COLUMNS = 4;
-        public const string REMOVE_FIGHTER_STRING = "Remove Fighter";
+
+        public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
+        public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";
         #endregion
 
         #region Files

@@ -386,8 +386,6 @@ namespace SmashUltimateEditor
             {
                 page = EmptyBattlePage;
                 tabs.TabPages.Add(page);
-                page = EmptyEventPage;
-                tabs.TabPages.Add(page);
             }
 
             while (!HasEnoughPages)

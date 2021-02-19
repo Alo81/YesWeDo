@@ -64,6 +64,22 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
+        public static string GetPageNameFromType(Type type)
+        {
+            if (type == typeof(Battle))
+            {
+                return Top_Level_Page.Battle.ToString();
+            }
+            else if (type == typeof(Fighter))
+            {
+                return Top_Level_Page.Fighters.ToString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public static TabPage GetEmptyTabPage(int page = 0)
         {
 

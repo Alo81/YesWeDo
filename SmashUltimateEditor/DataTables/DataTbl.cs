@@ -326,7 +326,7 @@ namespace SmashUltimateEditor.DataTables
         public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)
         {
             TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
-            topLevelPage.Name = Top_Level_Page.Fighters.ToString();
+            topLevelPage.Name = UiHelper.GetPageNameFromType(type);
 
             List<Point> points = new List<Point>();
             TabControl subControl = new TabControl();

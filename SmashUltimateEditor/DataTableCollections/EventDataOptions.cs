@@ -139,7 +139,7 @@ namespace SmashUltimateEditor.DataTableCollections
             _dataList[index] = newEvent;
         }
 
-        public void SetEventLabelOptions(ComboBox combo, ref TabPage page)
+        public void SetEventLabelOptions(ComboBox combo, TabPage page)
         {
             if (GetCount() == 0)
             {
@@ -158,9 +158,9 @@ namespace SmashUltimateEditor.DataTableCollections
                 }
             }
 
-            SetEventLabelOptions(labelComboName, labelType, ref page);
+            SetEventLabelOptions(labelComboName, labelType, page);
         }
-        public void SetEventLabelOptions(string labelComboName, string labelType, ref TabPage page)
+        public void SetEventLabelOptions(string labelComboName, string labelType, TabPage page)
         {
             if (GetCount() == 0)
             {
@@ -171,19 +171,16 @@ namespace SmashUltimateEditor.DataTableCollections
 
             var labels = GetLabelsOfType(labelType);
 
-            foreach (ComboBox control in controls)
+            foreach (ComboBox control in controls.Where(x => x.Name == labelComboName))
             {
-                if (control.Name == labelComboName)
+                // Save value off.  Change datasource.  Set the value.  
+                var value = control.Text;
+                control.DataSource = labels;
+                if (control.Items.Contains(value ?? ""))
                 {
-                    // Save value off.  Change datasource.  Set the value.  
-                    var value = control.Text;
-                    control.DataSource = labels;
-                    if (control.Items.Contains(value ?? ""))
-                    {
-                        control.SelectedItem = value;
-                    }
-                    return;
+                    control.SelectedItem = value;
                 }
+                return;
             }
         }
 

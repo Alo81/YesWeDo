@@ -403,10 +403,8 @@ namespace SmashUltimateEditor.DataTables
             // Set method to update event label options when event changes.  
             if (type == typeof(Battle))
             {
-                var eventsPage = (int)Battle_Page.Events;
-                var subPage = subControl.TabPages[eventsPage];
+                var subPage = subControl.TabPages[(int)Battle_Page.Events];
                 dataTbls.SetEventOnChange(ref subPage);
-                subControl.TabPages[eventsPage] = subPage;
             }
 
             return topLevelPage;

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using static SmashUltimateEditor.Enums;
 using static System.Windows.Forms.TabControl;
 
 namespace SmashUltimateEditor
@@ -84,20 +85,7 @@ namespace SmashUltimateEditor
         {
             get
             {
-                var page = Battle.BuildEmptyPage(this);
-                SetEventOnChange(ref page);
-                if(eventData.GetCount() != 0)
-                {
-                    var pages = UiHelper.GetPagesAsList(page);
-                    for(int i = 0; i < pages.Count; i++)
-                    {
-                        var subpage = pages[i];
-                        if(subpage != null)
-                            SetEventOnChange(ref subpage);
-                        pages[i] = subpage;
-                    }
-                }
-                return page;
+                return Battle.BuildEmptyPage(this);
             } 
         }
 
@@ -463,22 +451,11 @@ namespace SmashUltimateEditor
             }
 
             var combo = ((ComboBox)sender);
-            for(int i = 0; i < tabs.TabPages.Count; i++)
+
+            // Get events page.  
+            foreach(TabPage page in UiHelper.GetAllPagesFromTabControl(tabs).Where(x => x.Name == Enums.Battle_Page.Events.ToString()))
             {
-                var superPage = tabs.TabPages[i];
-                if(superPage.Name == Enums.Top_Level_Page.Battle.ToString())
-                {
-                    var subPages = superPage.Controls.OfType<TabControl>().First().TabPages;
-                    for (int j = 0; j < subPages.Count; j++)
-                    {
-                        var subPage = subPages[j];
-                        if (subPage?.Name == Enums.Battle_Page.Events.ToString())
-                        {
-                            eventData.SetEventLabelOptions(combo, ref subPage);
-                            return;
-                        }
-                    }
-                }
+                eventData.SetEventLabelOptions(combo, page);
             }
         }
         public void SetMiiFighterSpecials(object sender, EventArgs e = null)
@@ -515,7 +492,7 @@ namespace SmashUltimateEditor
 
         public void SetEventLabelOptions(ComboBox combo, ref TabPage page)
         {
-            eventData.SetEventLabelOptions(combo, ref page);
+            eventData.SetEventLabelOptions(combo, page);
         }
 
         public void SetSelectedBattle(string battle_id)

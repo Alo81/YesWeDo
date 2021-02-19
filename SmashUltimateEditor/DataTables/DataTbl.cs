@@ -350,7 +350,7 @@ namespace SmashUltimateEditor.DataTables
                 points.Add(new Point(0, 0));
             }
 
-            // If fighter, First pass, add button to first page.  
+            // If fighter, First pass, add "Remove Fighter" button to first page.  
             if(type == typeof(Fighter))
             {
                 page = subControl.TabPages[0];
@@ -366,11 +366,11 @@ namespace SmashUltimateEditor.DataTables
                 points[0] = currentPos;
             }
 
-            // GetBattleIndex
+            // Gather each property for the DataTbl type, and make a label/data entry point for it.  
             foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
-                var pageNum = field.GetCustomAttributes(true).OfType<PageAttribute>().First().Page;
+                var pageNum = field?.GetCustomAttributes(true)?.OfType<PageAttribute>()?.FirstOrDefault()?.Page ?? 0;
                 page = subControl.TabPages[pageNum];
                 currentPos = points[pageNum];
 

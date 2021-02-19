@@ -1,4 +1,6 @@
-﻿namespace SmashUltimateEditor.DataTables
+﻿using System.Windows.Forms;
+
+namespace SmashUltimateEditor.DataTables
 {
     public class Event : DataTbl
     {
@@ -10,6 +12,11 @@
         {
             string typeName = this.GetFieldValueFromName("TYPE_NAME");
             return typeName == "" ? (this.GetFieldValueFromName("XML_NAME").Replace("_param", "")) : typeName;
+        }
+
+        public TabPage BuildEmptyPage(DataTbls dataTbls)
+        {
+            return DataTbl.BuildEmptyPage(dataTbls, this.GetType());
         }
     }
 

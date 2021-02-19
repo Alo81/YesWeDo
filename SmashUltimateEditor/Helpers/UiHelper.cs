@@ -58,26 +58,15 @@ namespace SmashUltimateEditor.Helpers
             {
                 return Enum.GetNames(typeof(Fighter_Page));
             }
-            else
+            else    // If no subpages are defined, get a single empty name tab.  
             {
-                return null;
+                return new string[] { "" };
             }
         }
 
         public static string GetPageNameFromType(Type type)
         {
-            if (type == typeof(Battle))
-            {
-                return Top_Level_Page.Battle.ToString();
-            }
-            else if (type == typeof(Fighter))
-            {
-                return Top_Level_Page.Fighters.ToString();
-            }
-            else
-            {
-                return null;
-            }
+            return type.Name;
         }
 
         public static TabPage GetEmptyTabPage(int page = 0)

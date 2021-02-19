@@ -82,7 +82,7 @@ namespace SmashUltimateEditor.UI
             {
                 combo = new ComboBox();
             }
-            combo.DataSource = newValue.Where(x => x != null).ToList();
+            combo.DataSource = newValue?.Where(x => x != null)?.ToList();
             combo.BindingContext = new BindingContext();
         }
         public void SetComboBoxDataSource(object newValue)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -84,36 +85,58 @@ namespace SmashUltimateEditor.Helpers
             XmlHelper.WriteXmlToFile(fileLocation, doc);
         }
 
-        public static void CopyPreloadFiles(string fileLocation)
+        public static FileInfo[] GetFiles(string file_location)
         {
-            StringBuilder errorMessage = new StringBuilder();
-            FileInfo[] files;
             try
             {
-                var preLoad = config.file_directory_preload;
-                files = new DirectoryInfo(preLoad).GetFiles();
+                return new DirectoryInfo(file_location).GetFiles();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 UiHelper.PopUpMessage(ex.Message);
-                return;
+                return null;
             }
 
-            foreach(var file in files)
+        }
+
+        public static string CopyFile(string source, string dest, string fileName)
+        {
+            try
+            {
+                FileInfo file = new FileInfo(source);
+                CopyFile(file, dest, fileName);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + "\r\n";
+            }
+            return "";
+        }
+        public static string CopyFile(FileInfo file, string dest, string fileName)
+        {
+            try
+            {
+                Directory.CreateDirectory(dest);
+                File.Copy(file.FullName, dest + fileName);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message + "\r\n";
+            }
+            return "";
+        }
+
+        public static void CopyFiles(string source, string dest)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            var files = GetFiles(source);
+
+            foreach (var file in files)
             {
                 var definedLocation = GetFilePath(file.Name);
                 if (!String.IsNullOrWhiteSpace(definedLocation))
                 {
-                    try
-                    {
-                        var copyLocation = fileLocation + definedLocation;
-                        Directory.CreateDirectory(copyLocation);
-                        File.Copy(file.FullName, copyLocation + file.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        errorMessage.Append(ex.Message + "\r\n");
-                    }
+                    errorMessage.Append(CopyFile(file, dest + definedLocation, file.Name));
                 }
             }
 
@@ -123,11 +146,51 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
+        public static void CopyFilesWithRegexMatch(string source, string dest)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            var files = GetFiles(source);
+
+            foreach (var file in files)
+            {
+                var definedLocation = GetFilePathFromLikeName(file.Name);
+                if (!String.IsNullOrWhiteSpace(definedLocation))
+                {
+                    errorMessage.Append(CopyFile(file, dest + definedLocation, file.Name));
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(errorMessage.ToString()))
+            {
+                UiHelper.PopUpMessage(errorMessage.ToString());
+            }
+        }
+
+        public static void CopyPreloadFiles(string fileLocation)
+        {
+            CopyFiles(config.file_directory_preload, fileLocation);
+        }
+        public static void CopySpiritImages(string fileLocation)
+        {
+            CopyFiles(config.file_directory_spirit_images, fileLocation);
+        }
+
         public static string GetFilePath(string fileName)
         {
             foreach(var file in Defs.files)
             {
                 if (file.Item1.Equals(fileName)){
+                    return file.Item2;
+                }
+            }
+            return "";
+        }
+        public static string GetFilePathFromLikeName(string fileName)
+        {
+            foreach (var file in Defs.spiritUiLocations)
+            {
+                if (Regex.IsMatch(fileName, file.Item1))
+                {
                     return file.Item2;
                 }
             }

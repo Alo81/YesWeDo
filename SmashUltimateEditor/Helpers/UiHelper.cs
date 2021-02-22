@@ -135,6 +135,19 @@ namespace SmashUltimateEditor.Helpers
             return b;
         }
 
+        public static int? GetSpiritButtonIndexFromButton(Button b)
+        {
+            var name = b.Name;
+            foreach(char c in name)
+            {
+                if (Char.IsDigit(c))
+                {
+                    return (int)Char.GetNumericValue(c);
+                }
+            }
+            return null;
+        }
+
         public static IEnumerable<Button> GetButtons(TabPage page)
         {
             return page.Controls.OfType<Button>();

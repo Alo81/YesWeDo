@@ -44,23 +44,26 @@ namespace SmashUltimateEditor
 
         public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
         public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";
+        public const string FILE_WILDCARD_PATTERN = ".*";
         #endregion
 
         #region Files
-        public static List<Tuple<string, string>> files = new List<Tuple<string, string>>()
+        public static List<Tuple<string, string>> spiritUiLocations = new List<Tuple<string, string>>()
+        {
+            new Tuple<string, string>($"spirits_0_{FILE_WILDCARD_PATTERN}.bntx", @"\ui\replace\spirits\spirits_0\"),
+            new Tuple<string, string>($"spirits_1_{FILE_WILDCARD_PATTERN}.bntx", @"\ui\replace\spirits\spirits_1\"),
+            new Tuple<string, string>($"spirits_2_{FILE_WILDCARD_PATTERN}.bntx", @"\ui\replace\spirits\spirits_2\")
+        };
+
+        public static List<Tuple<string, string>> regExFiles = new List<Tuple<string, string>>(spiritUiLocations);
+
+        public static List<Tuple<string, string>> files = new List<Tuple<string, string>>()    // Include Spirit UI locations
         {
             new Tuple<string, string>("ui_spirits_battle_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_fighter_spirit_aw_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_chara_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("spirits_battle_event.prc", @"\ui\param\spirits\")
         };
-        public static List<string> spiritUiLocations = new List<string>()
-        {
-            @"\ui\replace\spirits\spirits_0\",
-            @"\ui\replace\spirits\spirits_1\",
-            @"\ui\replace\spirits\spirits_2\"
-        };
-
         #endregion
 
         #region Spirit Battles

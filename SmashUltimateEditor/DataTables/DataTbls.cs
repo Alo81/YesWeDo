@@ -160,6 +160,8 @@ namespace SmashUltimateEditor
                 tabStorage.Push(page);
             }
         }
+
+        #region Saving
         public void Save()
         {
             Save(config.file_location);
@@ -233,6 +235,7 @@ namespace SmashUltimateEditor
                 }
             }
         }
+        #endregion
         public void SetRemoveFighterButtonMethod(ref Button b)
         {
             b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
@@ -252,7 +255,20 @@ namespace SmashUltimateEditor
 
         public void LoadSpiritImageFromButton(object sender, EventArgs e)
         {
+            var index = UiHelper.GetSpiritButtonIndexFromButton((Button)sender);
 
+            var openDialog = new OpenFileDialog() { Title = $"Import Spirit Image {index}.", Filter = "BNTX|*.bntx*"};
+            var result = openDialog.ShowDialog();
+
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
+            {
+                var source = openDialog.FileName;
+                var fileDetails = Defs.spiritUiLocations[(int)index];
+                var name = fileDetails.Item1.Replace(Defs.FILE_WILDCARD_PATTERN, selectedBattle.battle_id);
+                var dest = config.file_directory_spirit_images;
+
+                FileHelper.CopyFile(source, dest, name);
+            }
         }
 
         public void ImportBattle(BattleDataOptions battles, FighterDataOptions fighters)
@@ -391,39 +407,8 @@ namespace SmashUltimateEditor
                 eventData.SetEventLabelOptions(combo, page);
             }
         }
-        public void SetMiiFighterSpecials(object sender, EventArgs e = null)
-        {
-            var combo = ((ComboBox)sender);
 
-            if (!Defs.miiFighterMod.ContainsKey((string)combo.SelectedValue))
-            {
-                return;
-            }
-
-            // For fighters, we care about unique instances, cuz there can be more than one.  How do we handle?  
-            var allTabs = UiHelper.GetPagesFromTabControl(tabs);
-
-            for (int i = 0; i < allTabs.Count; i++)
-            {
-                var page = allTabs[i];
-                if (page.Name == Enums.Top_Level_Page.Fighters.ToString())
-                {
-                    var subPages = UiHelper.GetAllPagesFromTabControl(tabs);
-                    for (int j = 0; j < subPages.Count; j++)
-                    {
-                        var subPage = subPages[j];
-                        if (subPage?.Name == Enums.Fighter_Page.Mii.ToString())
-                        {
-                            // Get current fighter_kind
-                            //Fighter.SetMiiFighterSpecials(combo, ref subPage);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void SetEventLabelOptions(ComboBox combo, ref TabPage page)
+        public void SetEventLabelOptions(ComboBox combo, TabPage page)
         {
             eventData.SetEventLabelOptions(combo, page);
         }
@@ -468,6 +453,38 @@ namespace SmashUltimateEditor
             string mode = groups.First(g => g.Count() == maxCount).Key;
 
             return mode;
+        }
+
+        public void SetMiiFighterSpecials(object sender, EventArgs e = null)
+        {
+            var combo = ((ComboBox)sender);
+
+            if (!Defs.miiFighterMod.ContainsKey((string)combo.SelectedValue))
+            {
+                return;
+            }
+
+            // For fighters, we care about unique instances, cuz there can be more than one.  How do we handle?  
+            var allTabs = UiHelper.GetPagesFromTabControl(tabs);
+
+            for (int i = 0; i < allTabs.Count; i++)
+            {
+                var page = allTabs[i];
+                if (page.Name == Enums.Top_Level_Page.Fighters.ToString())
+                {
+                    var subPages = UiHelper.GetAllPagesFromTabControl(tabs);
+                    for (int j = 0; j < subPages.Count; j++)
+                    {
+                        var subPage = subPages[j];
+                        if (subPage?.Name == Enums.Fighter_Page.Mii.ToString())
+                        {
+                            // Get current fighter_kind
+                            //Fighter.SetMiiFighterSpecials(combo, ref subPage);
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         #region Randomizer

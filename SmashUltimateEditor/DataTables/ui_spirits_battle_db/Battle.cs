@@ -183,7 +183,7 @@ namespace SmashUltimateEditor
 
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
         {
-            return DataTbl.BuildEmptyPage(dataTbls, typeof(Battle));
+            return BuildEmptyPage(dataTbls, typeof(Battle));
         }
 
         [Order][Page((int)Enums.Battle_Page.Basics)]

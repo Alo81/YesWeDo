@@ -44,8 +44,6 @@ namespace SmashUltimateEditor.DataTables
 
             public int Page { get { return _page; } }
         }
-
-        internal int pageIndex = 0;
         internal int pageCount { get { return 1; } }
 
         public static DataTbl GetDataTblFromXmlName(string className)
@@ -214,7 +212,7 @@ namespace SmashUltimateEditor.DataTables
             }
         }
 
-        public void UpdatePageValues(ref TabPage page, int pageIndex, int collectionIndex)
+        public void UpdatePageValues(TabPage page)
         {
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
@@ -228,15 +226,17 @@ namespace SmashUltimateEditor.DataTables
             {
                 text.Text = this.GetPropertyValueFromName(text.Name);
             }
-            if (GetType().Name == "Fighter")
+        }
+
+        public void UpdateFighterPageValues(TabPage page, int collectionIndex)
+        {
+            UpdatePageValues(page);
+
+            Button b = UiHelper.GetFighterButton(page);
+            if (!(b == default))
             {
-                Button b = UiHelper.GetFighterButton(page);
-                if (!(b == default))
-                {
-                    b.Name = collectionIndex.ToString();
-                }
+                b.Name = collectionIndex.ToString();
             }
-            this.pageIndex = pageIndex;
         }
         public Tuple<float, float> GetRangeFromName(string name)
         {
@@ -325,8 +325,9 @@ namespace SmashUltimateEditor.DataTables
 
         public static TabPage BuildEmptyPage(DataTbls dataTbls, Type type)
         {
-            TabPage topLevelPage = UiHelper.GetEmptyTabPage(dataTbls.pageCount);
-            topLevelPage.Name = UiHelper.GetPageNameFromType(type);
+
+            TabPage topLevelPage = UiHelper.GetEmptyTabPageFromType(type);
+            topLevelPage.TabIndex = dataTbls.tabs.TabPages.Count;
 
             List<Point> points = new List<Point>();
             TabControl subControl = new TabControl();
@@ -342,11 +343,14 @@ namespace SmashUltimateEditor.DataTables
             LabelBox lb;
 
             // Build out subpages.  
-            foreach(var pageName in UiHelper.GetSubpagesFromType(type))
+            foreach(var pageType in UiHelper.GetSubpagesFromType(type))     //pageType is an Enum
             {
-                int pageNum = subControl.TabPages.Count;
-                subControl.TabPages.Add(UiHelper.GetEmptyTabPage(pageNum));
-                subControl.TabPages[pageNum].Name = subControl.TabPages[pageNum].Text = pageName;
+                var newPage = UiHelper.GetEmptyTabPage();
+
+                newPage.Name = newPage.Text = pageType.ToString();
+                newPage.TabIndex = (int)pageType;
+                subControl.TabPages.Add(newPage);
+
                 points.Add(new Point(0, 0));
             }
 
@@ -371,7 +375,7 @@ namespace SmashUltimateEditor.DataTables
             foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
-                var pageNum = field?.GetCustomAttributes(true)?.OfType<PageAttribute>()?.FirstOrDefault()?.Page ?? 0;
+                var pageNum = UiHelper.GetUiPageFromProperty(field);
                 page = subControl.TabPages[pageNum];
                 currentPos = points[pageNum];
 

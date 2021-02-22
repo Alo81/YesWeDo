@@ -4,9 +4,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
+using static System.Windows.Forms.TabControl;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -58,15 +61,15 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
-        public static IEnumerable<string> GetSubpagesFromType(Type type)
+        public static Array GetSubpagesFromType(Type type)
         {
             if(type == typeof(Battle))
             {
-                return Enum.GetNames(typeof(Battle_Page));
+                return Enum.GetValues(typeof(Battle_Page));
             }
             else if (type == typeof(Fighter))
             {
-                return Enum.GetNames(typeof(Fighter_Page));
+                return Enum.GetValues(typeof(Fighter_Page));
             }
             else    // If no subpages are defined, get a single empty name tab.  
             {
@@ -79,19 +82,32 @@ namespace SmashUltimateEditor.Helpers
             return type.Name;
         }
 
-        public static TabPage GetEmptyTabPage(int page = 0)
+        public static int GetUiPageFromProperty(PropertyInfo field)
+        {
+            return field?.GetCustomAttributes(true)?.OfType<PageAttribute>()?.FirstOrDefault()?.Page ?? 0;
+        }
+
+        public static TabPage GetEmptyTabPage()
         {
 
             TabPage tabPage = new TabPage()
             {
                 Location = new System.Drawing.Point(4, 24),
                 Padding = new System.Windows.Forms.Padding(3),
-                TabIndex = page,
                 UseVisualStyleBackColor = true,
                 AutoScroll = true
             };
             return tabPage;
         }
+
+        public static TabPage GetEmptyTabPageFromType(Type type)
+        {
+            var page = GetEmptyTabPage();
+            page.Name = GetPageNameFromType(type);
+
+            return page;
+        }
+
         public static Button GetEmptyButton()
         {
             Button b = new Button();
@@ -183,11 +199,14 @@ namespace SmashUltimateEditor.Helpers
 
             return csv;
         }
-        public static List<TabPage> GetPagesAsList(TabPage page)
+        public static List<TabPage> GetPagesAsList(TabPage page, bool inclusive = true)
         {
             List<TabPage> pages = new List<TabPage>();
 
-            pages.Add(page);
+            if (inclusive)  // If inclusive, add this page and its subpages.  Else, only add subpages.  
+            {
+                pages.Add(page);
+            }
             var subPages = page.Controls.OfType<TabControl>().First().TabPages;
             foreach(TabPage subPage in subPages)
             {

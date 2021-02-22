@@ -72,7 +72,7 @@ namespace SmashUltimateEditor
 
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
-        public Queue<TabPage> tabStorage = new Queue<TabPage>();
+        public Stack<TabPage> tabStorage = new Stack<TabPage>();
 
         public Config config;
 
@@ -149,7 +149,7 @@ namespace SmashUltimateEditor
             // Stored pages.
             for (int i = 0; i < tabStorage.Count; i++)
             {
-                var page = tabStorage.Dequeue();
+                var page = tabStorage.Pop();
                 var pages = UiHelper.GetPagesAsList(page);
                 for (int j = 0; j < pages.Count; j++)
                 {
@@ -157,7 +157,7 @@ namespace SmashUltimateEditor
                     if (subPage != null)
                         SetEventTypeForPage(ref subPage);
                 }
-                tabStorage.Enqueue(page);
+                tabStorage.Push(page);
             }
         }
         public void Save()
@@ -263,76 +263,72 @@ namespace SmashUltimateEditor
 
         public void RefreshTabs()
         {
-            TabPage page;
             if(tabs is null)
             {
                 tabs = new TabControl();
             }
-            ShowTabs();
+            PopulateTabs();
             BuildEmptyTabs();
 
-            for (int i = 0; i < pageCount; i++)
+            foreach(TabPage page in UiHelper.GetPagesFromTabControl(tabs))
             {
-                page = tabs.TabPages[i];
                 // Battle
-                if (i == 0)
+                if (page.TabIndex == (int)Top_Level_Page.Battle)
                 {
                     UiHelper.SetPageName(page, selectedBattle.battle_id, battleData.GetBattleIndex(selectedBattle));
 
-                    TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
-                    for (int j = 0; j < subPages.Count; j++)
+                    foreach (var subPage in UiHelper.GetPagesAsList(page, inclusive : false))
                     {
-                        var subPage = subPages[j];
-                        UpdateBattlePageValues(ref subPage, j);
-                        subPages[j] = subPage;
+                        UpdateBattlePageValues(subPage);
                     }
                 }
-                // Fighters
-                else
+                else if(page.TabIndex >= (int)Top_Level_Page.Fighters)
                 {
-                    UiHelper.SetPageName(page, selectedFighters[i-1].fighter_kind, fighterData.GetFighterIndex(selectedFighters[i-1]));
-                    TabPageCollection subPages = page.Controls.OfType<TabControl>().First().TabPages;
-                    for (int j = 0; j < subPages.Count; j++)
+                    var pageIndex = page.TabIndex - 1;
+                    UiHelper.SetPageName(page, selectedFighters[pageIndex].fighter_kind, fighterData.GetFighterIndex(selectedFighters[pageIndex]));
+
+
+                    foreach (var subPage in UiHelper.GetPagesAsList(page, inclusive: false))
                     {
-                        var subPage = subPages[j];
-                        if (i == 1 && j == 0)   //i is first character, j is first tab.  
+                        UpdateFighterPageValues(subPage, pageIndex);
+
+                        // If first fighter, and first page.  
+                        if(pageIndex == 0 && subPage.TabIndex == (int)Fighter_Page.Attributes)
                         {
                             if (selectedFighters.Count == 1)
                                 UiHelper.DisableFighterButton(subPage);
                             else
                                 UiHelper.EnableFighterButton(subPage);
                         }
-                        UpdateFighterPageValues(ref subPage, i);
-                        subPages[j] = subPage;
                     }
                 }
-            }
+                else
+                {
 
-            HideTabs();
+                }
+            }
         }
         public void BuildEmptyTabs()
         {
-            TabPage page;
-
-            if (tabCount == 0)
-            {
-                page = EmptyBattlePage;
-                tabs.TabPages.Add(page);
-            }
-
             while (!HasEnoughPages)
             {
-                page = EmptyFighterPage;
-                tabs.TabPages.Add(page);
+                if (tabCount == 0)
+                {
+                    tabs.TabPages.Add(EmptyBattlePage);
+                }
+                else
+                {
+                    tabs.TabPages.Add(EmptyFighterPage);
+                }
             }
         }
 
         public void HideTabs()
         {
-            for (int i = pageCount; i < tabCount;)
+            while(pageCount < tabCount)
             {
-                tabStorage.Enqueue(tabs.TabPages[i]);
-                tabs.TabPages.RemoveAt(i);
+                tabStorage.Push(tabs.TabPages[tabCount-1]);
+                tabs.TabPages.RemoveAt(tabCount-1);
             }
         }
 
@@ -340,20 +336,25 @@ namespace SmashUltimateEditor
         {
             while (tabStorage.Count > 0 && !HasEnoughPages)
             {
-                tabs.TabPages.Add(tabStorage.Dequeue());
+                tabs.TabPages.Add(tabStorage.Pop());
             }
         }
 
-        public void UpdateBattlePageValues(ref TabPage page, int i = 0)
+        public void PopulateTabs()
         {
-            var collectionIndex = battleData.GetBattleIndex(selectedBattle);
-            selectedBattle.UpdatePageValues(ref page, i, collectionIndex);
+            HideTabs();
+            ShowTabs();
+        }
+
+        public void UpdateBattlePageValues(TabPage page)
+        {
+            selectedBattle.UpdatePageValues(page);
         }
         
-        public void UpdateFighterPageValues(ref TabPage page, int i)
+        public void UpdateFighterPageValues(TabPage page, int index)
         {
-            var collectionIndex = fighterData.GetFighterIndex(selectedFighters[i - 1]);
-            selectedFighters[i - 1].UpdatePageValues(ref page, i, collectionIndex);
+            var collectionIndex = fighterData.GetFighterIndex(selectedFighters[index]);
+            selectedFighters[index].UpdateFighterPageValues(page, collectionIndex);
         }
 
         public void SetEventTypeForPage(ref TabPage page)

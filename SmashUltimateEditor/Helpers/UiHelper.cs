@@ -119,31 +119,33 @@ namespace SmashUltimateEditor.Helpers
             return b;
         }
 
-        public static IEnumerable<Button> GetButtons(ref TabPage page)
+        public static IEnumerable<Button> GetButtons(TabPage page)
         {
             return page.Controls.OfType<Button>();
         }
 
-        public static Button GetRemoveFighterButtonFromButtons(ref IEnumerable<Button> buttons)
+        public static Button GetRemoveFighterButtonFromButtons(IEnumerable<Button> buttons)
         {
             return buttons.FirstOrDefault(x => x.Text == Defs.REMOVE_FIGHTER_BUTTON_STRING);
         }
 
-        public static void DisableFighterButton(ref TabPage page)
+        public static Button GetFighterButton(TabPage page)
         {
-            var buttons = GetButtons(ref page);
-            Button button = GetRemoveFighterButtonFromButtons(ref buttons);
-            button.Enabled = false;
+            var buttons = GetButtons(page);
+            return GetRemoveFighterButtonFromButtons(buttons);
         }
 
-        public static void EnableFighterButton(ref TabPage page)
+        public static void DisableFighterButton(TabPage page)
         {
-            var buttons = GetButtons(ref page);
-            Button button = GetRemoveFighterButtonFromButtons(ref buttons);
-            button.Enabled = true;
+            GetFighterButton(page).Enabled = false;
         }
 
-        public static void SetupRandomizeProgress(ref ProgressBar progress, int max)
+        public static void EnableFighterButton(TabPage page)
+        {
+            GetFighterButton(page).Enabled = true;
+        }
+
+        public static void SetupRandomizeProgress(ProgressBar progress, int max)
         {
             progress.Visible = true;
             progress.Minimum = 0;
@@ -152,7 +154,7 @@ namespace SmashUltimateEditor.Helpers
             progress.Step = 1;
         }
 
-        public static void SetPageName(ref TabPage page, string tabName, int collectionIndex)
+        public static void SetPageName(TabPage page, string tabName, int collectionIndex)
         {
             page.Text = String.Format("{0} | [{1}]", tabName, collectionIndex);
         }

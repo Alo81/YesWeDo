@@ -230,7 +230,7 @@ namespace SmashUltimateEditor.DataTables
             }
             if (GetType().Name == "Fighter")
             {
-                Button b = page.Controls.OfType<Button>().FirstOrDefault();
+                Button b = UiHelper.GetFighterButton(page);
                 if (!(b == default))
                 {
                     b.Name = collectionIndex.ToString();
@@ -404,14 +404,15 @@ namespace SmashUltimateEditor.DataTables
             // Set method to update event label options when event changes.  
             if (type == typeof(Battle))
             {
-                var subPage = subControl.TabPages[(int)Battle_Page.Events];
-                dataTbls.SetEventOnChange(ref subPage);
-            }
-            // If battle, add Spirit image buttons.  
-            if (type == typeof(Battle))
-            {
-                var pageNum = (int)Battle_Page.Basics;
+                // Add event to set event labels when event type changes.  
+                var pageNum = (int)Battle_Page.Events;
                 var subPage = subControl.TabPages[pageNum];
+
+                dataTbls.SetEventOnChange(ref subPage);
+
+                // Add Load spirit image buttons to the Battle basics page.  
+                pageNum = (int)Battle_Page.Basics;
+                subPage = subControl.TabPages[pageNum];
                 currentPos = points[pageNum];
 
                 // Force buttons onto new column.  
@@ -421,12 +422,11 @@ namespace SmashUltimateEditor.DataTables
                 {
                     Button b = UiHelper.GetEmptySpiritImageButton(UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Button));
                     b.Text = b.Name = b.Text.Replace('#', i.ToString()[0]);
-                    // dataTbls.SetRemoveFighterButtonMethod(ref b);    // Set GetEmprtSpiritImageButtonMethod
+                    dataTbls.SetLoadSpiritImageButtonMethod(ref b);    // Set GetEmprtSpiritImageButtonMethod
                     subPage.Controls.Add(b);
 
                     points[pageNum] = currentPos;
                 }
-
             }
 
             return topLevelPage;

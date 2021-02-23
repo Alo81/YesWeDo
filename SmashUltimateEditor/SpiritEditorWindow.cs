@@ -29,6 +29,7 @@ namespace SmashUltimateEditor
             dataTbls.tabs = tabControlData;
             dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
+            dataTbls.informativeLabel = labelInformative;
 
             if (dataTbls.battleData.HasData())
             {
@@ -236,6 +237,31 @@ namespace SmashUltimateEditor
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
                 FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
+            }
+
+            UiHelper.PopUpMessage("Export complete.");
+        }
+        private void ExportBattleForSwitch_Click(object sender, EventArgs e)
+        {
+            dataTbls.SaveLocal();
+            BattleDataOptions singleBattle = new BattleDataOptions();
+            FighterDataOptions fighters = new FighterDataOptions();
+
+            singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
+            fighters.AddFighters(dataTbls.selectedFighters);
+
+            var saveDialog = new SaveFileDialog()
+            {
+                Title = "Export Spirit Battle",
+                Filter = "PRC|*.prc*",
+                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, singleBattle.battle_id.First()),
+                InitialDirectory = dataTbls.config.file_directory_custom_battles
+            };
+
+            var result = saveDialog.ShowDialog();
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
+            {
+                FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted: true, encrypted: false);
             }
 
             UiHelper.PopUpMessage("Export complete.");

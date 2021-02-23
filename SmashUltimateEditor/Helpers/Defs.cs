@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace SmashUltimateEditor
 {
@@ -41,6 +42,8 @@ namespace SmashUltimateEditor
         public const int BUTTON_PADDING = 5;
         public const int ROWS = 18;
         public const int COLUMNS = 4;
+
+        public static Color labelBack = Color.FromArgb(255, 205, 205);
 
         public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
         public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";

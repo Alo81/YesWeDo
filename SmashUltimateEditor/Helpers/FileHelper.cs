@@ -40,6 +40,7 @@ namespace SmashUltimateEditor.Helpers
                 if (randomized)
                 {
                     CopyPreloadFiles(fileLocation);
+                    CopySpiritImages(fileLocation);
                     fileLocation += GetFilePath(fileName);
                 }
                 Directory.CreateDirectory(fileLocation);
@@ -172,7 +173,7 @@ namespace SmashUltimateEditor.Helpers
         }
         public static void CopySpiritImages(string fileLocation)
         {
-            CopyFiles(config.file_directory_spirit_images, fileLocation);
+            CopyFilesWithRegexMatch(config.file_directory_spirit_images, fileLocation);
         }
 
         public static string GetFilePath(string fileName)

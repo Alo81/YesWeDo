@@ -18,6 +18,16 @@ namespace SmashUltimateEditor
 {
     public partial class DataTbls
     {
+        public List<Fighter> selectedFighters;
+        public Battle selectedBattle;
+        public Stack<TabPage> tabStorage;
+
+        public Config config;
+
+        public TabControl tabs;
+        public ProgressBar progress;
+        public Label informativeLabel;
+
         public List<IDataOptions> dataOptions;
 
         public BattleDataOptions battleData
@@ -70,15 +80,6 @@ namespace SmashUltimateEditor
             dataOptions.Add(options);
         }
 
-        public List<Fighter> selectedFighters;
-        public Battle selectedBattle;
-        public Stack<TabPage> tabStorage = new Stack<TabPage>();
-
-        public Config config;
-
-        public TabControl tabs;
-        public ProgressBar progress;
-
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
         public TabPage EmptyBattlePage
@@ -105,6 +106,7 @@ namespace SmashUltimateEditor
             selectedFighters = new List<Fighter>();
             selectedBattle = new Battle();
             config = new Config();
+            tabStorage = new Stack<TabPage>();
 
             var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location);
 
@@ -268,6 +270,7 @@ namespace SmashUltimateEditor
                 var dest = config.file_directory_spirit_images;
 
                 FileHelper.CopyFile(source, dest, name);
+                UiHelper.SetInformativeLabel(ref informativeLabel, $"Spirit Image {index} imported.");
             }
         }
 

@@ -271,6 +271,31 @@ namespace SmashUltimateEditor.Helpers
         public static void SetInformativeLabel(ref Label label, string message)
         {
             label.Text = message;
+
+            // Cycle color.
+            Color c = label.BackColor;
+            int r = c.R;    int g = c.G;    int b = c.B;
+            int t;
+            if(r == 255)
+            {
+                t = g;
+                g = r;
+                r = t;
+            }
+            else if (g == 255)
+            {
+                t = b;
+                b = g;
+                g = t;
+            }
+            else if (b == 255)
+            {
+                t = r;
+                r = b;
+                b = t;
+            }
+
+            label.BackColor = Color.FromArgb(r, g, b);
         }
     }
 }

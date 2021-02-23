@@ -334,6 +334,7 @@ namespace SmashUltimateEditor
             this.labelInformative.Name = "labelInformative";
             this.labelInformative.Size = new System.Drawing.Size(0, 20);
             this.labelInformative.TabIndex = 14;
+            this.labelInformative.BackColor = Defs.labelBack;
             // 
             // SpiritEditorWindow
             // 

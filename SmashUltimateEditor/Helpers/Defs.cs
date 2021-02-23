@@ -109,7 +109,7 @@ namespace SmashUltimateEditor
             { "gum_floor",      new List<string>() { "adhesion_floor_invalid" } },
             { "ice_floor",      new List<string>() { "slip_invalid" } },
             { "mist_area",      new List<string>() { "fog_invalid" } },
-            { "poison_area",    new List<string>() { "poison_heal", "poison_invalid", "fog_invalid", "poison_half" } },
+            { "poison_area",    new List<string>() { "poison_heal", "poison_invalid", "fog_invalid", "poison_half", "fog_invalid" } },
             { "poison_floor",   new List<string>() { "poison_heal", "poison_invalid", "poison_half" } },
             { "sleep_floor",    new List<string>() { "sleep_invalid" } },
             { "wind_area",      new List<string>() { "wind_invalid", "wind_half" } }

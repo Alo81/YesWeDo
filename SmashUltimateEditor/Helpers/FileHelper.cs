@@ -20,10 +20,13 @@ namespace SmashUltimateEditor.Helpers
             // Do multiple randomizers, in case an impossible battle happens.  
             var fileName = config.file_name_encr;
             var directory = config.file_directory_randomized + "Randomizer " + seed + " " + iteration;  // Randomizer ### 1
-            Save(battleData, fighterData, directory, fileName, unencrypted:false, randomized:true);
+            Save(battleData, fighterData, directory, fileName, unencrypted:false, useFolderStructure: true);
+
+            CopyPreloadFiles(directory);
+            CopySpiritImages(directory);
         }
 
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool randomized = false)
+        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false)
         {
             fileLocation += @"\";
 
@@ -37,10 +40,8 @@ namespace SmashUltimateEditor.Helpers
             if (encrypted)
             {
                 // Save an encrypted version for direct placement on SD card. 
-                if (randomized)
+                if (useFolderStructure)
                 {
-                    CopyPreloadFiles(fileLocation);
-                    CopySpiritImages(fileLocation);
                     fileLocation += GetFilePath(fileName);
                 }
                 Directory.CreateDirectory(fileLocation);
@@ -86,7 +87,7 @@ namespace SmashUltimateEditor.Helpers
             XmlHelper.WriteXmlToFile(fileLocation, doc);
         }
 
-        public static FileInfo[] GetFiles(string file_location)
+        public static IEnumerable<FileInfo> GetFiles(string file_location)
         {
             try
             {
@@ -97,7 +98,28 @@ namespace SmashUltimateEditor.Helpers
                 UiHelper.PopUpMessage(ex.Message);
                 return null;
             }
+        }
+        public static IEnumerable<FileInfo> GetFilesMatching(string file_location, string match)
+        {
+            try
+            {
+                var files = new DirectoryInfo(file_location).GetFiles();
+                var matchFiles = new List<FileInfo>();
+                foreach(var file in files)
+                {
+                    if(SpiritImageMatchesBattle(file, match))
+                    {
+                        matchFiles.Add(file);
+                    }
+                }
 
+                return matchFiles;
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+                return null;
+            }
         }
 
         public static string CopyFile(string source, string dest, string fileName)
@@ -127,10 +149,9 @@ namespace SmashUltimateEditor.Helpers
             return "";
         }
 
-        public static void CopyFiles(string source, string dest)
+        public static void CopyFiles(IEnumerable<FileInfo> files, string dest)
         {
             StringBuilder errorMessage = new StringBuilder();
-            var files = GetFiles(source);
 
             foreach (var file in files)
             {
@@ -147,10 +168,9 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
-        public static void CopyFilesWithRegexMatch(string source, string dest)
+        public static void CopyFilesWithRegexMatch(IEnumerable<FileInfo> files, string dest)
         {
             StringBuilder errorMessage = new StringBuilder();
-            var files = GetFiles(source);
 
             foreach (var file in files)
             {
@@ -169,11 +189,15 @@ namespace SmashUltimateEditor.Helpers
 
         public static void CopyPreloadFiles(string fileLocation)
         {
-            CopyFiles(config.file_directory_preload, fileLocation);
+            CopyFiles(GetFiles(config.file_directory_preload), fileLocation);
         }
         public static void CopySpiritImages(string fileLocation)
         {
-            CopyFilesWithRegexMatch(config.file_directory_spirit_images, fileLocation);
+            CopyFilesWithRegexMatch(GetFiles(config.file_directory_spirit_images), fileLocation);
+        }
+        public static void CopySpiritImagesForBattle(string fileLocation, string battle_id)
+        {
+            CopyFilesWithRegexMatch(GetFilesMatching(config.file_directory_spirit_images, battle_id), fileLocation);
         }
 
         public static string GetFilePath(string fileName)
@@ -196,6 +220,11 @@ namespace SmashUltimateEditor.Helpers
                 }
             }
             return "";
+        }
+
+        public static bool SpiritImageMatchesBattle(FileInfo file, string battle_id)
+        {
+            return file.Name.Contains(battle_id);
         }
     }
 }

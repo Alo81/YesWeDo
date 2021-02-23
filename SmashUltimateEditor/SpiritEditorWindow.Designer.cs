@@ -47,6 +47,8 @@ namespace SmashUltimateEditor
             this.SaveAsFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportBattleFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportBattleForSwitch = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.importBattleOverFile = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportBattles = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportBattlesFromFolderFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,9 +74,10 @@ namespace SmashUltimateEditor
             // dropdownSpiritData
             // 
             this.dropdownSpiritData.FormattingEnabled = true;
-            this.dropdownSpiritData.Location = new System.Drawing.Point(11, 35);
+            this.dropdownSpiritData.Location = new System.Drawing.Point(10, 26);
+            this.dropdownSpiritData.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dropdownSpiritData.Name = "dropdownSpiritData";
-            this.dropdownSpiritData.Size = new System.Drawing.Size(457, 28);
+            this.dropdownSpiritData.Size = new System.Drawing.Size(400, 23);
             this.dropdownSpiritData.TabIndex = 4;
             this.dropdownSpiritData.SelectedIndexChanged += new System.EventHandler(this.dropdownSpiritData_SelectedIndexChanged);
             // 
@@ -87,19 +90,19 @@ namespace SmashUltimateEditor
             this.tabControlData.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlData.Location = new System.Drawing.Point(11, 109);
-            this.tabControlData.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabControlData.MinimumSize = new System.Drawing.Size(600, 750);
+            this.tabControlData.Location = new System.Drawing.Point(10, 82);
+            this.tabControlData.MinimumSize = new System.Drawing.Size(525, 562);
             this.tabControlData.Name = "tabControlData";
             this.tabControlData.SelectedIndex = 0;
-            this.tabControlData.Size = new System.Drawing.Size(854, 808);
+            this.tabControlData.Size = new System.Drawing.Size(747, 606);
             this.tabControlData.TabIndex = 5;
             // 
             // btnAddFighter
             // 
-            this.btnAddFighter.Location = new System.Drawing.Point(475, 35);
+            this.btnAddFighter.Location = new System.Drawing.Point(416, 26);
+            this.btnAddFighter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAddFighter.Name = "btnAddFighter";
-            this.btnAddFighter.Size = new System.Drawing.Size(107, 29);
+            this.btnAddFighter.Size = new System.Drawing.Size(94, 22);
             this.btnAddFighter.TabIndex = 6;
             this.btnAddFighter.Text = "Add Fighter";
             this.btnAddFighter.UseVisualStyleBackColor = true;
@@ -108,9 +111,10 @@ namespace SmashUltimateEditor
             // btnRandomizeAll
             // 
             this.btnRandomizeAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRandomizeAll.Location = new System.Drawing.Point(764, 35);
+            this.btnRandomizeAll.Location = new System.Drawing.Point(668, 26);
+            this.btnRandomizeAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRandomizeAll.Name = "btnRandomizeAll";
-            this.btnRandomizeAll.Size = new System.Drawing.Size(104, 29);
+            this.btnRandomizeAll.Size = new System.Drawing.Size(91, 22);
             this.btnRandomizeAll.TabIndex = 8;
             this.btnRandomizeAll.Text = "Randomize";
             this.btnRandomizeAll.UseVisualStyleBackColor = true;
@@ -119,10 +123,9 @@ namespace SmashUltimateEditor
             // textboxSeed
             // 
             this.textboxSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxSeed.Location = new System.Drawing.Point(764, 71);
-            this.textboxSeed.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textboxSeed.Location = new System.Drawing.Point(668, 53);
             this.textboxSeed.Name = "textboxSeed";
-            this.textboxSeed.Size = new System.Drawing.Size(103, 27);
+            this.textboxSeed.Size = new System.Drawing.Size(91, 23);
             this.textboxSeed.TabIndex = 9;
             this.textboxSeed.Text = "-1";
             // 
@@ -135,13 +138,15 @@ namespace SmashUltimateEditor
             this.SaveAsFile,
             this.toolStripSeparator1,
             this.ExportBattleFile,
+            this.exportBattleForSwitch,
+            this.toolStripSeparator5,
             this.importBattleOverFile,
             this.ImportBattles,
             this.ImportBattlesFromFolderFile,
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // OpenDbFile
@@ -149,21 +154,21 @@ namespace SmashUltimateEditor
             this.OpenDbFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.OpenDbFile.Name = "OpenDbFile";
             this.OpenDbFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.OpenDbFile.Size = new System.Drawing.Size(270, 26);
+            this.OpenDbFile.Size = new System.Drawing.Size(229, 22);
             this.OpenDbFile.Text = "&Open Db";
             this.OpenDbFile.Click += new System.EventHandler(this.OpenDbFile_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(267, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(226, 6);
             // 
             // SaveFile
             // 
             this.SaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.SaveFile.Name = "SaveFile";
             this.SaveFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.SaveFile.Size = new System.Drawing.Size(270, 26);
+            this.SaveFile.Size = new System.Drawing.Size(229, 22);
             this.SaveFile.Text = "&Save";
             this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
             // 
@@ -172,27 +177,39 @@ namespace SmashUltimateEditor
             this.SaveAsFile.Name = "SaveAsFile";
             this.SaveAsFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.SaveAsFile.Size = new System.Drawing.Size(270, 26);
+            this.SaveAsFile.Size = new System.Drawing.Size(229, 22);
             this.SaveAsFile.Text = "Save &As";
             this.SaveAsFile.Click += new System.EventHandler(this.SaveAsFile_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(267, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(226, 6);
             // 
             // ExportBattleFile
             // 
             this.ExportBattleFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ExportBattleFile.Name = "ExportBattleFile";
-            this.ExportBattleFile.Size = new System.Drawing.Size(270, 26);
+            this.ExportBattleFile.Size = new System.Drawing.Size(229, 22);
             this.ExportBattleFile.Text = "&Export Battle";
-            this.ExportBattleFile.Click += new System.EventHandler(this.ExportBattleFile_Click);
+            this.ExportBattleFile.Click += new System.EventHandler(this.ExportModForRelease_Click);
+            // 
+            // exportBattleForSwitch
+            // 
+            this.exportBattleForSwitch.Name = "exportBattleForSwitch";
+            this.exportBattleForSwitch.Size = new System.Drawing.Size(229, 22);
+            this.exportBattleForSwitch.Text = "Export Battles for Switch";
+            this.exportBattleForSwitch.Click += new System.EventHandler(this.ExportAllForSwitch_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(226, 6);
             // 
             // importBattleOverFile
             // 
             this.importBattleOverFile.Name = "importBattleOverFile";
-            this.importBattleOverFile.Size = new System.Drawing.Size(270, 26);
+            this.importBattleOverFile.Size = new System.Drawing.Size(229, 22);
             this.importBattleOverFile.Text = "Import Battle Over Current";
             this.importBattleOverFile.Click += new System.EventHandler(this.ImportBattleOverFile_Click);
             // 
@@ -200,7 +217,7 @@ namespace SmashUltimateEditor
             // 
             this.ImportBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ImportBattles.Name = "ImportBattles";
-            this.ImportBattles.Size = new System.Drawing.Size(270, 26);
+            this.ImportBattles.Size = new System.Drawing.Size(229, 22);
             this.ImportBattles.Text = "Import Battle(s)";
             this.ImportBattles.Click += new System.EventHandler(this.ImportBattle_Click);
             // 
@@ -208,19 +225,19 @@ namespace SmashUltimateEditor
             // 
             this.ImportBattlesFromFolderFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ImportBattlesFromFolderFile.Name = "ImportBattlesFromFolderFile";
-            this.ImportBattlesFromFolderFile.Size = new System.Drawing.Size(270, 26);
+            this.ImportBattlesFromFolderFile.Size = new System.Drawing.Size(229, 22);
             this.ImportBattlesFromFolderFile.Text = "Import Battles From Folder";
             this.ImportBattlesFromFolderFile.Click += new System.EventHandler(this.ImportFolderFile_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(267, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(226, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(270, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CloseApplication_Click);
             // 
@@ -230,20 +247,20 @@ namespace SmashUltimateEditor
             this.RandomizeAllTool,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // RandomizeAllTool
             // 
             this.RandomizeAllTool.Name = "RandomizeAllTool";
-            this.RandomizeAllTool.Size = new System.Drawing.Size(189, 26);
+            this.RandomizeAllTool.Size = new System.Drawing.Size(150, 22);
             this.RandomizeAllTool.Text = "&Randomize All";
             this.RandomizeAllTool.Click += new System.EventHandler(this.RandomizeAllTool_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(189, 26);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // menuStrip1
@@ -254,17 +271,16 @@ namespace SmashUltimateEditor
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
-            this.menuStrip1.Size = new System.Drawing.Size(882, 30);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(772, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // randomizeProgress
             // 
-            this.randomizeProgress.Location = new System.Drawing.Point(11, 79);
-            this.randomizeProgress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.randomizeProgress.Location = new System.Drawing.Point(10, 59);
             this.randomizeProgress.Name = "randomizeProgress";
-            this.randomizeProgress.Size = new System.Drawing.Size(418, 23);
+            this.randomizeProgress.Size = new System.Drawing.Size(366, 17);
             this.randomizeProgress.TabIndex = 10;
             // 
             // toolStripSeparator4
@@ -319,9 +335,9 @@ namespace SmashUltimateEditor
             // 
             this.labelSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSeed.AutoSize = true;
-            this.labelSeed.Location = new System.Drawing.Point(656, 75);
+            this.labelSeed.Location = new System.Drawing.Point(574, 56);
             this.labelSeed.Name = "labelSeed";
-            this.labelSeed.Size = new System.Drawing.Size(102, 20);
+            this.labelSeed.Size = new System.Drawing.Size(80, 15);
             this.labelSeed.TabIndex = 11;
             this.labelSeed.Text = "Random Seed";
             // 
@@ -330,17 +346,17 @@ namespace SmashUltimateEditor
             this.labelInformative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInformative.AutoSize = true;
-            this.labelInformative.Location = new System.Drawing.Point(14, 921);
+            this.labelInformative.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))));
+            this.labelInformative.Location = new System.Drawing.Point(12, 691);
             this.labelInformative.Name = "labelInformative";
-            this.labelInformative.Size = new System.Drawing.Size(0, 20);
+            this.labelInformative.Size = new System.Drawing.Size(0, 15);
             this.labelInformative.TabIndex = 14;
-            this.labelInformative.BackColor = Defs.labelBack;
             // 
             // SpiritEditorWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 953);
+            this.ClientSize = new System.Drawing.Size(772, 715);
             this.Controls.Add(this.labelInformative);
             this.Controls.Add(this.labelSeed);
             this.Controls.Add(this.randomizeProgress);
@@ -351,8 +367,7 @@ namespace SmashUltimateEditor
             this.Controls.Add(this.dropdownSpiritData);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MinimumSize = new System.Drawing.Size(750, 950);
+            this.MinimumSize = new System.Drawing.Size(658, 722);
             this.Name = "SpiritEditorWindow";
             this.Text = "Smash Spirits Editor";
             this.menuStrip1.ResumeLayout(false);
@@ -401,6 +416,8 @@ namespace SmashUltimateEditor
         private Label labelSeed;
         private Label labelInformative;
         private ToolStripMenuItem importBattleOverFile;
+        private ToolStripMenuItem exportBattleForSwitch;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
 

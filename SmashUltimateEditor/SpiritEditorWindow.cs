@@ -241,7 +241,27 @@ namespace SmashUltimateEditor
 
             UiHelper.PopUpMessage("Export complete.");
         }
-        private void ExportBattleForSwitch_Click(object sender, EventArgs e)
+        private void ExportAllForSwitch_Click(object sender, EventArgs e)
+        {
+            dataTbls.SaveLocal();
+
+            var openFolderDialog = new FolderBrowserDialog
+            {
+
+                Description = "Export Battles for Switch.",
+                SelectedPath = dataTbls.config.file_directory_custom_battles
+            };
+
+            var result = openFolderDialog.ShowDialog();
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openFolderDialog?.SelectedPath))
+            {
+                FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true);
+                FileHelper.CopySpiritImages(openFolderDialog.SelectedPath);
+            }
+
+            UiHelper.PopUpMessage("Export complete.");
+        }
+        private void ExportModForRelease_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
             BattleDataOptions singleBattle = new BattleDataOptions();
@@ -250,18 +270,20 @@ namespace SmashUltimateEditor
             singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
             fighters.AddFighters(dataTbls.selectedFighters);
 
-            var saveDialog = new SaveFileDialog()
+            var openFolderDialog = new FolderBrowserDialog
             {
-                Title = "Export Spirit Battle",
-                Filter = "PRC|*.prc*",
-                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, singleBattle.battle_id.First()),
-                InitialDirectory = dataTbls.config.file_directory_custom_battles
+                Description = "Export Mod for Release.",
+                SelectedPath = dataTbls.config.file_directory_custom_battles
             };
 
-            var result = saveDialog.ShowDialog();
-            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
+            var result = openFolderDialog.ShowDialog();
+            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openFolderDialog?.SelectedPath))
             {
-                FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted: true, encrypted: false);
+                var fileName = String.Format("{0}_{1}", dataTbls.config.file_name, singleBattle.battle_id.First());
+
+                FileHelper.Save(singleBattle, fighters, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true); // Save encrypted version for releasing straight to Switch.
+                
+                FileHelper.CopySpiritImagesForBattle(openFolderDialog.SelectedPath, dataTbls.selectedBattle.battle_id);
             }
 
             UiHelper.PopUpMessage("Export complete.");

@@ -250,7 +250,7 @@ namespace SmashUltimateEditor.DataTables
             return val == "none" ? "" : val;
         }
 
-        public static DataTbl DetermineXmlTypeFromFirstLevel(MemoryStream stream)
+        public static DataTbl DetermineXmlTypeFromFirstLevel(Stream stream)
         {
             XmlReader reader = XmlReader.Create(stream);
 

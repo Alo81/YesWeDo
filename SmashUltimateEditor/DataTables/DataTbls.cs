@@ -82,6 +82,10 @@ namespace SmashUltimateEditor
 
         public int pageCount { get { return selectedFighters.Sum(x => x.pageCount) + selectedBattle.pageCount; } }
         public int tabCount { get { return tabs.TabPages.Count; } }
+        public int tabStorageCount { get { return tabStorage.Count; } }
+        public int totalTabCount { get { return tabCount + tabStorageCount; } }
+        public bool HasEnoughPages { get { return tabCount >= pageCount; } }
+
         public TabPage EmptyBattlePage
         {
             get
@@ -97,8 +101,6 @@ namespace SmashUltimateEditor
                 return Fighter.BuildEmptyPage(this);
             }
         }
-
-        public bool HasEnoughPages { get { return tabs.TabPages.Count >= pageCount; } }
 
         public DataTbls()
         {
@@ -282,10 +284,6 @@ namespace SmashUltimateEditor
 
         public void RefreshTabs()
         {
-            if(tabs is null)
-            {
-                tabs = new TabControl();
-            }
             PopulateTabs();
             BuildEmptyTabs();
 
@@ -361,6 +359,10 @@ namespace SmashUltimateEditor
 
         public void PopulateTabs()
         {
+            if (tabs is null)
+            {
+                tabs = new TabControl();
+            }
             HideTabs();
             ShowTabs();
         }

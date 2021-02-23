@@ -36,18 +36,13 @@ namespace SmashUltimateEditor.Helpers
             }
         }
 
-        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "")
+        public static Stream GetStreamFromFile(string fileName)
         {
-            bool parseData = false;
-            bool firstPass = false;
-            bool sharedXmlName;
-            IDataTbl dataTable;
-            var results = new DataOptions();
-
             // Copy the stream to memory, so we're not holding the resource open.  
             MemoryStream stream = new MemoryStream();
             XmlReader reader;
 
+            // Open file into stream.  
             try
             {
                 using (Stream fileStream = new FileStream(fileName, FileMode.Open))
@@ -56,41 +51,81 @@ namespace SmashUltimateEditor.Helpers
                     stream.Position = 0;
                 }
 
-                reader = XmlReader.Create(stream);
+                return stream;
             }
             catch (Exception ex)
             {
                 UiHelper.PopUpMessage(ex.Message);
-                return new DataOptions();
+                return null;
             }
+        }
 
+        public static Stream GetStreamFromEncryptedFile(string fileName, string fileLocationLabels)
+        {
+            var stream = new MemoryStream();
+
+            try
+            {
+                // Try opening again, and decrypting this time.
+                XmlDocument doc = PrcCrypto.DisassembleEncrypted(fileName, fileLocationLabels);
+                doc.Save(stream);
+                stream.Position = 0;
+                return stream;
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+                return null;
+            }
+        }
+
+        public static XmlReader GetXmlReaderFromStream(Stream stream)
+        {
+            // Open stream into reader.  
+            try
+            {
+                return  XmlReader.Create(stream);
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+                return null;
+            }
+        }
+
+        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "")
+        {
+            bool parseData = false;
+            bool firstPass = false;
+            bool sharedXmlName;
+            IDataTbl dataTable;
+            var results = new DataOptions();
+
+            var stream = GetStreamFromFile(fileName);
+            var reader = GetXmlReaderFromStream(stream);
+
+            // Try to read.  If we can't read - it might be encrypted.  Try to decrypt.  
             try
             {
                 reader.Read();
             }
             catch
             {
-                // Close and dispose reader and stream.
-                reader.Dispose();
-                stream.Dispose();
-                stream = new MemoryStream();
-
                 try
                 {
-                    // Try opening again, and decrypting this time.
-                    XmlDocument doc = PrcCrypto.DisassembleEncrypted(fileName, fileLocationLabels);
-                    doc.Save(stream);
-                    stream.Position = 0;
-                    reader = XmlReader.Create(stream);
+                    // Close and dispose reader and stream.
+                    reader.Dispose();
+                    stream = GetStreamFromEncryptedFile(fileName, fileLocationLabels);
+                    reader = GetXmlReaderFromStream(stream);
                     reader.Read();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    UiHelper.PopUpMessage(ex.Message);
                     return new DataOptions();
                 }
             }
 
+            // Read through entire file, and determine type.  
             try
             {
                 // Read the whole file.  
@@ -106,7 +141,6 @@ namespace SmashUltimateEditor.Helpers
 
                         if (sharedXmlName)
                         {
-                            MemoryStream firstLevelCopy = new MemoryStream();
                             // Store the position, read from the beginning, restore the position.
                             var position = stream.Position;
                             stream.Position = 0;

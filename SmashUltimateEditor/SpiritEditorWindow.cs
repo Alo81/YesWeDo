@@ -256,6 +256,7 @@ namespace SmashUltimateEditor
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openFolderDialog?.SelectedPath))
             {
                 FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true);
+                FileHelper.CopyPreloadFiles(openFolderDialog.SelectedPath);
                 FileHelper.CopySpiritImages(openFolderDialog.SelectedPath);
             }
 
@@ -283,6 +284,7 @@ namespace SmashUltimateEditor
 
                 FileHelper.Save(singleBattle, fighters, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true); // Save encrypted version for releasing straight to Switch.
                 
+                FileHelper.CopyPreloadFiles(openFolderDialog.SelectedPath);
                 FileHelper.CopySpiritImagesForBattle(openFolderDialog.SelectedPath, dataTbls.selectedBattle.battle_id);
             }
 

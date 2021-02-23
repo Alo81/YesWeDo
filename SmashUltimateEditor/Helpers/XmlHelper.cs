@@ -40,7 +40,6 @@ namespace SmashUltimateEditor.Helpers
         {
             // Copy the stream to memory, so we're not holding the resource open.  
             MemoryStream stream = new MemoryStream();
-            XmlReader reader;
 
             // Open file into stream.  
             try

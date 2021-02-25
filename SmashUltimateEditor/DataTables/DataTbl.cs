@@ -207,7 +207,7 @@ namespace SmashUltimateEditor.DataTables
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
             {
-                if (!String.IsNullOrWhiteSpace(text.Text))
+                if (!String.IsNullOrEmpty(text.Text))
                     this.SetValueFromName(text.Name, text.Text);
             }
         }

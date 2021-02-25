@@ -36,7 +36,7 @@ namespace SmashUltimateEditor.UI
         public void SetComboBox(string name, List<string> opts, Point pos, string value = "")
         {
             SetComboBoxDataSource(opts);
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!String.IsNullOrEmpty(value))
             {
                 SetComboBoxValue(value);
             }

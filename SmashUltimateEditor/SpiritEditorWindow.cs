@@ -36,7 +36,6 @@ namespace SmashUltimateEditor
                 buildFighterDataTab(dataTbls?.battleData?.battle_id?.First());
             }
             LoadAllFiles();
-            dataTbls.UpdateEventsForDbValues();
         }
 
         private void buildFighterDataTab(string battle_id)

@@ -202,9 +202,9 @@ namespace SmashUltimateEditor
         {
             get { return _dataList.Select(x => x.corps.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> _0x0f2077926c
+        public List<string> fix_corps_color
         {
-            get { return _dataList.Select(x => x._0x0f2077926c.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.fix_corps_color.ToString()).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> hp
         {

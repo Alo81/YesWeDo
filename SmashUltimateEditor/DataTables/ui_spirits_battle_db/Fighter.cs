@@ -191,7 +191,7 @@ namespace SmashUltimateEditor
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool corps { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
-        public bool _0x0f2077926c { get; set; }
+        public bool fix_corps_color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public ushort hp { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]

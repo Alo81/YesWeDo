@@ -2,6 +2,7 @@
 using SmashUltimateEditor.DataTables;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -29,12 +30,58 @@ namespace SmashUltimateEditor.Helpers
         }
         public static void GetNamesPerType(Type type)
         {
+            var allProperties = new List<string>();
             var dataTblTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass
-                                    && type.IsSubclassOf(typeof(DataTbl)));
+                                    && t.IsSubclassOf(typeof(DataTbl)));
 
             var dataTblPropertiesMatchingType = dataTblTypes.Select(x => x.GetProperties().Where(y => y.PropertyType == type));
 
-            var results = dataTblPropertiesMatchingType.GroupBy(x => x.Select(y => y.Name));
+            foreach (var prop in dataTblPropertiesMatchingType)
+            {
+                foreach(var indProp in prop)
+                {
+                    allProperties.Add(indProp.Name);
+                }
+            }
         }
+
+        public static void WriteHashSetToFile(HashSet<string> dict, string fileName)
+        {
+            using StreamWriter writer = new StreamWriter(fileName);
+
+            foreach (var word in dict.OrderBy(x => x))
+            {
+                writer.WriteLine(word);
+            }
+
+            writer.Close();
+            writer.Dispose();
+        }
+
+        public static void GetDictionaryFromLabels(string inFileName, string outFileName)
+        {
+            var delim = '_';
+            var file = File.Open(inFileName, FileMode.Open);
+            var reader = new StreamReader(file);
+            HashSet<string> dict = new HashSet<string>();
+            HashSet<string> comboDict = new HashSet<string>();
+
+            while (!reader.EndOfStream)
+            {
+                var label = reader.ReadLine();
+                var subWords = label.Split(delim);
+
+                foreach(var word in subWords.Where(x => x.Length > 0 && !Char.IsDigit(x[0])))
+                {
+                    dict.Add(word);
+                }
+            }
+
+            WriteHashSetToFile(dict, outFileName);
+        }
+
+
+
+
     }
 }

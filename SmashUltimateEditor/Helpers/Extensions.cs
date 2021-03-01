@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmashUltimateEditor.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -111,8 +112,7 @@ namespace SmashUltimateEditor
                 }
                 catch(Exception ex2)
                 {
-                    MessageBox.Show(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex2.Message));
-                    throw ex2;
+                    UiHelper.PopUpMessage(String.Format("Could not set value: {0} for {1}.\r\n\r\n{2}", val, name, ex2.Message));
                 }
             }
         }

@@ -568,7 +568,7 @@ namespace SmashUltimateEditor
             }
             RefreshTabs();
             progress.Visible = false;
-            MessageBox.Show(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", config.randomizer_iterations, config.chaos, seed, config.file_directory_randomized));
+            UiHelper.PopUpMessage(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", config.randomizer_iterations, config.chaos, seed, config.file_directory_randomized));
         }
         #endregion
     }

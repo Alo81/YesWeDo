@@ -134,7 +134,7 @@ namespace SmashUltimateEditor
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("Could not set value from config: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
+                UiHelper.PopUpMessage(String.Format("Could not set value from config: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
                 throw ex;
             }
         }

@@ -91,6 +91,7 @@ namespace SmashUltimateEditor
                 fighter.Cleanup(ref rnd, isMain, isLoseEscort, dataTbls.fighterData.Fighters, isBoss);
             }
             dataTbls.RefreshTabs();
+            UiHelper.SetInformativeLabel(ref labelInformative, $"Page Randomized.");
         }
 
         private void OpenDbFile_Click(object sender, EventArgs e)
@@ -104,7 +105,8 @@ namespace SmashUltimateEditor
                 dbTypes = OpenDbWithFileName(openDialog.FileName);
                 dataTbls.RefreshTabs();
                 var dbTypeCSV = UiHelper.ListToCSV(dbTypes);
-                UiHelper.PopUpMessage($"Opened {dbTypeCSV}");
+
+                UiHelper.SetInformativeLabel(ref labelInformative, $"Opened {dbTypeCSV}");
             }
         }
 
@@ -153,7 +155,7 @@ namespace SmashUltimateEditor
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
+                UiHelper.PopUpMessage(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
             }
 
             return fileDbType;
@@ -234,9 +236,8 @@ namespace SmashUltimateEditor
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
             {
                 FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
+                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
             }
-
-            UiHelper.PopUpMessage("Export complete.");
         }
         private void ExportAllForSwitch_Click(object sender, EventArgs e)
         {
@@ -255,9 +256,9 @@ namespace SmashUltimateEditor
                 FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true);
                 FileHelper.CopyPreloadFiles(openFolderDialog.SelectedPath);
                 FileHelper.CopySpiritImages(openFolderDialog.SelectedPath);
+                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
             }
 
-            UiHelper.PopUpMessage("Export complete.");
         }
         private void ExportModForRelease_Click(object sender, EventArgs e)
         {
@@ -283,9 +284,8 @@ namespace SmashUltimateEditor
                 
                 FileHelper.CopyPreloadFiles(openFolderDialog.SelectedPath);
                 FileHelper.CopySpiritImagesForBattle(openFolderDialog.SelectedPath, dataTbls.selectedBattle.battle_id);
+                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
             }
-
-            UiHelper.PopUpMessage("Export complete.");
         }
 
         private void ImportBattle_Click(object sender, EventArgs e)
@@ -305,7 +305,7 @@ namespace SmashUltimateEditor
                 var battle_id = battles.GetBattleAtIndex(0).battle_id;
                 dropdownSpiritData.SelectedItem = battle_id;
 
-                UiHelper.PopUpMessage("Import complete.");
+                UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
             }
         }
         private void ImportBattleOverFile_Click(object sender, EventArgs e)
@@ -327,7 +327,7 @@ namespace SmashUltimateEditor
                 var battle_id = battles.GetBattleAtIndex(0).battle_id;
                 dropdownSpiritData.SelectedItem = battle_id;
 
-                UiHelper.PopUpMessage("Import complete.");
+                UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
             }
         }
 
@@ -357,11 +357,11 @@ namespace SmashUltimateEditor
                             dataTbls.SetSelectedFighters(battle_id);
                         }
                     }
-                }
-                var selected_battle_id = dataTbls.selectedBattle.battle_id;
-                dropdownSpiritData.SelectedItem = selected_battle_id;
+                    var selected_battle_id = dataTbls.selectedBattle.battle_id;
+                    dropdownSpiritData.SelectedItem = selected_battle_id;
 
-                UiHelper.PopUpMessage("Import complete.");
+                    UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
+                }
             }
             catch 
             { 

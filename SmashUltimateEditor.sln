@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmashUltimateEditor", "Smas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "paracobNet", "..\Alo81\paracobNET\paracobNET\paracobNet.csproj", "{87277E2B-20BA-4F6D-B454-3CFC91FC4A98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashUltimateEditorTests", "SmashUltimateEditorTests\SmashUltimateEditorTests.csproj", "{08BAD841-DE7F-463F-956B-70F2A659A7BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{87277E2B-20BA-4F6D-B454-3CFC91FC4A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87277E2B-20BA-4F6D-B454-3CFC91FC4A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87277E2B-20BA-4F6D-B454-3CFC91FC4A98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

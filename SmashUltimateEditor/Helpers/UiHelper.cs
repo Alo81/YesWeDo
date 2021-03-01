@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
@@ -266,7 +267,7 @@ namespace SmashUltimateEditor.Helpers
 
         public static void PopUpMessage(string message)
         {
-            MessageBox.Show(message);
+            Task.Factory.StartNew(() => MessageBox.Show(message));
         }
         public static void SetInformativeLabel(ref Label label, string message)
         {

@@ -58,7 +58,11 @@ namespace SmashUltimateEditor
 
         public IDataOptions GetOptionsOfType(Type type)
         {
-            return dataOptions.Where(x => x.GetType() == type).First();
+            return GetOptionsOfType(dataOptions, type);
+        }
+        public static IDataOptions GetOptionsOfType(List<IDataOptions> options, Type type)
+        {
+            return options.First(x => x.GetType() == type);
         }
 
         public void AddDataOptions(IDataOptions options)

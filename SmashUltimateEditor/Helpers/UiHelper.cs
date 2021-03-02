@@ -265,6 +265,11 @@ namespace SmashUltimateEditor.Helpers
             return new DirectoryInfo(path).Name;
         }
 
+        public static string GetParentFolder(string path)
+        {
+            return new DirectoryInfo(path).Parent.FullName;
+        }
+
         public static void PopUpMessage(string message)
         {
             Task.Factory.StartNew(() => MessageBox.Show(message));

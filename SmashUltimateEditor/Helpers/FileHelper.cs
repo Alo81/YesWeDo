@@ -1,4 +1,5 @@
-﻿using SmashUltimateEditor.DataTableCollections;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using SmashUltimateEditor.DataTableCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +11,7 @@ namespace SmashUltimateEditor.Helpers
     class FileHelper
     {
         static Config config = new Config();
+        const string defaultFileName = "Select Folder";
         public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
             Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
@@ -32,47 +34,37 @@ namespace SmashUltimateEditor.Helpers
 
             if (unencrypted)
             {
-                // Save the version for local editing. 
-                var unencrLoc = fileLocation + config.unencr_sub + @"\";
-                Directory.CreateDirectory(unencrLoc);
-                SaveToFile(battleData, fighterData, unencrLoc + fileName);
+                SaveUnencrypted(battleData, fighterData, fileLocation + config.unencr_sub, fileName);
             }
             if (encrypted)
             {
-                // Save an encrypted version for direct placement on SD card. 
-                if (useFolderStructure)
-                {
-                    fileLocation += GetFilePath(fileName);
-                }
-                Directory.CreateDirectory(fileLocation);
-                SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
+                SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
             }
         }
 
         // Replace Save calls to calls here.  
-        public static void SaveEncrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool randomized = false)
+        public static void SaveUnencrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName)
         {
-            fileLocation += @"\";
+            fileLocation = FixFolderEndPath(fileLocation);
+
+            // Save the version for local editing. 
+            Directory.CreateDirectory(fileLocation);
+            SaveToFile(battleData, fighterData, fileLocation + fileName);
+        }
+
+        public static void SaveEncrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool useFolderStructure = false)
+        {
+            fileLocation = FixFolderEndPath(fileLocation);
 
             // Save an encrypted version for direct placement on SD card. 
-            if (randomized)
+            if (useFolderStructure)
             {
-                CopyPreloadFiles(fileLocation);
                 fileLocation += GetFilePath(fileName);
             }
             Directory.CreateDirectory(fileLocation);
             SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
         }
 
-        public static void SaveUnencrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName)
-        {
-            fileLocation += @"\";
-
-            // Save the version for local editing. 
-            var unencrLoc = fileLocation + config.unencr_sub + @"\";
-            Directory.CreateDirectory(unencrLoc);
-            SaveToFile(battleData, fighterData, unencrLoc + fileName);
-        }
 
         public static void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
         {
@@ -140,7 +132,7 @@ namespace SmashUltimateEditor.Helpers
             try
             {
                 Directory.CreateDirectory(dest);
-                File.Copy(file.FullName, dest + fileName);
+                File.Copy(file.FullName, dest + fileName, true);
             }
             catch (Exception ex)
             {
@@ -222,9 +214,44 @@ namespace SmashUltimateEditor.Helpers
             return "";
         }
 
+
+        public static CommonSaveFileDialog GetCommonSaveFolderDialog()
+        {
+            var dialog = new CommonSaveFileDialog()
+            {
+                DefaultFileName = "Select Folder",
+                EnsureFileExists = false,
+                EnsurePathExists = false
+            };
+
+            dialog.Filters.Add(new CommonFileDialogFilter("Directory", "directory"));
+
+            return dialog;
+        }
+
+        public static bool IsDefaultFolderDialogPath(string filename)
+        {
+            return UiHelper.GetLastFolder(filename).Equals(defaultFileName);
+        }
+
+        public static string ToDefaultBattleExportFolder(string filename, string battleId)
+        {
+            return UiHelper.GetParentFolder(filename) + @"\" + battleId;
+        }
+
         public static bool SpiritImageMatchesBattle(FileInfo file, string battle_id)
         {
             return file.Name.Contains(battle_id);
+        }
+
+        public static string FixFolderEndPath(string filePath)
+        {
+            if (filePath[filePath.Length-1] != '\\')
+            {
+                return filePath + '\\';
+            }
+
+            return filePath;
         }
     }
 }

@@ -224,8 +224,6 @@ namespace SmashUltimateEditor.Helpers
                 EnsurePathExists = false
             };
 
-            dialog.Filters.Add(new CommonFileDialogFilter("Directory", "directory"));
-
             return dialog;
         }
 
@@ -234,9 +232,9 @@ namespace SmashUltimateEditor.Helpers
             return UiHelper.GetLastFolder(filename).Equals(defaultFileName);
         }
 
-        public static string ToDefaultBattleExportFolder(string filename, string battleId)
+        public static string ToDefaultBattleExportFolder(string filename)
         {
-            return UiHelper.GetParentFolder(filename) + @"\" + battleId;
+            return UiHelper.GetParentFolder(filename);
         }
 
         public static bool SpiritImageMatchesBattle(FileInfo file, string battle_id)

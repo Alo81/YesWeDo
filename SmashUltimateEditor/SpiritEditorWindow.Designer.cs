@@ -47,7 +47,6 @@ namespace SmashUltimateEditor
             this.SaveAsFile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportBattleFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportBattleForSwitch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.importBattleOverFile = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportBattles = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,7 +137,6 @@ namespace SmashUltimateEditor
             this.SaveAsFile,
             this.toolStripSeparator1,
             this.ExportBattleFile,
-            this.exportBattleForSwitch,
             this.toolStripSeparator5,
             this.importBattleOverFile,
             this.ImportBattles,
@@ -154,21 +152,21 @@ namespace SmashUltimateEditor
             this.OpenDbFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.OpenDbFile.Name = "OpenDbFile";
             this.OpenDbFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.OpenDbFile.Size = new System.Drawing.Size(229, 22);
+            this.OpenDbFile.Size = new System.Drawing.Size(215, 22);
             this.OpenDbFile.Text = "&Open Db";
             this.OpenDbFile.Click += new System.EventHandler(this.OpenDbFile_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(226, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(212, 6);
             // 
             // SaveFile
             // 
             this.SaveFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.SaveFile.Name = "SaveFile";
             this.SaveFile.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.SaveFile.Size = new System.Drawing.Size(229, 22);
+            this.SaveFile.Size = new System.Drawing.Size(215, 22);
             this.SaveFile.Text = "&Save";
             this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
             // 
@@ -177,39 +175,32 @@ namespace SmashUltimateEditor
             this.SaveAsFile.Name = "SaveAsFile";
             this.SaveAsFile.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.SaveAsFile.Size = new System.Drawing.Size(229, 22);
+            this.SaveAsFile.Size = new System.Drawing.Size(215, 22);
             this.SaveAsFile.Text = "Save &As";
             this.SaveAsFile.Click += new System.EventHandler(this.SaveAsFile_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(226, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
             // 
             // ExportBattleFile
             // 
             this.ExportBattleFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ExportBattleFile.Name = "ExportBattleFile";
-            this.ExportBattleFile.Size = new System.Drawing.Size(229, 22);
-            this.ExportBattleFile.Text = "&Export Battle";
+            this.ExportBattleFile.Size = new System.Drawing.Size(215, 22);
+            this.ExportBattleFile.Text = "&Export";
             this.ExportBattleFile.Click += new System.EventHandler(this.ExportModForRelease_Click);
-            // 
-            // exportBattleForSwitch
-            // 
-            this.exportBattleForSwitch.Name = "exportBattleForSwitch";
-            this.exportBattleForSwitch.Size = new System.Drawing.Size(229, 22);
-            this.exportBattleForSwitch.Text = "Export Battles for Switch";
-            this.exportBattleForSwitch.Click += new System.EventHandler(this.ExportAllForSwitch_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(226, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(212, 6);
             // 
             // importBattleOverFile
             // 
             this.importBattleOverFile.Name = "importBattleOverFile";
-            this.importBattleOverFile.Size = new System.Drawing.Size(229, 22);
+            this.importBattleOverFile.Size = new System.Drawing.Size(215, 22);
             this.importBattleOverFile.Text = "Import Battle Over Current";
             this.importBattleOverFile.Click += new System.EventHandler(this.ImportBattleOverFile_Click);
             // 
@@ -217,7 +208,7 @@ namespace SmashUltimateEditor
             // 
             this.ImportBattles.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ImportBattles.Name = "ImportBattles";
-            this.ImportBattles.Size = new System.Drawing.Size(229, 22);
+            this.ImportBattles.Size = new System.Drawing.Size(215, 22);
             this.ImportBattles.Text = "Import Battle(s)";
             this.ImportBattles.Click += new System.EventHandler(this.ImportBattle_Click);
             // 
@@ -225,19 +216,19 @@ namespace SmashUltimateEditor
             // 
             this.ImportBattlesFromFolderFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ImportBattlesFromFolderFile.Name = "ImportBattlesFromFolderFile";
-            this.ImportBattlesFromFolderFile.Size = new System.Drawing.Size(229, 22);
+            this.ImportBattlesFromFolderFile.Size = new System.Drawing.Size(215, 22);
             this.ImportBattlesFromFolderFile.Text = "Import Battles From Folder";
             this.ImportBattlesFromFolderFile.Click += new System.EventHandler(this.ImportFolderFile_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(226, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.CloseApplication_Click);
             // 
@@ -416,7 +407,6 @@ namespace SmashUltimateEditor
         private Label labelSeed;
         private Label labelInformative;
         private ToolStripMenuItem importBattleOverFile;
-        private ToolStripMenuItem exportBattleForSwitch;
         private ToolStripSeparator toolStripSeparator5;
     }
 }

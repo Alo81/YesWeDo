@@ -262,37 +262,55 @@ namespace SmashUltimateEditor
         private void ExportModForRelease_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
-            BattleDataOptions singleBattle = new BattleDataOptions();
-            FighterDataOptions fighters = new FighterDataOptions();
-
             var selectedBattleId = dataTbls.selectedBattle.battle_id;
 
-            singleBattle.AddBattle(dataTbls.battleData.GetBattle(selectedBattleId));
-            fighters.AddFighters(dataTbls.selectedFighters);
-
             var dialog = FileHelper.GetCommonSaveFolderDialog();
+
+            dialog.Filters.Add(new CommonFileDialogFilter("Standalone + Packaged", "directory"));
+            dialog.Filters.Add(new CommonFileDialogFilter("Standalone", "directory"));
+            dialog.Filters.Add(new CommonFileDialogFilter("Packaged", "directory"));
 
             dialog.Title = "Export Mod for Release.";
             dialog.InitialDirectory = dataTbls.config.file_directory_custom_battles;
 
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !String.IsNullOrWhiteSpace(dialog?.FileName))
             {
-                var unencryptedFileName = String.Format("{0}_{1}", selectedBattleId, dataTbls.config.file_name);
+                var selectedFilter = dialog.Filters[dialog.SelectedFileTypeIndex-1];
+                var standalone = selectedFilter.DisplayName.Contains("Standalone");
+                var packaged = selectedFilter.DisplayName.Contains("Packaged");
 
-                // Check whether user entered custom folder name.  If not, use standard format.  
-                var encPath = FileHelper.IsDefaultFolderDialogPath(dialog.FileName) ?
-                    FileHelper.ToDefaultBattleExportFolder(dialog.FileName, selectedBattleId):
-                    dialog.FileName;
+                if (standalone)
+                {
+                    BattleDataOptions singleBattle = new BattleDataOptions();
+                    FighterDataOptions fighters = new FighterDataOptions();
 
-                var unencPath = UiHelper.GetParentFolder(encPath);
 
-                FileHelper.SaveUnencrypted(singleBattle, fighters, unencPath, unencryptedFileName);
+                    singleBattle.AddBattle(dataTbls.battleData.GetBattle(selectedBattleId));
+                    fighters.AddFighters(dataTbls.selectedFighters);
+
+                    var unencryptedFileName = String.Format("{0}_{1}", selectedBattleId, dataTbls.config.file_name);
+
+                    // Check whether user entered custom folder name.  If not, use standard format.  
+                    var standalonePath = FileHelper.IsDefaultFolderDialogPath(dialog.FileName) ?
+                        FileHelper.ToDefaultBattleExportFolder(dialog.FileName) :
+                        dialog.FileName;
+
+                    FileHelper.SaveUnencrypted(singleBattle, fighters, standalonePath, unencryptedFileName);
+                }
 
                 // Save encrypted version for releasing straight to Switch.
-                FileHelper.SaveEncrypted(singleBattle, fighters, encPath, dataTbls.config.file_name_encr, useFolderStructure : true); 
-                FileHelper.CopyPreloadFiles(encPath);
-                FileHelper.CopySpiritImagesForBattle(encPath, selectedBattleId);
-                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
+                if (packaged)
+                {
+                    // Check whether user entered custom folder name.  If not, use standard format.  
+                    var packPath = FileHelper.IsDefaultFolderDialogPath(dialog.FileName) ?
+                        FileHelper.ToDefaultBattleExportFolder(dialog.FileName) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
+                        dialog.FileName;
+
+                    FileHelper.SaveEncrypted(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true);
+                    FileHelper.CopyPreloadFiles(packPath);
+                    FileHelper.CopySpiritImages(packPath);
+                    UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
+                }
             }
         }
 
@@ -342,10 +360,9 @@ namespace SmashUltimateEditor
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
             var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
-            var result = openDialog.ShowDialog();
             try
             {
-                if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
+                if ((openDialog.ShowDialog() == CommonFileDialogResult.Ok) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
                 {
                     var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
                     foreach (string file in files)

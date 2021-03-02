@@ -237,6 +237,40 @@ namespace SmashUltimateEditor.Helpers
             return UiHelper.GetParentFolder(filename);
         }
 
+        public static void ExportStandalone(DataTbls dataTbls, string filename)
+        {
+            BattleDataOptions singleBattle = new BattleDataOptions();
+            FighterDataOptions fighters = new FighterDataOptions();
+
+            var selectedBattleId = dataTbls.selectedBattle.battle_id;
+
+            singleBattle.AddBattle(dataTbls.battleData.GetBattle(selectedBattleId));
+            fighters.AddFighters(dataTbls.selectedFighters);
+
+            var unencryptedFileName = String.Format("{0}_{1}", selectedBattleId, dataTbls.config.file_name);
+
+            // Check whether user entered custom folder name.  If not, use standard format.  
+            var standalonePath = FileHelper.IsDefaultFolderDialogPath(filename) ?
+                FileHelper.ToDefaultBattleExportFolder(filename) :
+                filename;
+
+            FileHelper.SaveUnencrypted(singleBattle, fighters, standalonePath, unencryptedFileName);
+        }
+
+        public static void ExportPackaged(DataTbls dataTbls, string filename)
+        {
+            var selectedBattleId = dataTbls.selectedBattle.battle_id;
+
+            // Check whether user entered custom folder name.  If not, use standard format.  
+            var packPath = FileHelper.IsDefaultFolderDialogPath(filename) ?
+                FileHelper.ToDefaultBattleExportFolder(filename) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
+                filename;
+
+            FileHelper.SaveEncrypted(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true);
+            FileHelper.CopyPreloadFiles(packPath);
+            FileHelper.CopySpiritImages(packPath);
+        }
+
         public static bool SpiritImageMatchesBattle(FileInfo file, string battle_id)
         {
             return file.Name.Contains(battle_id);

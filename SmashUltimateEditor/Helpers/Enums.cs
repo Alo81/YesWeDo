@@ -28,6 +28,13 @@
             Image
         }
 
+        public enum Export_Filters
+        {
+            PackagedAndStandalone,
+            Packaged,
+            Standalone
+        }
+
         #region FighterDataTbl
 
         public enum entry_type_opt

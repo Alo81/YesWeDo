@@ -10,6 +10,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static SmashUltimateEditor.Enums;
+using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
@@ -262,13 +264,13 @@ namespace SmashUltimateEditor
         private void ExportModForRelease_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
-            var selectedBattleId = dataTbls.selectedBattle.battle_id;
 
             var dialog = FileHelper.GetCommonSaveFolderDialog();
 
-            dialog.Filters.Add(new CommonFileDialogFilter("Standalone + Packaged", "directory"));
-            dialog.Filters.Add(new CommonFileDialogFilter("Standalone", "directory"));
-            dialog.Filters.Add(new CommonFileDialogFilter("Packaged", "directory"));
+            foreach(var filter in EnumUtil<Export_Filters>.GetValues())
+            {
+                dialog.Filters.Add(new CommonFileDialogFilter(filter, "directory"));
+            }
 
             dialog.Title = "Export Mod for Release.";
             dialog.InitialDirectory = dataTbls.config.file_directory_custom_battles;
@@ -276,41 +278,20 @@ namespace SmashUltimateEditor
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok && !String.IsNullOrWhiteSpace(dialog?.FileName))
             {
                 var selectedFilter = dialog.Filters[dialog.SelectedFileTypeIndex-1];
-                var standalone = selectedFilter.DisplayName.Contains("Standalone");
-                var packaged = selectedFilter.DisplayName.Contains("Packaged");
+                var standalone = selectedFilter.DisplayName.Contains(Export_Filters.Standalone.ToString());
+                var packaged = selectedFilter.DisplayName.Contains(Export_Filters.Packaged.ToString());
 
                 if (standalone)
                 {
-                    BattleDataOptions singleBattle = new BattleDataOptions();
-                    FighterDataOptions fighters = new FighterDataOptions();
-
-
-                    singleBattle.AddBattle(dataTbls.battleData.GetBattle(selectedBattleId));
-                    fighters.AddFighters(dataTbls.selectedFighters);
-
-                    var unencryptedFileName = String.Format("{0}_{1}", selectedBattleId, dataTbls.config.file_name);
-
-                    // Check whether user entered custom folder name.  If not, use standard format.  
-                    var standalonePath = FileHelper.IsDefaultFolderDialogPath(dialog.FileName) ?
-                        FileHelper.ToDefaultBattleExportFolder(dialog.FileName) :
-                        dialog.FileName;
-
-                    FileHelper.SaveUnencrypted(singleBattle, fighters, standalonePath, unencryptedFileName);
+                    FileHelper.ExportStandalone(dataTbls, dialog.FileName);
                 }
 
                 // Save encrypted version for releasing straight to Switch.
                 if (packaged)
                 {
-                    // Check whether user entered custom folder name.  If not, use standard format.  
-                    var packPath = FileHelper.IsDefaultFolderDialogPath(dialog.FileName) ?
-                        FileHelper.ToDefaultBattleExportFolder(dialog.FileName) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
-                        dialog.FileName;
-
-                    FileHelper.SaveEncrypted(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true);
-                    FileHelper.CopyPreloadFiles(packPath);
-                    FileHelper.CopySpiritImages(packPath);
-                    UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
+                    FileHelper.ExportPackaged(dataTbls, dialog.FileName);
                 }
+                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
             }
         }
 

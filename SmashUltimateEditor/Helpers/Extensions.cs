@@ -41,8 +41,16 @@ namespace SmashUltimateEditor
                 if (!typeof(T).IsEnum)
                     throw new ArgumentException("T must be an enumerated type");
 
-                var sorted = (T[]) Enum.GetValues(typeof(T));
-                return sorted.OrderBy(x => x.ToString()).Select(x => x.ToString()).ToList();
+                var sorted = GetValues();
+                return sorted.OrderBy(x => x.ToString()).ToList();
+            }
+
+            public static IEnumerable<string> GetValues()
+            {
+                if (!typeof(T).IsEnum)
+                    throw new ArgumentException("T must be an enumerated type");
+
+                return ((T[])Enum.GetValues(typeof(T))).Select(x => x.ToString());
             }
 
         }

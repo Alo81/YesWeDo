@@ -9,6 +9,7 @@ namespace SmashUltimateEditor
 {
     public class Config
     {
+
         public string file_directory_sub
         {
             get { return UiHelper.GetLastFolder(file_directory); }
@@ -37,6 +38,17 @@ namespace SmashUltimateEditor
         {
             get { return UiHelper.GetLastFolder(file_directory_spirit_images); }
         }
+
+        const string defaultDbName = "ui_spirits_battle_db.prc";
+        const string defaultEncrypted = @"Encrypted\";
+        const string defaultCustomBattlesDirectory = @"CustomBattles\";
+        const string defaultUnencrypted = @"Unencrypted\";
+        const string defaultRandomized = @"Randomized\";
+        const string defaultPreload = @"Preload\";
+        const string defaultSpiritImages = @"Spirit Images\";
+        const string defaultParamLabels = @"ParamLabels.csv";
+        const int defaultChaosValue = 100;
+        const int defaultRandomizerIterations = 3;
 
         public string file_name;
         public string file_name_encr;
@@ -83,15 +95,19 @@ namespace SmashUltimateEditor
             }
 
             randomizer_iterations = randomizer_iterations < 1 ? 1 : randomizer_iterations;
-            file_name = String.IsNullOrEmpty(file_name) ? @"ui_spirits_battle_db.prc" : file_name;
+            file_name = String.IsNullOrEmpty(file_name) ? defaultDbName : file_name;
             file_name_encr = String.IsNullOrEmpty(file_name_encr) ? file_name : file_name_encr;
-            file_directory_custom_battles = String.IsNullOrEmpty(file_directory_custom_battles) ? file_directory + @"CustomBattles\" : file_directory_custom_battles;
-            file_directory_encr = String.IsNullOrEmpty(file_directory_encr) ? file_directory + @"Encrypted\" : file_directory_encr;
-            file_directory_unencr = String.IsNullOrEmpty(file_directory_unencr) ? file_directory + @"Unencrypted\" : file_directory_unencr;
-            file_directory_randomized = String.IsNullOrEmpty(file_directory_randomized) ? file_directory + @"Randomized\" : file_directory_randomized; 
-            file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + @"Preload\" : file_directory_preload;
-            file_directory_spirit_images = String.IsNullOrEmpty(file_directory_spirit_images) ? file_directory + @"Spirit Images\" : file_directory_spirit_images;
-            labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + @"ParamLabels.csv" : labels_file_location;
+            file_directory_custom_battles = String.IsNullOrEmpty(file_directory_custom_battles) ? file_directory + defaultCustomBattlesDirectory : file_directory_custom_battles;
+            file_directory_encr = String.IsNullOrEmpty(file_directory_encr) ? file_directory + defaultEncrypted : file_directory_encr;
+            file_directory_unencr = String.IsNullOrEmpty(file_directory_unencr) ? file_directory + defaultUnencrypted : file_directory_unencr;
+            file_directory_randomized = String.IsNullOrEmpty(file_directory_randomized) ? file_directory + defaultRandomized : file_directory_randomized; 
+            file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + defaultPreload : file_directory_preload;
+            file_directory_spirit_images = String.IsNullOrEmpty(file_directory_spirit_images) ? file_directory + defaultSpiritImages : file_directory_spirit_images;
+            labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + defaultParamLabels : labels_file_location;
+
+            chaos = chaos == default(int) ? defaultChaosValue : chaos;
+            randomizer_iterations = randomizer_iterations == default(int) ? defaultRandomizerIterations : randomizer_iterations;
+
 
             file_location = file_directory + file_name;
             file_location_encr = file_directory_encr + file_name_encr;

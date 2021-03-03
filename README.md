@@ -71,4 +71,7 @@ You can also import battles from a folder into an existing SpiritBattle DB.  If 
 
 File -> Import... 
 
-Theres other stuff I'm probably forgetting.  
+Additional details: 
+All options for dropdowns are pulled from the loaded ui_spirits_battle_db.prc.  This means that as new Smash updates come out, you should be able to replace the file and get new parameters loaded automatically.  
+
+If spirits_battle_event.prc is in the Preload folder, it will be used to populate Event types and labels.  This means you should be able to (if done correctly) generate new events that will load organically into the program and into the randomizer.  

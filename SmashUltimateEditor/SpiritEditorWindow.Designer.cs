@@ -111,21 +111,21 @@ namespace SmashUltimateEditor
             // btnRandomizeAll
             // 
             this.btnRandomizeAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRandomizeAll.Location = new System.Drawing.Point(668, 26);
+            this.btnRandomizeAll.Location = new System.Drawing.Point(653, 26);
             this.btnRandomizeAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnRandomizeAll.Name = "btnRandomizeAll";
-            this.btnRandomizeAll.Size = new System.Drawing.Size(91, 22);
+            this.btnRandomizeAll.Size = new System.Drawing.Size(106, 22);
             this.btnRandomizeAll.TabIndex = 8;
-            this.btnRandomizeAll.Text = "Randomize";
+            this.btnRandomizeAll.Text = "Randomize Page";
             this.btnRandomizeAll.UseVisualStyleBackColor = true;
             this.btnRandomizeAll.Click += new System.EventHandler(this.btnRandomize_Click);
             // 
             // textboxSeed
             // 
             this.textboxSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxSeed.Location = new System.Drawing.Point(668, 53);
+            this.textboxSeed.Location = new System.Drawing.Point(653, 53);
             this.textboxSeed.Name = "textboxSeed";
-            this.textboxSeed.Size = new System.Drawing.Size(91, 23);
+            this.textboxSeed.Size = new System.Drawing.Size(106, 23);
             this.textboxSeed.TabIndex = 9;
             this.textboxSeed.Text = "-1";
             // 
@@ -335,7 +335,7 @@ namespace SmashUltimateEditor
             // 
             this.labelSeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSeed.AutoSize = true;
-            this.labelSeed.Location = new System.Drawing.Point(574, 56);
+            this.labelSeed.Location = new System.Drawing.Point(567, 56);
             this.labelSeed.Name = "labelSeed";
             this.labelSeed.Size = new System.Drawing.Size(80, 15);
             this.labelSeed.TabIndex = 11;

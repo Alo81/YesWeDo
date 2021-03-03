@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using static SmashUltimateEditor.Enums;
@@ -498,7 +499,7 @@ namespace SmashUltimateEditor
         }
 
         #region Randomizer
-        public void ExecuteRandomizer(int iteration, int seed, int characterUnlockSeed)
+        public async void ExecuteRandomizer(int iteration, int seed, int characterUnlockSeed)
         {
             Form form = new Form()
             {
@@ -517,11 +518,18 @@ namespace SmashUltimateEditor
 
             form.Controls.Add(bar);
             form.Show();
-            RandomizeAll(bar, seed, characterUnlockSeed, iteration);
+
+            var randomizedSpirits = await RandomizeAll(bar, seed, characterUnlockSeed, iteration);
+
+            var randomizedBattleData = (BattleDataOptions)GetOptionsOfType(randomizedSpirits, typeof(BattleDataOptions));
+            var randomizedFighterData = (FighterDataOptions)GetOptionsOfType(randomizedSpirits, typeof(FighterDataOptions));
+
+            FileHelper.SaveRandomized(randomizedBattleData, randomizedFighterData, characterUnlockSeed, iteration);
+
             form.Hide();
         }
 
-        public void RandomizeAll(ProgressBar progressBar, int seed, int characterUnlockSeed, int iteration = 0)
+        public async Task<List<IDataOptions>> RandomizeAll(ProgressBar progressBar, int seed, int characterUnlockSeed, int iteration = 0)
         {
             Random rnd = new Random(seed);
             Random unlockableRnd;
@@ -589,7 +597,8 @@ namespace SmashUltimateEditor
 
                 progressBar.PerformStep();
             }
-            FileHelper.SaveRandomized(randomizedBattleData, randomizedFighters, characterUnlockSeed, iteration);
+
+            return new List<IDataOptions>() { randomizedBattleData, randomizedFighters };
         }
         #endregion
     }

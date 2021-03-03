@@ -109,14 +109,14 @@ namespace SmashUltimateEditor
 
             try
             {
-                field.SetValue(obj, Convert.ChangeType(val, field.PropertyType));
+                field?.SetValue(obj, Convert.ChangeType(val, field.PropertyType));
             }
             catch
             {
                 try
                 {
                     var numVal = val == "" ? "0" : val;
-                    field.SetValue(obj, Convert.ChangeType(numVal, field.PropertyType));
+                    field?.SetValue(obj, Convert.ChangeType(numVal, field.PropertyType));
                 }
                 catch(Exception ex2)
                 {

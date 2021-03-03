@@ -31,7 +31,7 @@ namespace SmashUltimateEditor
 
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
-            dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
+            //dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
             dataTbls.informativeLabel = labelInformative;
 

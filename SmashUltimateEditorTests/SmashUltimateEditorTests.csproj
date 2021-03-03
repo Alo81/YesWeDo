@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\paracobNET\paracobNET\paracobNet.csproj" />
+    <ProjectReference Include="..\..\Alo81\paracobNET\paracobNET\paracobNet.csproj" />
     <ProjectReference Include="..\SmashUltimateEditor\SmashUltimateEditor.csproj" />
   </ItemGroup>
 

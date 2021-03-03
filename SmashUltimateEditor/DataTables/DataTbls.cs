@@ -116,6 +116,12 @@ namespace SmashUltimateEditor
             config = new Config();
             tabStorage = new Stack<TabPage>();
 
+            // If there is no labels file, ask the user if they would like one.  
+            if (!FileHelper.FileExists(config.labels_file_location) && UiHelper.PopUpQuestion("No Labels file found.  Would you like to download now?"))
+            {
+                FileHelper.DownloadParamLabels(config.labels_file_location);
+            }
+
             var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location);
 
             foreach(Type child in DataTbl.GetChildrenTypes())

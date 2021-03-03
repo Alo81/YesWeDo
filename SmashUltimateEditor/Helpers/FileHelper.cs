@@ -3,6 +3,7 @@ using SmashUltimateEditor.DataTableCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -204,6 +205,11 @@ namespace SmashUltimateEditor.Helpers
             }
             return "";
         }
+
+        public static bool FileExists(string fileName)
+        {
+            return new FileInfo(fileName ?? "").Exists;
+        }
         public static string GetFilePathFromLikeName(string fileName)
         {
             foreach (var file in Defs.spiritUiLocations)
@@ -293,6 +299,14 @@ namespace SmashUltimateEditor.Helpers
             }
 
             return filePath;
+        }
+
+        public static void DownloadParamLabels(string fileLocation)
+        {
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(Defs.paramLabelsGitUrl, fileLocation);
+            }
         }
     }
 }

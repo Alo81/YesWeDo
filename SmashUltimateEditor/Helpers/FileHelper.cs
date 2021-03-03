@@ -216,6 +216,13 @@ namespace SmashUltimateEditor.Helpers
             return "";
         }
 
+        public static void CreateDirectories(List<string> dirs)
+        {
+            foreach (var dir in dirs)
+            {
+                Directory.CreateDirectory(dir);
+            }
+        }
 
         public static CommonSaveFileDialog GetCommonSaveFolderDialog()
         {

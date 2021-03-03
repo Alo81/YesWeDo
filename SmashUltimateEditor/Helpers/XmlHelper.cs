@@ -98,6 +98,12 @@ namespace SmashUltimateEditor.Helpers
             var results = new DataOptions();
 
             var stream = GetStreamFromFile(fileName);
+
+            if (stream == null)
+            {
+                return results;
+            }
+
             var reader = GetXmlReaderFromStream(stream);
 
             // Try to read.  If we can't read - it might be encrypted.  Try to decrypt.  
@@ -117,7 +123,7 @@ namespace SmashUltimateEditor.Helpers
                 }
                 catch
                 {
-                    return new DataOptions();
+                    return results;
                 }
             }
 

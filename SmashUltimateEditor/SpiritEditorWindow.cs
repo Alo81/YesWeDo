@@ -39,6 +39,11 @@ namespace SmashUltimateEditor
             {
                 buildFighterDataTab(dataTbls?.battleData?.battle_id?.First());
             }
+            else
+            {
+                UiHelper.PopUpMessage($"Be sure to add a SpiritBattle DB (ui_spirits_battle_db.prc) and ParamLabels.csv file locations to YesWeDo.dll.config.");
+            }
+            FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
             LoadAllFiles();
         }
 
@@ -167,12 +172,11 @@ namespace SmashUltimateEditor
 
         public void LoadAllFiles()
         {
-            var config = new Config();
+            var config = dataTbls.config;
             var directory = config.file_directory_preload;
             string[] fileNames;
             try
             {
-                Directory.CreateDirectory(directory);
                 fileNames = Directory.GetFiles(directory);
             }
             catch(Exception ex)

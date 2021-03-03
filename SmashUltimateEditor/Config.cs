@@ -1,5 +1,6 @@
 ﻿using SmashUltimateEditor.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Reflection;
@@ -39,6 +40,7 @@ namespace SmashUltimateEditor
             get { return UiHelper.GetLastFolder(file_directory_spirit_images); }
         }
 
+        static string defaultFileDirectory = AppDomain.CurrentDomain.BaseDirectory;
         const string defaultDbName = "ui_spirits_battle_db.prc";
         const string defaultEncrypted = @"Encrypted\";
         const string defaultCustomBattlesDirectory = @"CustomBattles\";
@@ -94,9 +96,10 @@ namespace SmashUltimateEditor
                 Console.WriteLine("Error reading app settings");
             }
 
-            randomizer_iterations = randomizer_iterations < 1 ? 1 : randomizer_iterations;
             file_name = String.IsNullOrEmpty(file_name) ? defaultDbName : file_name;
             file_name_encr = String.IsNullOrEmpty(file_name_encr) ? file_name : file_name_encr;
+
+            file_directory = String.IsNullOrEmpty(file_directory) ? FileHelper.FixFolderEndPath(defaultFileDirectory) : file_directory;
             file_directory_custom_battles = String.IsNullOrEmpty(file_directory_custom_battles) ? file_directory + defaultCustomBattlesDirectory : file_directory_custom_battles;
             file_directory_encr = String.IsNullOrEmpty(file_directory_encr) ? file_directory + defaultEncrypted : file_directory_encr;
             file_directory_unencr = String.IsNullOrEmpty(file_directory_unencr) ? file_directory + defaultUnencrypted : file_directory_unencr;
@@ -107,6 +110,7 @@ namespace SmashUltimateEditor
 
             chaos = chaos == default(int) ? defaultChaosValue : chaos;
             randomizer_iterations = randomizer_iterations == default(int) ? defaultRandomizerIterations : randomizer_iterations;
+            randomizer_iterations = randomizer_iterations < 1 ? 1 : randomizer_iterations;
 
 
             file_location = file_directory + file_name;
@@ -114,6 +118,16 @@ namespace SmashUltimateEditor
             file_location_unencr = file_directory_unencr + file_name;
         }
 
+        public List<string> GetFileDirectories()
+        {
+            return new List<string>()
+            {
+                file_directory_custom_battles,
+                file_directory_randomized,
+                file_directory_preload,
+                file_directory_spirit_images
+            };
+        }
 
         static void AddUpdateAppSettings(string key, string value)
         {
@@ -150,8 +164,15 @@ namespace SmashUltimateEditor
             }
             catch (Exception ex)
             {
-                UiHelper.PopUpMessage(String.Format("Could not set value from config: {0} for {1}.\r\n\r\n{2}", val, name, ex.Message));
-                throw ex;
+                try
+                {
+                    // Setting numeric value to empty string?  Use int default instead.  
+                    field.SetValue(this, Convert.ChangeType("0", field.FieldType));
+                }
+                catch(Exception inEx)
+                {
+                    UiHelper.PopUpMessage(String.Format("Could not set value from config: {0} for {1}.\r\n\r\n{2}", val, name, inEx.Message));
+                }
             }
         }
     }

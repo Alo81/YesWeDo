@@ -274,6 +274,11 @@ namespace SmashUltimateEditor.Helpers
         {
             Task.Factory.StartNew(() => MessageBox.Show(message));
         }
+
+        public static bool PopUpQuestion(string message)
+        {
+            return MessageBox.Show(message, "", MessageBoxButtons.YesNo) == DialogResult.Yes;
+        }
         public static void SetInformativeLabel(ref Label label, string message)
         {
             label.Text = message;

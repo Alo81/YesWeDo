@@ -407,10 +407,7 @@ namespace SmashUltimateEditor
 
         private void GetParamLabels_Click(object sender, EventArgs e)
         {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(Defs.paramLabelsGitUrl, dataTbls.config.labels_file_location);
-            }
+            FileHelper.DownloadParamLabels(dataTbls.config.labels_file_location);
         }
 
         private void CloseApplication_Click(object sender, EventArgs e)

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
@@ -375,12 +377,24 @@ namespace SmashUltimateEditor
             };
         }
 
-        private void RandomizeAllTool_Click(object sender, EventArgs e)
+        private async void RandomizeAllTool_Click(object sender, EventArgs e)
         {
             int seed = TryGetSeed();
+            var allTasks = new Task[dataTbls.config.randomizer_iterations];
+
+            UiHelper.ChangeControlsEnabled(this, false);
 
             // If seed isn't positive, get random one. 
-            dataTbls.RandomizeAll(seed);
+            for (int i = 0; i < dataTbls.config.randomizer_iterations; i++)
+            {
+                allTasks[i] = Task.Run(() => dataTbls.ExecuteRandomizer(i, seed+i, seed));
+                Thread.Sleep(50);
+            }
+
+            await Task.WhenAll(allTasks);
+
+            UiHelper.ChangeControlsEnabled(this, true);
+            UiHelper.PopUpMessage(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", dataTbls.config.randomizer_iterations, dataTbls.config.chaos, seed, dataTbls.config.file_directory_randomized));
         }
 
         private void CloseApplication_Click(object sender, EventArgs e)

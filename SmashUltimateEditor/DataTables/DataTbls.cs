@@ -6,6 +6,7 @@ using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -497,82 +498,98 @@ namespace SmashUltimateEditor
         }
 
         #region Randomizer
-        public void RandomizeAll(int seed = -1)
+        public void ExecuteRandomizer(int iteration, int seed, int characterUnlockSeed)
+        {
+            Form form = new Form()
+            {
+                Text = $"Randomizer {iteration} progress.",
+                Size = new Size(300, 100),
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(0, 100*(iteration))
+            };
+
+            var controlPoint = new Point();
+
+            var bar = new ProgressBar();
+            bar.Size = new Size(Defs.LABEL_WIDTH, Defs.LABEL_HEIGHT);
+            bar.Location = UiHelper.IncrementPoint(ref controlPoint, 0, Ui_Element.Label);
+            UiHelper.SetupRandomizeProgress(bar, battleData.GetCount());
+
+            form.Controls.Add(bar);
+            form.Show();
+            RandomizeAll(bar, seed, characterUnlockSeed, iteration);
+            form.Hide();
+        }
+
+        public void RandomizeAll(ProgressBar progressBar, int seed, int characterUnlockSeed, int iteration = 0)
         {
             Random rnd = new Random(seed);
             Random unlockableRnd;
+
 
             BattleDataOptions randomizedBattleData;
             FighterDataOptions randomizedFighters;
             Fighter randomizedFighter;
             int fighterCount;
 
-            for (int iteration = 0; iteration < config.randomizer_iterations; iteration++)
+            unlockableRnd = new Random(characterUnlockSeed);
+            randomizedFighters = new FighterDataOptions();
+            randomizedBattleData = this.battleData.Copy();
+            List<string> unlockableFighters = this.spiritFighterData.unlockable_fighters_string;
+
+            foreach (Battle battle in randomizedBattleData.GetBattles())
             {
-                unlockableRnd = new Random(seed);
-                randomizedFighters = new FighterDataOptions();
-                randomizedBattleData = battleData.Copy();
-                List<string> unlockableFighters = spiritFighterData.unlockable_fighters_string;
+                battle.Randomize(ref rnd, this);
+                // If lose escort, need at least 2 fighters.  
+                fighterCount = battle.IsLoseEscort() ?
+                    RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)]
+                    :
+                    RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
 
-                UiHelper.SetupRandomizeProgress(progress, randomizedBattleData.GetCount());
+                // Save after randomizing, as cleanup will modify it.  
+                var isUnlockableFighterType = this.spiritFighterData.IsUnlockableFighter(battle.battle_id);
+                var isBossType = battle.IsBossType();
+                var isLoseEscort = battle.IsLoseEscort();
 
-                foreach (Battle battle in randomizedBattleData.GetBattles())
+                battle.Cleanup(ref rnd, fighterCount, this, isUnlockableFighterType);
+
+                var fighterSum = 0;
+                for (int i = 0; i < fighterCount; i++)
                 {
-                    battle.Randomize(ref rnd, this);
-                    // If lose escort, need at least 2 fighters.  
-                    fighterCount = battle.IsLoseEscort() ?
-                        RandomizerHelper.fighterLoseEscortDistribution[rnd.Next(RandomizerHelper.fighterLoseEscortDistribution.Count)]
-                        :
-                        RandomizerHelper.fighterDistribution[rnd.Next(RandomizerHelper.fighterDistribution.Count)];
+                    string unlockableFighter = null;
 
-                    // Save after randomizing, as cleanup will modify it.  
-                    var isUnlockableFighterType = spiritFighterData.IsUnlockableFighter(battle.battle_id);
-                    var isBossType = battle.IsBossType();
-                    var isLoseEscort = battle.IsLoseEscort();
+                    var isMain = i == 0;     // Set first fighter to main.  
+                    var isUnlockableFighter = isMain && isUnlockableFighterType;     // If unlockable fighter, we will explicitly set a fighter to match the spirit.  
+                    var isBoss = isMain && isBossType;     // Set first fighter to main.  
+                    var isEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
 
-                    battle.Cleanup(ref rnd, fighterCount, this, isUnlockableFighterType);
+                    randomizedFighter = battle.GetNewFighter();
+                    randomizedFighter.Randomize(ref rnd, this);
 
-                    var fighterSum = 0;
-                    for (int i = 0; i < fighterCount; i++)
+                    if (isUnlockableFighter)
                     {
-                        string unlockableFighter = null;
-
-                        var isMain = i == 0;     // Set first fighter to main.  
-                        var isUnlockableFighter = isMain && isUnlockableFighterType;     // If unlockable fighter, we will explicitly set a fighter to match the spirit.  
-                        var isBoss = isMain && isBossType;     // Set first fighter to main.  
-                        var isEscort = i == 1 && battle.IsLoseEscort();     // Set second fighter to ally, if Lose Escort result type.  
-
-                        randomizedFighter = battle.GetNewFighter();
-                        randomizedFighter.Randomize(ref rnd, this);
-
-                        if (isUnlockableFighter)
-                        {
-                            int fighterIndex = unlockableRnd.Next(unlockableFighters.Count);
-                            unlockableFighter = unlockableFighters[fighterIndex];
-                            unlockableFighters.RemoveAt(fighterIndex);
-                        }
-
-                        randomizedFighter.Cleanup(ref rnd, isMain, isEscort, fighterData.Fighters, isBoss, unlockableFighter);
-                        fighterSum += randomizedFighter.stock == 0 ? 1 : randomizedFighter.stock;
-
-                        randomizedFighters.AddFighter(randomizedFighter);
-                    }
-                    // Do a total fighter check, and adjust stock accordingly. 
-                    if (fighterSum > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
-                    {
-                        for (int i = randomizedFighters.GetCount() - fighterCount; i < randomizedFighters.GetCount(); i++)
-                        {
-                            randomizedFighters.GetFighterAtIndex(i).StockCheck(fighterSum);
-                        }
+                        int fighterIndex = unlockableRnd.Next(unlockableFighters.Count);
+                        unlockableFighter = unlockableFighters[fighterIndex];
+                        unlockableFighters.RemoveAt(fighterIndex);
                     }
 
-                    progress.PerformStep();
+                    randomizedFighter.Cleanup(ref rnd, isMain, isEscort, this.fighterData.Fighters, isBoss, unlockableFighter);
+                    fighterSum += randomizedFighter.stock == 0 ? 1 : randomizedFighter.stock;
+
+                    randomizedFighters.AddFighter(randomizedFighter);
                 }
-                FileHelper.SaveRandomized(randomizedBattleData, randomizedFighters, seed, iteration);
+                // Do a total fighter check, and adjust stock accordingly. 
+                if (fighterSum > Defs.FIGHTER_COUNT_STOCK_CUTOFF)
+                {
+                    for (int i = randomizedFighters.GetCount() - fighterCount; i < randomizedFighters.GetCount(); i++)
+                    {
+                        randomizedFighters.GetFighterAtIndex(i).StockCheck(fighterSum);
+                    }
+                }
+
+                progressBar.PerformStep();
             }
-            RefreshTabs();
-            progress.Visible = false;
-            UiHelper.PopUpMessage(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", config.randomizer_iterations, config.chaos, seed, config.file_directory_randomized));
+            FileHelper.SaveRandomized(randomizedBattleData, randomizedFighters, characterUnlockSeed, iteration);
         }
         #endregion
     }

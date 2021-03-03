@@ -303,5 +303,13 @@ namespace SmashUltimateEditor.Helpers
 
             label.BackColor = Color.FromArgb(r, g, b);
         }
+
+        public static void ChangeControlsEnabled(Form form, bool enabled)
+        {
+            foreach(Control control in form.Controls)
+            {
+                control.Enabled = enabled;
+            }
+        }
     }
 }

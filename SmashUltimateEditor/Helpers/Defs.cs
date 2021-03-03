@@ -5,7 +5,10 @@ using System.Drawing;
 namespace SmashUltimateEditor
 {
     public static class Defs
-    {   
+    {
+        public const string paramLabelsGitUrl = @"https://github.com/ultimate-research/param-labels/raw/master/ParamLabels.csv";
+        public const string paramLabelsName = @"ParamLabels.csv";
+
         #region randomizer
         public const int CHAOS = 50;
         public const int BOSS_CHECK = 50;

@@ -48,7 +48,7 @@ namespace SmashUltimateEditor
         const string defaultRandomized = @"Randomized\";
         const string defaultPreload = @"Preload\";
         const string defaultSpiritImages = @"Spirit Images\";
-        const string defaultParamLabels = @"ParamLabels.csv";
+        const string defaultParamLabels = Defs.paramLabelsName;
         const int defaultChaosValue = 100;
         const int defaultRandomizerIterations = 3;
 

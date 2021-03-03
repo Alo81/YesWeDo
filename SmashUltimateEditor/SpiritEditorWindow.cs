@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -41,7 +42,9 @@ namespace SmashUltimateEditor
             }
             else
             {
-                UiHelper.PopUpMessage($"Be sure to add a SpiritBattle DB (ui_spirits_battle_db.prc) and ParamLabels.csv file locations to YesWeDo.dll.config.");
+                UiHelper.PopUpMessage($"Be sure to add a SpiritBattle DB (ui_spirits_battle_db.prc) to application directory\r\n" +
+                    $"And\r\n" +
+                    $"Download ParamLabels.csv from \"Tools\" dropdown.");
             }
             FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
             LoadAllFiles();
@@ -399,6 +402,14 @@ namespace SmashUltimateEditor
 
             UiHelper.ChangeControlsEnabled(this, true);
             UiHelper.PopUpMessage(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", dataTbls.config.randomizer_iterations, dataTbls.config.chaos, seed, dataTbls.config.file_directory_randomized));
+        }
+
+        private async void GetParamLabels_Click(object sender, EventArgs e)
+        {
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(Defs.paramLabelsGitUrl, dataTbls.config.labels_file_location);
+            }
         }
 
         private void CloseApplication_Click(object sender, EventArgs e)

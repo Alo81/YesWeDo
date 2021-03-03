@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmashUltimateEditor\SmashUltimateEditor.csproj" />
+    <ProjectReference Include="..\SmashUltimateEditor\YesWeDo.csproj" />
   </ItemGroup>
 
 </Project>

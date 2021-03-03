@@ -360,7 +360,7 @@ namespace SmashUltimateEditor
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(658, 722);
             this.Name = "SpiritEditorWindow";
-            this.Text = "Smash Spirits Editor";
+            this.Text = "YesWeDo!";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

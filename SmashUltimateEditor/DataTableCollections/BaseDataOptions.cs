@@ -16,7 +16,7 @@ namespace SmashUltimateEditor.DataTableCollections
                 var newList = new List<string>();
                 foreach (var item in (IEnumerable)list)
                 {
-                    newList.Add((string)Convert.ChangeType(item, typeof(string)));
+                    newList.Add(    (   (string) Convert.ChangeType(item, typeof(string)    )).ToLower()   );
                 }
                 list = newList;
             }

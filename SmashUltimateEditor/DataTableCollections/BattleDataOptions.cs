@@ -160,9 +160,9 @@ namespace SmashUltimateEditor
             get { return _dataList.Select(x => x.stage_bgm).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<string>stage_gimmick
+        public List<bool>stage_gimmick
         {
-            get { return _dataList.Select(x => x.stage_gimmick.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.stage_gimmick).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>stage_attr
@@ -363,19 +363,19 @@ namespace SmashUltimateEditor
             get { return event_damage; }
         }
 
-        public List<string>aw_flap_delay
+        public List<bool>aw_flap_delay
         {
-            get { return _dataList.Select(x => x.aw_flap_delay.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.aw_flap_delay).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<string> _0x0d41ef8328
+        public List<bool> _0x0d41ef8328
         {
-            get { return _dataList.Select(x => x._0x0d41ef8328.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x._0x0d41ef8328).Distinct().OrderBy(x => x).ToList(); }
         }
 
-        public List<string> _0x0d6f19abae
+        public List<bool> _0x0d6f19abae
         {
-            get { return _dataList.Select(x => x._0x0d6f19abae.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x._0x0d6f19abae).Distinct().OrderBy(x => x).ToList(); }
         }
 
         public List<string>_0x18d9441f71

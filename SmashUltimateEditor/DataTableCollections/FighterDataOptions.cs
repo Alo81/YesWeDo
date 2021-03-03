@@ -124,9 +124,9 @@ namespace SmashUltimateEditor
         {
             get { return _dataList.Select(x => x.entry_type).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> first_appear
+        public List<bool> first_appear
         {
-            get { return _dataList.Select(x => x.first_appear.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.first_appear).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> appear_rule_time
         {
@@ -190,21 +190,21 @@ namespace SmashUltimateEditor
         {
             get { return _dataList.Select(x => x.cpu_sub_type).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> cpu_item_pick_up
+        public List<bool> cpu_item_pick_up
         {
-            get { return _dataList.Select(x => x.cpu_item_pick_up.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.cpu_item_pick_up).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> stock
         {
             get { return _dataList.Select(x => x.stock.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<string> corps
+        public List<bool> corps
         {
-            get { return _dataList.Select(x => x.corps.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.corps).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> fix_corps_color
+        public List<bool> fix_corps_color
         {
-            get { return _dataList.Select(x => x.fix_corps_color.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.fix_corps_color).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> hp
         {
@@ -226,13 +226,13 @@ namespace SmashUltimateEditor
         {
             get { return _dataList.Select(x => x.fly_rate.ToString()).OrderBy(x => x).ToList(); }
         }
-        public List<string> invalid_drop
+        public List<bool> invalid_drop
         {
-            get { return _dataList.Select(x => x.invalid_drop.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.invalid_drop).Distinct().OrderBy(x => x).ToList(); }
         }
-        public List<string> enable_charge_final
+        public List<bool> enable_charge_final
         {
-            get { return _dataList.Select(x => x.enable_charge_final.ToString()).Distinct().OrderBy(x => x).ToList(); }
+            get { return _dataList.Select(x => x.enable_charge_final).Distinct().OrderBy(x => x).ToList(); }
         }
         public List<string> attack
         {

@@ -12,7 +12,6 @@ using static SmashUltimateEditor.Extensions;
 
 namespace SmashUltimateEditor
 {
-
     public class Fighter : DataTbl
     {
         internal static string XML_NAME = "fighter_data_tbl";

@@ -21,7 +21,9 @@ namespace SmashUltimateEditor.Helpers
         {
             // Do multiple randomizers, in case an impossible battle happens.  
             var fileName = config.file_name_encr;
-            var directory = config.file_directory_randomized + "Randomizer " + seed + " " + iteration;  // Randomizer ### 1
+            var randomizerString = iteration > 0 ? ".Randomizer " : "Randomizer ";
+            var directory = config.file_directory_randomized + randomizerString + seed + " " + iteration;  // Randomizer ### 1
+
             Save(battleData, fighterData, directory, fileName, unencrypted:false, useFolderStructure: true);
 
             CopyPreloadFiles(directory);

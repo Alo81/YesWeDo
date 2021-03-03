@@ -56,6 +56,7 @@ namespace SmashUltimateEditor
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RandomizeAllTool = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.GetParamLabels = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.randomizeProgress = new System.Windows.Forms.ProgressBar();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -67,7 +68,6 @@ namespace SmashUltimateEditor
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSeed = new System.Windows.Forms.Label();
             this.labelInformative = new System.Windows.Forms.Label();
-            this.GetParamLabels = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -246,15 +246,22 @@ namespace SmashUltimateEditor
             // RandomizeAllTool
             // 
             this.RandomizeAllTool.Name = "RandomizeAllTool";
-            this.RandomizeAllTool.Size = new System.Drawing.Size(159, 22);
+            this.RandomizeAllTool.Size = new System.Drawing.Size(196, 22);
             this.RandomizeAllTool.Text = "&Randomize All";
             this.RandomizeAllTool.Click += new System.EventHandler(this.RandomizeAllTool_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(196, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
+            // 
+            // GetParamLabels
+            // 
+            this.GetParamLabels.Name = "GetParamLabels";
+            this.GetParamLabels.Size = new System.Drawing.Size(196, 22);
+            this.GetParamLabels.Text = "Get Latest ParamLabels";
+            this.GetParamLabels.Click += new System.EventHandler(this.GetParamLabels_Click);
             // 
             // menuStrip1
             // 
@@ -344,13 +351,6 @@ namespace SmashUltimateEditor
             this.labelInformative.Name = "labelInformative";
             this.labelInformative.Size = new System.Drawing.Size(0, 15);
             this.labelInformative.TabIndex = 14;
-            // 
-            // GetParamLabels
-            // 
-            this.GetParamLabels.Name = "GetParamLabels";
-            this.GetParamLabels.Size = new System.Drawing.Size(159, 22);
-            this.GetParamLabels.Text = "Get ParamLabels File";
-            this.GetParamLabels.Click += new System.EventHandler(this.GetParamLabels_Click);
             // 
             // SpiritEditorWindow
             // 

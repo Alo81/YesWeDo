@@ -44,7 +44,8 @@ namespace SmashUltimateEditor
             {
                 UiHelper.PopUpMessage($"Be sure to add a SpiritBattle DB (ui_spirits_battle_db.prc) to application directory\r\n" +
                     $"And\r\n" +
-                    $"Download ParamLabels.csv from \"Tools\" dropdown.");
+                    $"Download ParamLabels.csv from \"Tools\" dropdown.\r\n" +
+                    $"Then restart application.");
             }
             FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
             LoadAllFiles();
@@ -404,7 +405,7 @@ namespace SmashUltimateEditor
             UiHelper.PopUpMessage(String.Format("Spirit Battles Randomized {0} times.\r\nChaos: {1}. \r\nSeed: {2}\r\nLocation: {3}", dataTbls.config.randomizer_iterations, dataTbls.config.chaos, seed, dataTbls.config.file_directory_randomized));
         }
 
-        private async void GetParamLabels_Click(object sender, EventArgs e)
+        private void GetParamLabels_Click(object sender, EventArgs e)
         {
             using (var client = new WebClient())
             {

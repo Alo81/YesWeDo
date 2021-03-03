@@ -17,7 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Alo81\paracobNET\paracobNET\paracobNet.csproj" />
+    <Reference Include="paracobNET">
+      <HintPath>References\paracobNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

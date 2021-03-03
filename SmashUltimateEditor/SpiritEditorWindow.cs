@@ -376,6 +376,8 @@ namespace SmashUltimateEditor
                     var selected_battle_id = dataTbls.selectedBattle.battle_id;
                     dropdownSpiritData.SelectedItem = selected_battle_id;
 
+                    dataTbls.RefreshTabs();
+
                     UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
                 }
             }

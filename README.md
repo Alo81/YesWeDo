@@ -24,9 +24,9 @@ __________________________________
 ### Optional (but recommended):
 
 - Arcadia 
-  >(For toggling between Randomizers)
+  >(For drag and drop support toggling between Randomizers)
 
-##### Rip files from data.arc and place in "/PreLoad" folder
+##### Extract files from data.arc and place in "/PreLoad" folder
 
   - ui_fighter_spirit_aw_db.prc
     >@\ui\param\database\  

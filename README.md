@@ -1,4 +1,6 @@
-![YesWeDo 500](https://user-images.githubusercontent.com/6089807/109901215-4a48ff00-7c5e-11eb-8895-14f9f4628b35.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/6089807/109901215-4a48ff00-7c5e-11eb-8895-14f9f4628b35.png">
+</p>
 
 ## Smash Ultimate Randomizer and Spirit Battle Editor
 

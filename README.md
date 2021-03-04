@@ -73,6 +73,9 @@ You'll see three options:
   
   - **PackagedAndStandalone**: Do both!
 
+![image](https://user-images.githubusercontent.com/6089807/109911479-c8fa6800-7c6f-11eb-935e-82f856f68e95.png)
+
+
 ### Importing Spirit Battles
 You can also import battles from a folder into an existing SpiritBattle DB.  If you wish to play others Spirit Battles, you can place them in the **Custom Battles** folder, and Import Battles from the folder.  
 

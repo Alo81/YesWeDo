@@ -42,7 +42,7 @@ __________________________________
   
 ### Usage:
 
-  **Randomizer**
+### Randomizer
   
   ![image](https://user-images.githubusercontent.com/6089807/109874328-94b58600-7c34-11eb-8cf6-663e6702b890.png)
     
@@ -56,7 +56,7 @@ __________________________________
   
 ##  Disclaimer: If due to the nature of Random, you run into a battle that cannot be beaten which halts your progress, switch to one of the other Randomizers from the same seed.  Fighter Unlocks should be randomized in the same order, and you should hopefully be able to beat at least one of the 3 randomized battles.  
   
-  **Editing Spirit Battles**  
+### Editing Spirit Battles
   Select your battle from the top dropdown.  The first tab is for settings specific to the battle, the next tabs are for settings specific to the fighters.  
 
 When done making changes, select: 
@@ -73,7 +73,7 @@ You'll see three options:
   
   - **PackagedAndStandalone**: Do both!
 
-**Importing Spirit Battles**
+### Importing Spirit Battles
 You can also import battles from a folder into an existing SpiritBattle DB.  If you wish to play others Spirit Battles, you can place them in the **Custom Battles** folder, and Import Battles from the folder.  
 
 **File -> Import... **

@@ -31,6 +31,8 @@ namespace SmashUltimateEditor
         public const int FIGHTER_COUNT_STOCK_CUTOFF = 2;
         public const int FIGHTER_COUNT_TIMER_CUTOFF = 3;
         public const int FIGHTER_COUNT_TIMER_ADD = 8;   //How many seconds to add?
+
+        public const char CONFIG_DELIMITER = '|';
         #endregion
 
         #region UI

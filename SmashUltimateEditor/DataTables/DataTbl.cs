@@ -115,7 +115,7 @@ namespace SmashUltimateEditor.DataTables
         {
             Type type = GetType();
             string value;
-            if (!overrideExclusion && Defs.EXCLUDED_RANDOMIZED.Contains(field.Name))
+            if (!overrideExclusion && (Defs.EXCLUDED_RANDOMIZED.Contains(field.Name) || dataTbls.config.EXCLUDED_RANDOMIZED.Contains(field.Name)))
             {
                 return null;
             }

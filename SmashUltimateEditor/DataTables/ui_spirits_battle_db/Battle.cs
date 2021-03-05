@@ -16,6 +16,18 @@ namespace SmashUltimateEditor
     {
         internal static string XML_NAME = "battle_data_tbl";
 
+        // Make an event object dawg.  
+        public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls, bool isUnlockableFighterType = false)
+        {
+            bool isBossType = IsBossType();
+            EventSet(ref rnd, dataTbls);
+            HazardCheck();
+            BossCheck();
+            HealthCheck(ref rnd, dataTbls);
+            TimerCheck(fighterCount, isUnlockableFighterType, dataTbls.config.minimum_battle_time);
+            BattlePowerCheck(ref rnd, isBossType);
+        }
+
         public void BuildEvent(BattleEvent randEvent, int index)
         {
             var eventNum = String.Format("event{0}_", index);
@@ -31,18 +43,6 @@ namespace SmashUltimateEditor
         public Fighter GetNewFighter()
         {
             return new Fighter() { battle_id = battle_id, spirit_name = battle_id};
-        }
-
-        // Make an event object dawg.  
-        public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls, bool isUnlockableFighterType = false)
-        {
-            bool isBossType = IsBossType();
-            EventSet(ref rnd, dataTbls);
-            HazardCheck();
-            BossCheck();
-            HealthCheck(ref rnd, dataTbls);
-            TimerCheck(fighterCount, isUnlockableFighterType);
-            BattlePowerCheck(ref rnd, isBossType);
         }
 
         public void EventSet(ref Random rnd, DataTbls dataTbls)
@@ -142,7 +142,7 @@ namespace SmashUltimateEditor
             }
         }
 
-        public void TimerCheck(int count, bool isUnlockableFighterType)
+        public void TimerCheck(int count, bool isUnlockableFighterType, int minimumTimer)
         {
             if (isUnlockableFighterType)
             {
@@ -152,6 +152,7 @@ namespace SmashUltimateEditor
             {
                 battle_time_sec += (ushort)(count * Defs.FIGHTER_COUNT_TIMER_ADD);
             }
+            battle_time_sec = (ushort)Math.Max(battle_time_sec, minimumTimer);  //Always use at least minimum timer
         }
 
         public void BattlePowerCheck(ref Random rnd, bool isBoss)

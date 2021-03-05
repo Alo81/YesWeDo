@@ -70,6 +70,9 @@ namespace SmashUltimateEditor
         public string labels_file_location;
         public int chaos;
         public int randomizer_iterations;
+        public int minimum_battle_time;
+        public string excluded_fields;
+        public IEnumerable<string> EXCLUDED_RANDOMIZED;
 
         public Config()
         {
@@ -116,6 +119,13 @@ namespace SmashUltimateEditor
             file_location = file_directory + file_name;
             file_location_encr = file_directory_encr + file_name_encr;
             file_location_unencr = file_directory_unencr + file_name;
+
+            EXCLUDED_RANDOMIZED = SplitExcludedFields(excluded_fields??"");
+        }
+
+        public IEnumerable<string> SplitExcludedFields(string excluded)
+        {
+            return excluded.Split(Defs.CONFIG_DELIMITER);
         }
 
         public List<string> GetFileDirectories()

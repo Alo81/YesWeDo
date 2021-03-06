@@ -20,6 +20,26 @@ namespace SmashUltimateEditor
 
                 return Enum.IsDefined(typeof(T), value);
             }
+            public static string GetByValue(string value)
+            {
+                try
+                {
+                    // This should only be a one character digit string.  If it is a number, good to try.  If not, return empty.  
+                    if (Char.IsDigit(value[0]))
+                    {
+                        return GetByValue((int)Char.GetNumericValue(value[0]));
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                catch(Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return "";
+                }
+            }
             public static string GetByValue(int value)
             {
                 if (!typeof(T).IsEnum)

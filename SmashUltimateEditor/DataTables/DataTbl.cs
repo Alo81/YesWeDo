@@ -131,7 +131,7 @@ namespace SmashUltimateEditor.DataTables
                 value = options[rnd.Next(options.Count)].ToString();
             }
 
-            value = EnumChecker(value, field.Name);
+            value = EnumCheckerToTbl(value, field.Name);
 
             return value;
         }
@@ -167,7 +167,7 @@ namespace SmashUltimateEditor.DataTables
             }
         }
 
-        public string EnumChecker(string value, string name)
+        public string EnumCheckerToTbl(string value, string name)
         {
             if (name == "mii_color")
             {
@@ -191,6 +191,30 @@ namespace SmashUltimateEditor.DataTables
             }
             return value;
         }
+        public string EnumCheckerToPage(string value, string name)
+        {
+            if (name == "mii_color")
+            {
+                value = (EnumUtil<Enums.mii_color_opt>.GetByValue(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_n")
+            {
+                value = (EnumUtil<Enums.mii_sp_n_opt>.GetByValue(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_s")
+            {
+                value = (EnumUtil<Enums.mii_sp_s_opt>.GetByValue(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_hi")
+            {
+                value = (EnumUtil<Enums.mii_sp_hi_opt>.GetByValue(value ?? "")).ToString();
+            }
+            else if (name == "mii_sp_lw")
+            {
+                value = (EnumUtil<Enums.mii_sp_lw_opt>.GetByValue(value ?? "")).ToString();
+            }
+            return value;
+        }
 
         public void UpdateTblValues(TabPage page)
         {
@@ -202,7 +226,7 @@ namespace SmashUltimateEditor.DataTables
                     value = combo?.Text ?? "";
                 }
 
-                value = EnumChecker(value, combo.Name);
+                value = EnumCheckerToTbl(value, combo.Name);
                 this.SetValueFromName(combo.Name, value);
             }
             foreach (TextBox text in page.Controls.OfType<TextBox>())
@@ -217,7 +241,7 @@ namespace SmashUltimateEditor.DataTables
             foreach (ComboBox combo in page.Controls.OfType<ComboBox>())
             {
                 var value = this.GetPropertyValueFromName(combo.Name);
-                value = EnumChecker(value, combo.Name);
+                value = EnumCheckerToPage(value, combo.Name);
 
                 combo.SelectedIndex = combo.Items.IndexOf(value);
                 combo.Text = combo.SelectedText = value;

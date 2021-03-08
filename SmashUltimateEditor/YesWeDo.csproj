@@ -17,8 +17,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Cetera">
+      <HintPath>References\Cetera.dll</HintPath>
+    </Reference>
+    <Reference Include="Kontract">
+      <HintPath>References\Kontract.dll</HintPath>
+    </Reference>
     <Reference Include="paracobNET">
       <HintPath>References\paracobNet.dll</HintPath>
+    </Reference>
+    <Reference Include="text_msbt">
+      <HintPath>References\text_msbt.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -71,7 +71,9 @@ namespace SmashUltimateEditor
             new Tuple<string, string>("ui_fighter_spirit_aw_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_chara_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("spirits_battle_event.prc", @"\ui\param\spirits\"),
-            new Tuple<string, string>("spirits_board_special_param.prc", @"\ui\param_patch\spirits_board_special")
+            new Tuple<string, string>("spirits_board_special_param.prc", @"\ui\param_patch\spirits_board_special"),
+            new Tuple<string, string>("spirits_battle_items.prc", @"\param\spirits"),
+            new Tuple<string, string>("msg_spirits.msbt", @"\ui\message")
         };
         #endregion
 

@@ -174,18 +174,27 @@ namespace SmashUltimateEditor
             return fileDbType;
         }
 
-        public void OpenMsbtWithFileName(string fileName)
+        public string OpenMsbtWithFileName(string fileName)
         {
             var adapter = new text_msbt.MsbtAdapter();
-            adapter.Load(fileName);
+            var loaded = adapter.Load(fileName);
 
             foreach (var battle in dataTbls.battleData.GetBattles())
             {
                 var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
                 if(match != null)
                 {
-                    battle.SetSpiritTitle(match.EditedText);
+                    battle.spiritTitle = match.EditedText;
                 }
+            }
+
+            if (loaded == Kontract.LoadResult.Success)
+            {
+                return "Spirit Titles";
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -212,7 +221,7 @@ namespace SmashUltimateEditor
             }
             foreach (string fileName in fileNames.Where(x => x.EndsWith(Defs.textFileExtension)))
             {
-                OpenMsbtWithFileName(fileName);
+                dbTypes.Add(OpenMsbtWithFileName(fileName));
             }
 
             dbTypeCSV = UiHelper.ListToCSV(dbTypes);

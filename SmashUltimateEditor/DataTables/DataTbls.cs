@@ -9,10 +9,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
 using static System.Windows.Forms.TabControl;
 
@@ -441,15 +443,21 @@ namespace SmashUltimateEditor
 
         public List<string> GetOptionsFromTypeAndName(Type type, string name)
         {
-            if (type == typeof(Fighter))
+            if (type?.GetProperty(name)?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false)    // If this field is excluded, don't build out for it.  
             {
-                return fighterData.GetOptionsFromName(name) ?? new List<string>();
             }
-            if (type == typeof(Battle))
+            else
             {
-                return battleData.GetOptionsFromName(name) ?? new List<string>();
+                if (type == typeof(Fighter))
+                {
+                    return fighterData.GetOptionsFromName(name) ?? new List<string>();
+                }
+                if (type == typeof(Battle))
+                {
+                    return battleData.GetOptionsFromName(name) ?? new List<string>();
+                }
             }
-            return null;
+            return new List<string>();
         }
 
         public string GetModeFromTypeAndName(Type type, string name)

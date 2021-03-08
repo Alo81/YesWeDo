@@ -305,5 +305,7 @@ namespace SmashUltimateEditor
         public string	_0x0ff8afd14f { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public uint	    battle_power { get; set; }
+        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
+        public string spiritTitle { get; set; }
     }
 }

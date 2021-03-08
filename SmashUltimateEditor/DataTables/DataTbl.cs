@@ -44,6 +44,17 @@ namespace SmashUltimateEditor.DataTables
 
             public int Page { get { return _page; } }
         }
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class ExcludedAttribute : Attribute
+        {
+            private readonly bool _excluded;
+            public ExcludedAttribute(bool excluded = false)
+            {
+                _excluded = excluded;
+            }
+
+            public bool Excluded { get { return _excluded; } }
+        }
         internal int pageCount { get { return 1; } }
 
         public static DataTbl GetDataTblFromXmlName(string className)
@@ -104,7 +115,7 @@ namespace SmashUltimateEditor.DataTables
         public void Randomize(ref Random rnd, DataTbls dataTbls)
         {
             Type type = GetType();
-            foreach (PropertyInfo field in type.GetProperties())
+            foreach (PropertyInfo field in type.GetProperties().Where(x => ! x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false))
             {
                 var val = GetRandomFieldValue(field, ref rnd, dataTbls);
                 SaveRandomizedField(ref rnd, field, val, dataTbls);
@@ -299,7 +310,8 @@ namespace SmashUltimateEditor.DataTables
             return new XElement("struct",
             new XAttribute("index", index),
                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
-                this.GetType().GetProperties().OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
+                this.GetType().GetProperties().Where(x => !x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? true)
+                    .OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
                new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
                new XAttribute("hash", DataParse.ExportNameFixer(property.Name)), DataParse.ExportNameFixer(this.GetPropertyValueFromName(property.Name)))
                     )
@@ -395,8 +407,8 @@ namespace SmashUltimateEditor.DataTables
                 points[0] = currentPos;
             }
 
-            // Gather each property for the DataTbl type, and make a label/data entry point for it.  
-            foreach (PropertyInfo field in type.GetProperties().OrderBy(x => x.Name))
+            // Gather each property that isn't excluded, for the DataTbl type, and make a label/data entry point for it.  
+            foreach (PropertyInfo field in type.GetProperties().Where(x => !    (x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded) ?? true).OrderBy(x => x.Name))
             {
                 lb = new LabelBox();
                 var pageNum = UiHelper.GetUiPageFromProperty(field);

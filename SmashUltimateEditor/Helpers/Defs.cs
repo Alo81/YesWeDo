@@ -56,6 +56,9 @@ namespace SmashUltimateEditor
         #endregion
 
         #region Files
+        public static string dbFileExtension = ".prc";
+        public static string textFileExtension = ".msbt";
+
         public static List<Tuple<string, string>> spiritUiLocations = new List<Tuple<string, string>>()
         {
             new Tuple<string, string>($"spirits_0_{FILE_WILDCARD_PATTERN}.bntx", @"\ui\replace\spirits\spirits_0\"),

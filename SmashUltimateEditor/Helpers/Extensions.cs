@@ -102,7 +102,7 @@ namespace SmashUltimateEditor
     {
         public static string GetPropertyValueFromName(this object obj, string name)
         {
-            return obj?.GetType()?.GetProperty(name)?.GetValue(obj)?.ToString()?.ToLower() ?? "";
+            return obj?.GetType()?.GetProperty(name)?.GetValue(obj)?.ToString() ?? "";
         }
         public static string GetFieldValueFromName(this object obj, string name)
         {

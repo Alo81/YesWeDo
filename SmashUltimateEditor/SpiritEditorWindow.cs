@@ -176,26 +176,7 @@ namespace SmashUltimateEditor
 
         public string OpenMsbtWithFileName(string fileName)
         {
-            var adapter = new text_msbt.MsbtAdapter();
-            var loaded = adapter.Load(fileName);
-
-            foreach (var battle in dataTbls.battleData.GetBattles())
-            {
-                var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
-                if(match != null)
-                {
-                    battle.spiritTitle = match.EditedText;
-                }
-            }
-
-            if (loaded == Kontract.LoadResult.Success)
-            {
-                return "Spirit Titles";
-            }
-            else
-            {
-                return null;
-            }
+            return FileHelper.OpenMsbtWithFilename(dataTbls.battleData.GetBattles(), fileName);
         }
 
         public void LoadAllFiles()

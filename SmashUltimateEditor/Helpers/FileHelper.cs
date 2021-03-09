@@ -3,6 +3,7 @@ using SmashUltimateEditor.DataTableCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -299,6 +300,35 @@ namespace SmashUltimateEditor.Helpers
             }
 
             return filePath;
+        }
+
+        public static string OpenMsbtWithFilename(IEnumerable<Battle> battles, string fileName)
+        {
+            var adapter = new text_msbt.MsbtAdapter();
+            var loaded = adapter.Load(fileName);
+
+            foreach (var battle in battles)
+            {
+                if(battle.battle_id.Contains("agitha"))
+                {
+                    var x = 0;
+                }
+
+                var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
+                if (match != null)
+                {
+                    battle.SetSpiritTitleParameters(match.EditedText);
+                }
+            }
+
+            if (loaded == Kontract.LoadResult.Success)
+            {
+                return "Spirit Titles";
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static void DownloadParamLabels(string fileLocation)

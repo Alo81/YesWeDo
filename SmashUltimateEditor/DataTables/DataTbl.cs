@@ -465,6 +465,13 @@ namespace SmashUltimateEditor.DataTables
                 lb.SetTextBox("spiritTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 subPage.Controls.Add(lb.text);
 
+                lb = new LabelBox();
+                lb.SetLabel("Spirit Sort Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                subPage.Controls.Add(lb.label);
+
+                lb.SetTextBox("spiritSortTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                subPage.Controls.Add(lb.text);
+
                 for (int i = 0; i < Defs.spiritUiLocations.Count; i++)
                 {
                     Button b = UiHelper.GetEmptySpiritImageButton(UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Button));

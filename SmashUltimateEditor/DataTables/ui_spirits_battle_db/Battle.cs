@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Enums;
 
@@ -15,6 +16,9 @@ namespace SmashUltimateEditor
     public class Battle : DataTbl
     {
         internal static string XML_NAME = "battle_data_tbl";
+        internal string msbtTitle;
+        internal string msbtSort;
+        internal string msbtSeparator;
 
         // Make an event object dawg.  
         public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls, bool isUnlockableFighterType = false)
@@ -182,6 +186,25 @@ namespace SmashUltimateEditor
             return newCopy;
         }
 
+        public void SetSpiritTitleParameters(string title)
+        {
+
+            try
+            {
+                // Find boundaries of string separator.  
+                var sepStart = title.LastIndexOf('\u000e'); //For strange titles, there can be multiple instances of this, so we want the last one we see.  
+                var sepEnd = sepStart + title.Substring(sepStart).IndexOf('\0');   //Search the first instance of \0 that shows up after the parsed display title, add that index amount to the already found SepStart size.  
+
+                msbtTitle = title.Substring(0, sepStart);
+                msbtSeparator = title.Substring(sepStart, sepEnd - sepStart);
+                msbtSort = title.Substring(sepEnd, title.Length - sepEnd);
+            }
+            catch
+            {
+                return; // It doesn't have a title.  Thats fine, just return.  
+            }
+        }
+
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
         {
             return BuildEmptyPage(dataTbls, typeof(Battle));
@@ -306,6 +329,29 @@ namespace SmashUltimateEditor
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public uint	    battle_power { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
-        public string spiritTitle { get; set; }
+        public string spiritTitle 
+        { 
+            get { return msbtTitle; }
+            set { msbtTitle = value; } 
+        }
+        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
+        public string spiritSortTitle 
+        {
+            get 
+            {
+                return msbtSort?.Replace(Convert.ToString('\0'), "") ?? String.Empty;  
+            }
+            set 
+            {
+                StringBuilder newString = new StringBuilder();  
+                newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
+                foreach (var ch in value)
+                {
+                    newString.Append(ch);
+                    newString.Append('\0');
+                }
+                msbtSort = newString.ToString(); 
+            } 
+        }
     }
 }

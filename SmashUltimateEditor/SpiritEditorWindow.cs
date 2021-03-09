@@ -13,6 +13,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesWeDo.Helpers;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
 
@@ -49,6 +50,11 @@ namespace SmashUltimateEditor
             }
             FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
             LoadAllFiles();
+
+            if (dataTbls.config.check_for_updates)
+            {
+                NetworkHelper.UpdateCheck();
+            }
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -419,7 +425,7 @@ namespace SmashUltimateEditor
 
         private void GetParamLabels_Click(object sender, EventArgs e)
         {
-            FileHelper.DownloadParamLabels(dataTbls.config.labels_file_location);
+            NetworkHelper.DownloadParamLabels(dataTbls.config.labels_file_location);
         }
 
         private void CloseApplication_Click(object sender, EventArgs e)

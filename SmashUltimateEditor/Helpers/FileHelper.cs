@@ -1,10 +1,8 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using SmashUltimateEditor.DataTableCollections;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -375,14 +373,6 @@ namespace SmashUltimateEditor.Helpers
             catch
             {
 
-            }
-        }
-
-        public static void DownloadParamLabels(string fileLocation)
-        {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(Defs.paramLabelsGitUrl, fileLocation);
             }
         }
     }

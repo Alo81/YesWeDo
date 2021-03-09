@@ -9,6 +9,8 @@ namespace SmashUltimateEditor
         public const string paramLabelsGitUrl = @"https://github.com/Alo81/param-labels/raw/master/ParamLabels.csv";
         public const string paramLabelsName = @"ParamLabels.csv";
 
+        public const string gitReleasesUrl = "https://api.github.com/repos/Alo81/YesWeDo/releases";
+
         #region randomizer
         public const int CHAOS = 50;
         public const int BOSS_CHECK = 50;

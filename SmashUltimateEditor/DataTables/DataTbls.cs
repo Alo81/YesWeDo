@@ -1,8 +1,5 @@
-﻿using paracobNET;
-using SmashUltimateEditor.DataTableCollections;
+﻿using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
-using SmashUltimateEditor.DataTables.ui_item_db;
 using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
@@ -13,7 +10,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
+using YesWeDo.Helpers;
 using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
 using static System.Windows.Forms.TabControl;
@@ -121,7 +118,7 @@ namespace SmashUltimateEditor
             // If there is no labels file, ask the user if they would like one.  
             if (!FileHelper.FileExists(config.labels_file_location) && UiHelper.PopUpQuestion("No Labels file found.  Would you like to download now?"))
             {
-                FileHelper.DownloadParamLabels(config.labels_file_location);
+                NetworkHelper.DownloadParamLabels(config.labels_file_location);
             }
 
             var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location);

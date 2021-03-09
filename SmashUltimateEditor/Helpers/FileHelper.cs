@@ -19,6 +19,7 @@ namespace SmashUltimateEditor.Helpers
             Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
         }
 
+
         public static void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData, int seed = -1, int iteration = 0)
         {
             // Do multiple randomizers, in case an impossible battle happens.  
@@ -44,6 +45,8 @@ namespace SmashUltimateEditor.Helpers
             {
                 SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
             }
+
+            SaveSpiritTitles(battleData.GetBattles(), config.file_directory_preload);
         }
 
         // Replace Save calls to calls here.  
@@ -283,6 +286,7 @@ namespace SmashUltimateEditor.Helpers
                 filename;
 
             FileHelper.SaveEncrypted(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true);
+            SaveSpiritTitles(dataTbls.battleData.GetBattles(), config.file_directory_preload);
             FileHelper.CopyPreloadFiles(packPath);
             FileHelper.CopySpiritImages(packPath);
         }
@@ -302,10 +306,23 @@ namespace SmashUltimateEditor.Helpers
             return filePath;
         }
 
-        public static string OpenMsbtWithFilename(IEnumerable<Battle> battles, string fileName)
+        public static text_msbt.MsbtAdapter GetLoadedMsbtAdapter(string fileName)
         {
             var adapter = new text_msbt.MsbtAdapter();
-            var loaded = adapter.Load(fileName);
+            try
+            {
+                adapter.Load(fileName);
+            }
+            catch   // If it fails to load, adapter will be new, empty adapter.   If it doesn't, it will be filled.  either way, its what we want.  
+            {
+            }
+
+            return adapter;
+        }
+
+        public static string OpenMsbtWithFilename(IEnumerable<Battle> battles, string fileName)
+        {
+            var adapter = GetLoadedMsbtAdapter(fileName);
 
             foreach (var battle in battles)
             {
@@ -321,13 +338,43 @@ namespace SmashUltimateEditor.Helpers
                 }
             }
 
-            if (loaded == Kontract.LoadResult.Success)
+            if (adapter != null && adapter.Entries.Count() > 0)
             {
                 return "Spirit Titles";
             }
             else
             {
                 return null;
+            }
+        }
+
+        public static void SaveSpiritTitles(IEnumerable<Battle> battles, string fileName)
+        {
+            try
+            {
+                var files = GetFiles(fileName);
+
+                foreach(var file in files.Where( x=> Defs.filesToSave.Contains(x.Name)))
+                {
+                    var adapter = GetLoadedMsbtAdapter(file.FullName);
+
+
+                    foreach (var battle in battles)
+                    {
+                        var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
+                        if (match != null)
+                        {
+                            match.EditedText = battle.GetCombinedMsbtTitle();
+                        }
+                    }
+
+                    adapter.Save();
+                }
+
+            }
+            catch
+            {
+
             }
         }
 

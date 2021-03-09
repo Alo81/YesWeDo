@@ -186,6 +186,11 @@ namespace SmashUltimateEditor
             return newCopy;
         }
 
+        public string GetCombinedMsbtTitle()
+        {
+            return string.Concat(msbtTitle, msbtSeparator, msbtSort);
+        }
+
         public void SetSpiritTitleParameters(string title)
         {
 

@@ -458,19 +458,25 @@ namespace SmashUltimateEditor.DataTables
                 // Force buttons onto new column.  
                 UiHelper.MovePointToNewColumn(subPage, ref currentPos);
 
-                lb = new LabelBox();
-                lb.SetLabel("Spirit Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
-                subPage.Controls.Add(lb.label);
+                var files = FileHelper.GetFiles(dataTbls.config.file_directory_preload);
+                var spiritTitles = files.Where(x => Defs.filesToSave.Contains(x.Name)).SingleOrDefault();
 
-                lb.SetTextBox("spiritTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
-                subPage.Controls.Add(lb.text);
+                if (spiritTitles?.Exists ?? false)
+                {
+                    lb = new LabelBox();
+                    lb.SetLabel("Spirit Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                    subPage.Controls.Add(lb.label);
 
-                lb = new LabelBox();
-                lb.SetLabel("Spirit Sort Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
-                subPage.Controls.Add(lb.label);
+                    lb.SetTextBox("spiritTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                    subPage.Controls.Add(lb.text);
 
-                lb.SetTextBox("spiritSortTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
-                subPage.Controls.Add(lb.text);
+                    lb = new LabelBox();
+                    lb.SetLabel("Spirit Sort Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                    subPage.Controls.Add(lb.label);
+
+                    lb.SetTextBox("spiritSortTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                    subPage.Controls.Add(lb.text);
+                }
 
                 for (int i = 0; i < Defs.spiritUiLocations.Count; i++)
                 {

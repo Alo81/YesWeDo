@@ -3,10 +3,14 @@
 </p>
 
 Changelog:
-Add msg_spirits to preload allows you to change Spirit Titles shown in UI.  
-
+v1.2
+- Change Spirit Titles shown in UI
+> Instructions: Add msg_spirits to preload
   - msg_spirits.msbt
     >@\ui\message\
+v1.1
+- Add config option for minimum randomizer timer
+- Add config option for fields to be excluded from Randomization
    
 
 ## Smash Ultimate Randomizer and Spirit Battle Editor

@@ -348,6 +348,7 @@ namespace SmashUltimateEditor
             }
             set 
             {
+                var totalLength = msbtSort.Length;
                 StringBuilder newString = new StringBuilder();  
                 newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
                 foreach (var ch in value)
@@ -355,6 +356,12 @@ namespace SmashUltimateEditor
                     newString.Append(ch);
                     newString.Append('\0');
                 }
+                while(newString.Length < totalLength)
+                {
+                    newString.Append(" ");
+                    newString.Append('\0');
+                }
+
                 msbtSort = newString.ToString(); 
             } 
         }

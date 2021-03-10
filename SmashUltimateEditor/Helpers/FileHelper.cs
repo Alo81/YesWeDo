@@ -370,9 +370,9 @@ namespace SmashUltimateEditor.Helpers
                 }
 
             }
-            catch
+            catch(Exception ex)
             {
-
+                UiHelper.PopUpMessage(ex.Message);
             }
         }
     }

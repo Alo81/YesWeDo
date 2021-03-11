@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using YesWeDo.DataTables;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
 
@@ -178,6 +179,21 @@ namespace SmashUltimateEditor.DataTables
             }
         }
 
+        public void SetFieldToDefaultValue(PropertyInfo field)
+        {
+            var type = field.PropertyType;
+            string value;
+            if (type.IsValueType)
+            {
+                value = Activator.CreateInstance(field.PropertyType).ToString();
+            }
+            else
+            {
+                value = null;
+            }
+            this.SetValueFromName(field.Name, value);
+        }
+
         public string EnumCheckerToTbl(string value, string name)
         {
             if (name == "mii_color")
@@ -318,24 +334,56 @@ namespace SmashUltimateEditor.DataTables
                 );
         }
 
-        public void BuildFromXml(XmlReader reader)
+        public virtual void BuildFromXml(XmlReader reader)
         {
-            string attribute;
             while (reader.Read())
             {
-                while (!(reader.NodeType == XmlNodeType.Element))
+                var dbVal = GetNextXmlValue(reader);
+
+                if (dbVal == null)
                 {
-                    reader.Read();
-                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("struct"))
-                    {
-                        return;
-                    }
+                    return;
                 }
-                attribute = reader.GetAttribute("hash");
-                reader.Read();
-                this.SetValueFromName(DataParse.ImportNameFixer(attribute), reader.Value);
+                else
+                {
+                    this.SetValueFromName(DataParse.ImportNameFixer(dbVal.hash), dbVal.value);
+                }
             }
             return;
+        }
+        public DbValue GetNextXmlValue(XmlReader reader)
+        {
+            while (!(reader.NodeType == XmlNodeType.Element))
+            {
+                reader.Read();
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("struct"))
+                {
+                    return null;
+                }
+            }
+
+            var attribute = reader.GetAttribute("hash");
+            reader.Read();
+
+            return new DbValue()
+            {
+                hash = attribute,
+                value = reader.Value
+            };
+        }
+
+        public string GetNextXmlListItems(XmlReader reader)
+        {
+            while (!(reader.NodeType == XmlNodeType.Text))
+            {
+                reader.Read();
+                if (reader.NodeType == XmlNodeType.EndElement && reader.Name.Equals("list"))
+                {
+                    return null;
+                }
+            }
+
+            return reader.Value;
         }
 
         public static IEnumerable<Type> GetChildrenTypes()

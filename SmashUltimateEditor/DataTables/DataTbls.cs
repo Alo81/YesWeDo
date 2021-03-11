@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesWeDo.DataTableCollections;
 using YesWeDo.Helpers;
 using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
@@ -54,6 +55,11 @@ namespace SmashUltimateEditor
         public SpiritFighterDataOptions spiritFighterData
         {
             get { return (SpiritFighterDataOptions)GetOptionsOfType(typeof(SpiritFighterDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public SpiritBoardDataOptions spiritBoardData
+        {
+            get { return (SpiritBoardDataOptions)GetOptionsOfType(typeof(SpiritBoardDataOptions)); }
             set { UpdateDataOptions(value); }
         }
 

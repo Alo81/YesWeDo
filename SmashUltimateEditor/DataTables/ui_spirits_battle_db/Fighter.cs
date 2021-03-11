@@ -142,6 +142,16 @@ namespace SmashUltimateEditor
             return newCopy;
         }
 
+        public void SetAllValuesToDefault()
+        {
+            var battleId = this.battle_id;
+            foreach (PropertyInfo field in GetType().GetProperties().Where(x => !(x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false)))
+            {
+                SetFieldToDefaultValue(field);
+            }
+            this.battle_id = this.spirit_name = battleId;
+        }
+
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
         {
             return BuildEmptyPage(dataTbls, typeof(Fighter));

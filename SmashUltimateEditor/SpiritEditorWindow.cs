@@ -13,6 +13,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesWeDo.DataTableCollections;
 using YesWeDo.Helpers;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
@@ -73,6 +74,17 @@ namespace SmashUltimateEditor
         }
 
         private async void btnAddFighter_Click(object sender, EventArgs e)
+        {
+            dataTbls.SaveLocal();
+
+            Fighter newFighter = dataTbls.selectedBattle.GetNewFighter();
+            newFighter.SetAllValuesToDefault();
+
+            dataTbls.fighterData.AddFighter(newFighter);
+            dataTbls.selectedFighters.Add(newFighter);
+            dataTbls.RefreshTabs();
+        }
+        private async void btnCopyFighter_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
             int selectedTab = dataTbls.tabs.SelectedIndex;
@@ -170,6 +182,11 @@ namespace SmashUltimateEditor
                 {
                     dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
                     fileDbType.Add("Spirit Fighter");
+                }
+                if (results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard)).GetCount() > 0)
+                {
+                    dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
+                    fileDbType.Add("Spirit Board");
                 }
             }
             catch (Exception ex)

@@ -234,7 +234,11 @@ namespace SmashUltimateEditor.Helpers
 
         public static void SetSpiritDetailsButton(TabPage page, bool enabled)
         {
-            GetButtonFromText(page, Defs.EDIT_SPIRIT_DETAILS_BUTTON_STRING).Enabled = enabled;
+            var button = GetButtonFromText(page, Defs.EDIT_SPIRIT_DETAILS_BUTTON_STRING);
+            if(button != null)
+            {
+                button.Enabled = enabled;
+            }
         }
 
         public static ProgressBar GetRandomizerProgressBar(ref Point controlPoint, int max)

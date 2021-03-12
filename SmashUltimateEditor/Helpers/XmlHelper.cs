@@ -1,10 +1,12 @@
 ﻿using paracobNET;
+using SmashUltimateEditor.DataTableCollections;
 using SmashUltimateEditor.DataTables;
 using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using YesWeDo.DataTableCollections;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -220,6 +222,27 @@ namespace SmashUltimateEditor.Helpers
                             )
                         )
                     )
+                );
+
+            return doc;
+        }
+
+        public static XDocument BuildXml(SpiritDataOptions dataList)
+        {
+            XDocument doc =
+                new XDocument(new XDeclaration("1.0", "utf-8", null),
+                    new XElement("struct",
+                        new XElement("uint",
+                            new XAttribute("hash", "data_version"), 8),
+                        // <list hash="db_root">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement("list",
+                        new XAttribute("hash", "db_root"),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            dataList.GetData().Select(data =>
+                            ((DataTbl)data).GetAsXElement(dataList.GetItemIndex(data))
+                            )
+                            )
+                        )
                 );
 
             return doc;

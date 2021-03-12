@@ -211,25 +211,30 @@ namespace SmashUltimateEditor.Helpers
             return page.Controls.OfType<Button>();
         }
 
-        public static Button GetRemoveFighterButtonFromButtons(IEnumerable<Button> buttons)
+        public static Button GetButtonFromText(IEnumerable<Button> buttons, string text)
         {
-            return buttons.FirstOrDefault(x => x.Text == Defs.REMOVE_FIGHTER_BUTTON_STRING);
+            return buttons.FirstOrDefault(x => x.Text == text);
         }
 
-        public static Button GetFighterButton(TabPage page)
+        public static Button GetButtonFromText(TabPage page, string text)
         {
             var buttons = GetButtons(page);
-            return GetRemoveFighterButtonFromButtons(buttons);
+            return GetButtonFromText(buttons, text);
         }
 
-        public static void DisableFighterButton(TabPage page)
+        public static Button GetFighterButtonFromPage(TabPage page)
         {
-            GetFighterButton(page).Enabled = false;
+            return GetButtonFromText(page, Defs.REMOVE_FIGHTER_BUTTON_STRING);
         }
 
-        public static void EnableFighterButton(TabPage page)
+        public static void SetFighterButton(TabPage page, bool enabled)
         {
-            GetFighterButton(page).Enabled = true;
+            GetButtonFromText(page, Defs.REMOVE_FIGHTER_BUTTON_STRING).Enabled = enabled;
+        }
+
+        public static void SetSpiritDetailsButton(TabPage page, bool enabled)
+        {
+            GetButtonFromText(page, Defs.EDIT_SPIRIT_DETAILS_BUTTON_STRING).Enabled = enabled;
         }
 
         public static ProgressBar GetRandomizerProgressBar(ref Point controlPoint, int max)

@@ -25,6 +25,10 @@ namespace YesWeDo.DataTableCollections
             return _dataList.FirstOrDefault(x => x.ui_spirit_id == name);
         }
 
+        public int GetSpiritIndex(string spiritId)
+        {
+            return _dataList.FindIndex(x => x.ui_spirit_id == spiritId);
+        }
         public void SetData(List<IDataTbl> inSpiritBoard)
         {
             _dataList = inSpiritBoard.OfType<Spirit>().ToList();

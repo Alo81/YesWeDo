@@ -56,6 +56,17 @@ namespace SmashUltimateEditor.DataTables
 
             public bool Excluded { get { return _excluded; } }
         }
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class OriginalTypeAttribute : Attribute
+        {
+            private readonly string _original;
+            public OriginalTypeAttribute(string original)
+            {
+                _original = original;
+            }
+
+            public string OriginalFileType { get { return _original; } }
+        }
         internal int pageCount { get { return 1; } }
 
         public static DataTbl GetDataTblFromXmlName(string className)
@@ -288,7 +299,7 @@ namespace SmashUltimateEditor.DataTables
         {
             UpdatePageValues(page);
 
-            Button b = UiHelper.GetFighterButton(page);
+            Button b = UiHelper.GetFighterButtonFromPage(page);
             if (!(b == default))
             {
                 b.Name = collectionIndex.ToString();
@@ -333,7 +344,11 @@ namespace SmashUltimateEditor.DataTables
                 //<hash40 hash="battle_id">default</hash40>	// <*DataListItem.Type* hash="*DataListItem.FieldName*">*DataListItem.FieldValue*</>
                 this.GetType().GetProperties().Where(x => !x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? true)
                     .OrderBy(x => ((OrderAttribute)x.GetCustomAttributes(typeof(OrderAttribute), false).Single()).Order).Select(property =>
-               new XElement(DataParse.ReplaceTypes(property.PropertyType.Name.ToLower()),
+               new XElement(    (property?.GetCustomAttribute<OriginalTypeAttribute>() != null?
+                   property.GetCustomAttribute <OriginalTypeAttribute>().OriginalFileType
+                   :
+                   DataParse.ReplaceTypes(property.PropertyType.Name.ToLower())
+                   ),
                new XAttribute("hash", DataParse.ExportNameFixer(property.Name)), DataParse.ExportNameFixer(this.GetPropertyValueFromName(property.Name)))
                     )
                 );
@@ -512,7 +527,7 @@ namespace SmashUltimateEditor.DataTables
                 UiHelper.MovePointToNewColumn(subPage, ref currentPos);
 
                 var files = FileHelper.GetFiles(dataTbls.config.file_directory_preload);
-                var spiritTitles = files.Where(x => Defs.filesToSave.Contains(x.Name)).SingleOrDefault();
+                var spiritTitles = files.Where(x => Defs.msbtFilesToSave.Contains(x.Name)).SingleOrDefault();
 
                 if (spiritTitles?.Exists ?? false)
                 {

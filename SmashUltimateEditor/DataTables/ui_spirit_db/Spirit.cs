@@ -11,6 +11,8 @@ namespace YesWeDo.DataTables.ui_spirit_db
     {
         // This may end up clashing.... We may need further determination if there are other db_roots in the future.  
         internal static string XML_NAME = "data_version";
+        // Use first field if XML_NAME is generic. 
+        internal static string XML_FIRST_FIELD = "db_root";
 
 
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
@@ -22,7 +24,7 @@ namespace YesWeDo.DataTables.ui_spirit_db
         public ushort save_no { get; set; }
         [Order][Page((int)Enums.Spirit_Page.Basic)]
         public string ui_spirit_id { get; set; }
-        [Order][Page((int)Enums.Spirit_Page.Basic)]
+        [Order][Page((int)Enums.Spirit_Page.Basic)][OriginalType("string")]
         public string name_id { get; set; }
         [Order][Page((int)Enums.Spirit_Page.Basic)]
         public ushort fixed_no { get; set; }

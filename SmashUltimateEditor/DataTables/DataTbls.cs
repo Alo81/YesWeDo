@@ -23,6 +23,7 @@ namespace SmashUltimateEditor
     {
         public List<Fighter> selectedFighters;
         public Battle selectedBattle;
+        public Spirit selectedSpirit;
         public Stack<TabPage> tabStorage;
 
         public Config config;
@@ -31,16 +32,16 @@ namespace SmashUltimateEditor
         public ProgressBar progress;
         public Label informativeLabel;
 
-        public Form _editSpiritDetailsPage;
-        public Form editSpiritDetailsPage
+        public Form _editSpiritDetailsForm;
+        public Form editSpiritDetailsForm
         {
             get 
             {
-                if(_editSpiritDetailsPage == null)
+                if(_editSpiritDetailsForm == null)
                 {
-                    _editSpiritDetailsPage = UiHelper.GetEmptySpiritDataForm();
+                    _editSpiritDetailsForm = UiHelper.GetEmptySpiritDataForm();
                     var tabs = UiHelper.GetEmptyTabControl();
-                    _editSpiritDetailsPage.Controls.Add(tabs);
+                    _editSpiritDetailsForm.Controls.Add(tabs);
 
                     foreach (var subPage in UiHelper.GetPagesAsList(EmptySpiritPage, inclusive: false))
                     {
@@ -48,9 +49,17 @@ namespace SmashUltimateEditor
                         tabs.TabPages.Add(subPage);
                     }
                 }
-                return _editSpiritDetailsPage;
+                return _editSpiritDetailsForm;
             }
-            set { _editSpiritDetailsPage = value; }
+            set { _editSpiritDetailsForm = value; }
+        }
+
+        public TabPageCollection editSpiritDetailsPages
+        {
+            get
+            {
+                return editSpiritDetailsForm.Controls.OfType<TabControl>().FirstOrDefault()?.TabPages;
+            }
         }
 
         public List<IDataOptions> dataOptions;
@@ -226,7 +235,7 @@ namespace SmashUltimateEditor
         public void Save(string fileLocation)
         {
             SaveLocal();    // Save immediately before sending battle and fighter data.  
-            FileHelper.Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation));
+            FileHelper.Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation), spiritData : spiritData);
         }
 
         public void SetSaveTabChange(object sender, EventArgs e)
@@ -291,6 +300,30 @@ namespace SmashUltimateEditor
                 }
             }
         }
+        public void SaveSpiritDb(Spirit spirit)
+        {
+            var spiritDbPages = editSpiritDetailsPages;
+            // No Spirits?
+            if (spiritDbPages is null)
+            {
+                return;
+            }
+
+            foreach (TabPage subPage in spiritDbPages)
+            {
+                // No Spirits?
+                if (subPage is null)
+                {
+                    return;
+                }
+                spirit.UpdateTblValues(subPage);
+            }
+            int index = spiritData.GetItemIndex(spirit);
+            if (index >= 0)
+            {
+                spiritData.ReplaceItemAtIndex(spirit, index);
+            }
+        }
         #endregion
         public void SetRemoveFighterButtonMethod(ref Button b)
         {
@@ -318,20 +351,28 @@ namespace SmashUltimateEditor
         {
             try
             {
-                var selectedSpirit = spiritData.GetSpiritByName(selectedBattle.battle_id);
-
-                var spiritDetailsPage = editSpiritDetailsPage;
-
-                var tabControl = spiritDetailsPage.Controls.OfType<TabControl>().FirstOrDefault();
-
-                
-
-                foreach (var subPage in UiHelper.GetPagesFromTabControl(tabControl))
+                selectedSpirit = spiritData.GetSpiritByName(selectedBattle.battle_id);
+                if(selectedSpirit != null)
                 {
-                    selectedSpirit.UpdatePageValues(subPage);
+                    var spiritDetailsPage = editSpiritDetailsForm;
+
+                    var tabControl = spiritDetailsPage.Controls.OfType<TabControl>().FirstOrDefault();
+
+
+
+                    foreach (var subPage in UiHelper.GetPagesFromTabControl(tabControl))
+                    {
+                        selectedSpirit.UpdatePageValues(subPage);
+                    }
+
+                    spiritDetailsPage.ShowDialog();
+                    SaveSpiritDb(selectedSpirit);
+                }
+                else
+                {
+                    throw new Exception();
                 }
 
-                spiritDetailsPage.ShowDialog();
             }
             catch(Exception ex)
             {
@@ -379,6 +420,14 @@ namespace SmashUltimateEditor
                     foreach (var subPage in UiHelper.GetPagesAsList(page, inclusive : false))
                     {
                         UpdateBattlePageValues(subPage);
+                        // If first page of Battle.  
+                        if (subPage.TabIndex == (int)Battle_Page.Basics)
+                        {
+                            if (spiritData.GetSpiritByName(selectedBattle.battle_id) == null)   //If there is no spirit data, disable the button.  
+                                UiHelper.SetSpiritDetailsButton(subPage, false);
+                            else
+                                UiHelper.SetSpiritDetailsButton(subPage, true);
+                        }
                     }
                 }
                 else if(page.TabIndex >= (int)Top_Level_Page.Fighters)
@@ -395,9 +444,9 @@ namespace SmashUltimateEditor
                         if(pageIndex == 0 && subPage.TabIndex == (int)Fighter_Page.Attributes)
                         {
                             if (selectedFighters.Count == 1)
-                                UiHelper.DisableFighterButton(subPage);
+                                UiHelper.SetFighterButton(subPage, false);
                             else
-                                UiHelper.EnableFighterButton(subPage);
+                                UiHelper.SetFighterButton(subPage, true);
                         }
                     }
                 }

@@ -90,10 +90,14 @@ namespace SmashUltimateEditor
             new Tuple<string, string>("ui_spirit_db.prc", @"\ui\param\database\")
         };
 
-
-        public static List<string> filesToSave = new List<string>()
+        public static List<string> msbtFilesToSave = new List<string>()
         {
             "msg_spirits.msbt"
+        };
+
+        public static List<string> dbFilesToSave = new List<string>()
+        {
+            "ui_spirit_db.prc"
         };
         #endregion
 

@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using YesWeDo.DataTableCollections;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -12,11 +14,6 @@ namespace SmashUltimateEditor.Helpers
     {
         static Config config = new Config();
         const string defaultFileName = "Select Folder";
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData)
-        {
-            Save(battleData, fighterData, Path.GetDirectoryName(config.file_location), Path.GetFileName(config.file_location));
-        }
-
 
         public static void SaveRandomized(BattleDataOptions battleData, FighterDataOptions fighterData, int seed = -1, int iteration = 0)
         {
@@ -31,17 +28,23 @@ namespace SmashUltimateEditor.Helpers
             CopySpiritImages(directory);
         }
 
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false, bool saveSpiritTitles = true)
+        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, SpiritDataOptions spiritData = null, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false, bool saveSpiritTitles = true)
         {
             fileLocation += @"\";
 
             if (unencrypted)
             {
-                SaveUnencrypted(battleData, fighterData, fileLocation + config.unencr_sub, fileName);
+                var pathMod = useFolderStructure ? "" : config.unencr_sub;
+                SaveUnencrypted(battleData, fighterData, fileLocation + pathMod, fileName);
             }
             if (encrypted)
             {
                 SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
+                if (spiritData != null)
+                {
+                    var loc = MiscDbsToSave();
+                    SaveEncrypted(spiritData, Path.GetDirectoryName(loc), Path.GetFileName(loc));
+                }
             }
 
             if (saveSpiritTitles)
@@ -57,7 +60,17 @@ namespace SmashUltimateEditor.Helpers
 
             // Save the version for local editing. 
             Directory.CreateDirectory(fileLocation);
-            SaveToFile(battleData, fighterData, fileLocation + fileName);
+
+            SaveToFile(ConvertDataToXDocument(battleData, fighterData), fileLocation + fileName);
+        }
+        public static void SaveUnencrypted(SpiritDataOptions spiritData, string fileLocation, string fileName)
+        {
+            fileLocation = FixFolderEndPath(fileLocation);
+
+            // Save the version for local editing. 
+            Directory.CreateDirectory(fileLocation);
+
+            SaveToFile(ConvertDataToXDocument(spiritData), fileLocation + fileName);
         }
 
         public static void SaveEncrypted(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool useFolderStructure = false)
@@ -70,20 +83,32 @@ namespace SmashUltimateEditor.Helpers
                 fileLocation += GetFilePath(fileName);
             }
             Directory.CreateDirectory(fileLocation);
-            SaveToEncryptedFile(battleData, fighterData, fileLocation + fileName);
+            SaveToEncryptedFile(ConvertDataToXDocument(battleData, fighterData), fileLocation + fileName);
+        }
+        public static void SaveEncrypted(SpiritDataOptions spiritData, string fileLocation, string fileName)
+        {
+            fileLocation = FixFolderEndPath(fileLocation);
+
+            Directory.CreateDirectory(fileLocation);
+            SaveToEncryptedFile(ConvertDataToXDocument(spiritData), fileLocation + fileName);
         }
 
-
-        public static void SaveToEncryptedFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+        public static XDocument ConvertDataToXDocument(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
-            var doc = XmlHelper.BuildXml(battleData, fighterData);
+            return XmlHelper.BuildXml(battleData, fighterData);
+        }
+        public static XDocument ConvertDataToXDocument(SpiritDataOptions spiritData)
+        {
+            return XmlHelper.BuildXml(spiritData);
+        }
 
+        public static void SaveToEncryptedFile(XDocument doc, string fileLocation)
+        {
             PrcCrypto.AssmebleEncrypted(doc.ToXmlDocument(), fileLocation, config.labels_file_location);
         }
 
-        public static void SaveToFile(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation)
+        public static void SaveToFile(XDocument doc, string fileLocation)
         {
-            var doc = XmlHelper.BuildXml(battleData, fighterData);
             XmlHelper.WriteXmlToFile(fileLocation, doc);
         }
 
@@ -274,7 +299,7 @@ namespace SmashUltimateEditor.Helpers
                 FileHelper.ToDefaultBattleExportFolder(filename) :
                 filename;
 
-            FileHelper.SaveUnencrypted(singleBattle, fighters, standalonePath, unencryptedFileName);
+            FileHelper.Save(singleBattle, fighters, standalonePath, unencryptedFileName, unencrypted : true, encrypted : false, useFolderStructure : true, spiritData: dataTbls.spiritData);
         }
 
         public static void ExportPackaged(DataTbls dataTbls, string filename)
@@ -286,7 +311,7 @@ namespace SmashUltimateEditor.Helpers
                 FileHelper.ToDefaultBattleExportFolder(filename) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
                 filename;
 
-            FileHelper.SaveEncrypted(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true);
+            FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true, unencrypted : false, encrypted : true, spiritData: dataTbls.spiritData);
             SaveSpiritTitles(dataTbls.battleData.GetBattles(), config.file_directory_preload);
             FileHelper.CopyPreloadFiles(packPath);
             FileHelper.CopySpiritImages(packPath);
@@ -306,6 +331,22 @@ namespace SmashUltimateEditor.Helpers
 
             return filePath;
         }
+
+        public static string MiscDbsToSave()
+        {
+            foreach(var filesToSave in Defs.dbFilesToSave)
+            {
+                foreach(var preloadFile in FileHelper.GetFiles(config.file_directory_preload))
+                {
+                    if(preloadFile.Name == filesToSave)
+                    {
+                        return preloadFile.FullName;
+                    }
+                }
+            }
+            return null;
+        }
+
 
         public static text_msbt.MsbtAdapter GetLoadedMsbtAdapter(string fileName)
         {
@@ -355,7 +396,7 @@ namespace SmashUltimateEditor.Helpers
             {
                 var files = GetFiles(fileName);
 
-                foreach(var file in files.Where( x=> Defs.filesToSave.Contains(x.Name)))
+                foreach(var file in files.Where( x=> Defs.msbtFilesToSave.Contains(x.Name)))
                 {
                     var adapter = GetLoadedMsbtAdapter(file.FullName);
 

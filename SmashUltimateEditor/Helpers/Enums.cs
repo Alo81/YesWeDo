@@ -22,7 +22,10 @@
         }
         public enum Spirit_Page
         {
-            SpiritDetails
+            Basic,
+            Stats,
+            Summon,
+            Unknown
         }
         public enum Ui_Element
         {

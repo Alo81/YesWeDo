@@ -47,6 +47,13 @@ namespace SmashUltimateEditor
         public const int BUTTON_HEIGHT = 48;
         public const int BUTTON_WIDTH = 200;
         public const int BUTTON_PADDING = 5;
+
+        public static int MAX_WIDTH = Math.Max(Math.Max(BOX_WIDTH, LABEL_WIDTH), BUTTON_WIDTH);
+        public static int MAX_PADDING = Math.Max(Math.Max(BOX_PADDING, LABEL_PADDING), BUTTON_PADDING);
+
+        public static int COLUMN_WIDTH = MAX_WIDTH + (MAX_PADDING * 3);
+        public static int ROW_HEIGHT = (LABEL_HEIGHT + LABEL_PADDING) * ROWS;
+
         public const int ROWS = 18;
         public const int COLUMNS = 4;
 

@@ -31,15 +31,22 @@ namespace SmashUltimateEditor
         public ProgressBar progress;
         public Label informativeLabel;
 
-        public TabPage _editSpiritDetailsPage;
-        public TabPage editSpiritDetailsPage
+        public Form _editSpiritDetailsPage;
+        public Form editSpiritDetailsPage
         {
             get 
             {
                 if(_editSpiritDetailsPage == null)
                 {
-                    _editSpiritDetailsPage = EmptySpiritPage;
-                    _editSpiritDetailsPage.Size = new Size(300, 100);
+                    _editSpiritDetailsPage = UiHelper.GetEmptySpiritDataForm();
+                    var tabs = UiHelper.GetEmptyTabControl();
+                    _editSpiritDetailsPage.Controls.Add(tabs);
+
+                    foreach (var subPage in UiHelper.GetPagesAsList(EmptySpiritPage, inclusive: false))
+                    {
+                        subPage.AutoScroll = true;
+                        tabs.TabPages.Add(subPage);
+                    }
                 }
                 return _editSpiritDetailsPage;
             }
@@ -311,19 +318,24 @@ namespace SmashUltimateEditor
         {
             try
             {
-                //GetProperties
                 var selectedSpirit = spiritData.GetSpiritByName(selectedBattle.battle_id);
 
-                foreach (var subPage in UiHelper.GetPagesAsList(editSpiritDetailsPage, inclusive: false))
+                var spiritDetailsPage = editSpiritDetailsPage;
+
+                var tabControl = spiritDetailsPage.Controls.OfType<TabControl>().FirstOrDefault();
+
+                
+
+                foreach (var subPage in UiHelper.GetPagesFromTabControl(tabControl))
                 {
                     selectedSpirit.UpdatePageValues(subPage);
                 }
 
-                editSpiritDetailsPage.Show();
+                spiritDetailsPage.ShowDialog();
             }
             catch(Exception ex)
             {
-                UiHelper.PopUpMessage(ex.Message);
+                UiHelper.PopUpMessage("Spirit does not have Spirit Db Entry.");
             }
         }
 

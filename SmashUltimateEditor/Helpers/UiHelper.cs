@@ -128,6 +128,27 @@ namespace SmashUltimateEditor.Helpers
             return tabPage;
         }
 
+        public static Form GetEmptySpiritDataForm()
+        {
+            return new Form()
+            {
+                Text = $"Spirit Details",
+                Size = new Size((Defs.COLUMN_WIDTH * 2), Defs.ROW_HEIGHT )
+            };
+        }
+
+        public static TabControl GetEmptyTabControl()
+        {
+            TabControl subControl = new TabControl();
+            subControl.Size = new Size(1200, 800);
+
+            subControl.Anchor = (((((AnchorStyles.Top | AnchorStyles.Bottom)
+            | AnchorStyles.Left)
+            | AnchorStyles.Right)));
+
+            return subControl;
+        }
+
         public static TabPage GetEmptyTabPageFromType(Type type)
         {
             var page = GetEmptyTabPage();
@@ -232,15 +253,6 @@ namespace SmashUltimateEditor.Helpers
                 Size = new Size(300, 100),
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(0, 100 * (iteration))
-            };
-        }
-
-        public static Form GetEmptySpiritDataForm()
-        {
-            return new Form()
-            {
-                Text = $"Spirit Details",
-                Size = new Size(800, 600)
             };
         }
 

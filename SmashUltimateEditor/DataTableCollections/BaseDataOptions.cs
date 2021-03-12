@@ -10,6 +10,13 @@ namespace SmashUltimateEditor.DataTableCollections
 {
     public class BaseDataOptions : IDataOptions
     {
+        public IList<IDataTbl> _dataList
+        {
+            get
+            {
+                return (IList<IDataTbl>)GetType().GetProperty("dataList").GetValue(this);
+            }
+        }
         public List<IDataTbl> dataList { get; set; }
 
         public int GetCount()
@@ -26,10 +33,23 @@ namespace SmashUltimateEditor.DataTableCollections
         {
             dataList = inData;
         }
+
+        public IList<IDataTbl> GetData()
+        {
+            return _dataList;
+        }
+
+        public int GetItemIndex(IDataTbl item)
+        {
+            return _dataList.IndexOf(item);
+        }
+        public void ReplaceItemAtIndex(IDataTbl item, int index)
+        {
+            _dataList[index] = item;
+        }
         public IEnumerable<object> GetPropertyValuesFromName(string name)
         {
-            var list = GetType().GetProperty("dataList").GetValue(this);
-            return ((IEnumerable<object>)list).Select(x => x.GetPropertyValueFromName(name)).Distinct().OrderBy(x => x);
+            return _dataList.Select(x => x.GetPropertyValueFromName(name)).Distinct().OrderBy(x => x);
         }
 
         public List<string> GetOptionsFromName(string name)

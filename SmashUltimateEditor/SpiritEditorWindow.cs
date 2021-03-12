@@ -266,52 +266,6 @@ namespace SmashUltimateEditor
                 UiHelper.SetInformativeLabel(ref labelInformative, $"File saved.");
             }
         }
-
-        private void ExportBattleFile_Click(object sender, EventArgs e)
-        {
-            dataTbls.SaveLocal();
-            BattleDataOptions singleBattle = new BattleDataOptions();
-            FighterDataOptions fighters = new FighterDataOptions();
-            var battleId = dataTbls.selectedBattle.battle_id;
-
-            singleBattle.AddBattle(dataTbls.battleData.GetBattle(battleId));
-            fighters.AddFighters(dataTbls.selectedFighters);
-
-            var saveDialog = new SaveFileDialog()
-            {
-                Title = "Export Spirit Battle",
-                Filter = "PRC|*.prc*",
-                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, battleId),
-                InitialDirectory = dataTbls.config.file_directory_custom_battles
-            };
-
-            var result = saveDialog.ShowDialog();
-            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(saveDialog?.FileName))
-            {
-                FileHelper.Save(singleBattle, fighters, Path.GetDirectoryName(saveDialog.FileName), Path.GetFileName(saveDialog.FileName), unencrypted:true, encrypted:false);
-                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
-            }
-        }
-        private void ExportAllForSwitch_Click(object sender, EventArgs e)
-        {
-            dataTbls.SaveLocal();
-
-            var openFolderDialog = new FolderBrowserDialog
-            {
-                Description = "Export Battles for Switch.",
-                SelectedPath = dataTbls.config.file_directory_custom_battles
-            };
-
-            var result = openFolderDialog.ShowDialog();
-            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openFolderDialog?.SelectedPath))
-            {
-                FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, openFolderDialog.SelectedPath, dataTbls.config.file_name_encr, unencrypted: false, encrypted: true, useFolderStructure : true);
-                FileHelper.CopyPreloadFiles(openFolderDialog.SelectedPath);
-                FileHelper.CopySpiritImages(openFolderDialog.SelectedPath);
-                UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
-            }
-
-        }
         private void ExportModForRelease_Click(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();

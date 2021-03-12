@@ -33,6 +33,8 @@ __________________________________
     >@\ui\param\spirits\  
   - msg_spirits.msbt
     >@\ui\message\
+  - ui_spirit_db.prc
+    >\ui\param\database\
   
 __________________________________
 

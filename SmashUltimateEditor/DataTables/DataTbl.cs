@@ -67,6 +67,18 @@ namespace SmashUltimateEditor.DataTables
 
             public string OriginalFileType { get { return _original; } }
         }
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class RangeAttribute : Attribute
+        {
+            private readonly bool _range;
+            public RangeAttribute(bool range = false)
+            {
+                _range = range;
+            }
+
+            public bool IsRange { get { return _range; } }
+        }
+
         internal int pageCount { get { return 1; } }
 
         public static DataTbl GetDataTblFromXmlName(string className)
@@ -144,7 +156,7 @@ namespace SmashUltimateEditor.DataTables
             }
 
             // Range values?  Set a random value. 
-            if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()) && !Defs.EVENT_OPTIONS.Contains(field.Name.ToLower()))
+            if (field?.GetCustomAttribute<RangeAttribute>()?.IsRange ?? false && !Defs.EVENT_OPTIONS.Contains(field.Name.ToLower()))
             {
                 value = GetRangeValue(ref rnd, field);
             }
@@ -170,7 +182,7 @@ namespace SmashUltimateEditor.DataTables
             {
                 this.SetValueFromName(field.Name, value);
             }
-            else if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+            else if (field?.GetCustomAttribute<RangeAttribute>()?.IsRange ?? false)
             {
                 // Set floats to mode value?
                 this.SetValueFromName(field.Name, dataTbls.GetModeFromTypeAndName(GetType(), field.Name));
@@ -486,7 +498,7 @@ namespace SmashUltimateEditor.DataTables
                 lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
 
                 // Range values?  Use a textbox.
-                if (Defs.RANGE_VALUES.Contains(field.Name.ToUpper()))
+                if (field?.GetCustomAttribute<RangeAttribute>()?.IsRange ?? false)
                 {
                     lb.SetTextBox(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                 }

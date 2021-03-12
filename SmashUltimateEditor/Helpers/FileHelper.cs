@@ -40,7 +40,7 @@ namespace SmashUltimateEditor.Helpers
             if (encrypted)
             {
                 SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
-                if (spiritData.HasData())
+                if (spiritData?.HasData() ?? false)
                 {
                     var loc = MiscDbsToSave();
                     SaveEncrypted(spiritData, Path.GetDirectoryName(loc), Path.GetFileName(loc));

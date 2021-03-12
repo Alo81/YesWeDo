@@ -219,13 +219,13 @@ namespace SmashUltimateEditor
         public string   battle_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	battle_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public ushort	battle_time_sec { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public ushort	basic_init_damage { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public ushort	basic_init_hp { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public byte	    basic_stock { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	ui_stage_id { get; set; }
@@ -251,37 +251,37 @@ namespace SmashUltimateEditor
         public string	event1_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event1_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event1_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event1_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public byte	    event1_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public ushort	event1_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event2_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event2_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event2_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event2_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public byte	    event2_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public ushort	event2_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event3_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)]
         public string	event3_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event3_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public int		event3_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public byte	    event3_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
         public ushort	event3_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d41ef8328 { get; set; }
@@ -331,7 +331,7 @@ namespace SmashUltimateEditor
         public string	un_recommended_skill5 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x0ff8afd14f { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public uint	    battle_power { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
         public string spiritTitle 

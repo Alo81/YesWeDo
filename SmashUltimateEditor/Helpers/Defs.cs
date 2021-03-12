@@ -102,38 +102,6 @@ namespace SmashUltimateEditor
         #endregion
 
         #region Spirit Battles
-        public static List<string> RANGE_VALUES = new List<string>()
-        {
-            "APPEAR_RULE_TIME",
-            "APPEAR_RULE_COUNT",
-            "COLOR",
-            "CPU_LV",
-            "STOCK",
-            "HP",
-            "INIT_DAMAGE",
-            "SCALE",
-            "FLY_RATE",
-            "ATTACK",
-            "DEFENSE",
-            "BATTLE_TIME_SEC",
-            "BASIC_INIT_DAMAGE",
-            "BASIC_INIT_HP",
-            "BASIC_STOCK",
-            "EVENT1_START_TIME",
-            "EVENT1_RANGE_TIME",
-            "EVENT1_COUNT",
-            "EVENT1_DAMAGE",
-            "EVENT2_START_TIME",
-            "EVENT2_RANGE_TIME",
-            "EVENT2_COUNT",
-            "EVENT2_DAMAGE",
-            "EVENT3_START_TIME",
-            "EVENT3_RANGE_TIME",
-            "EVENT3_COUNT",
-            "EVENT3_DAMAGE",
-            "BATTLE_POWER"
-        };
-
         public static Dictionary<string, List<string>> HAZARD_SKILLS = new Dictionary<string, List<string>>()
         {
             { "damage_floor",   new List<string>() { "damage_floor_invalid", "damage_floor_half" } },
@@ -153,11 +121,6 @@ namespace SmashUltimateEditor
             { "event1_label",   "event1_type"},
             { "event2_label",   "event2_type"},
             { "event3_label",   "event3_type"}
-        };
-
-        public static List<string> FLOAT_VALUES = new List<string>()
-        {   "SCALE",
-            "FLY_RATE",
         };
 
         public static List<string> EVENT_OPTIONS = new List<String>()

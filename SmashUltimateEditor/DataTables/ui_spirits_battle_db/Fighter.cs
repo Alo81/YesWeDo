@@ -163,13 +163,13 @@ namespace SmashUltimateEditor
         public string entry_type { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool first_appear { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         public ushort appear_rule_time { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         public byte color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_hat_id { get; set; }
@@ -187,7 +187,7 @@ namespace SmashUltimateEditor
         public byte mii_sp_hi { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public byte mii_sp_lw { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public byte cpu_lv { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string cpu_type { get; set; }
@@ -195,21 +195,21 @@ namespace SmashUltimateEditor
         public string cpu_sub_type { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public bool cpu_item_pick_up { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public byte stock { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool corps { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool fix_corps_color { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public ushort hp { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public ushort init_damage { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string sub_rule { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public float scale { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public float fly_rate { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool invalid_drop { get; set; }
@@ -217,9 +217,9 @@ namespace SmashUltimateEditor
         public bool enable_charge_final { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string spirit_name { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public short attack { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public short defense { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string attr { get; set; }

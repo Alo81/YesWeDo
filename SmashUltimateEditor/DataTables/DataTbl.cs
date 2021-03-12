@@ -194,6 +194,11 @@ namespace SmashUltimateEditor.DataTables
             this.SetValueFromName(field.Name, value);
         }
 
+        public IEnumerable<PropertyInfo> GetProperties(bool includeExcluded = false)
+        {
+            return GetType().GetProperties().Where(x => includeExcluded || (!(x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded) ?? true)).OrderBy(x => x.Name);
+        }
+
         public string EnumCheckerToTbl(string value, string name)
         {
             if (name == "mii_color")
@@ -524,6 +529,13 @@ namespace SmashUltimateEditor.DataTables
 
                     lb.SetTextBox("spiritSortTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                     subPage.Controls.Add(lb.text);
+                }
+
+                if (dataTbls.spiritData.HasData())
+                {
+                    Button b = UiHelper.GetEmptySpiritDetailsButton(UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Button));
+                    dataTbls.SetEditSpiritDetailsButtonMethod(ref b);
+                    subPage.Controls.Add(b);
                 }
 
                 for (int i = 0; i < Defs.spiritUiLocations.Count; i++)

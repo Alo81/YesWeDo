@@ -25,13 +25,13 @@ namespace SmashUltimateEditor.Helpers
             var randomizerString = iteration > 0 ? ".Randomizer " : "Randomizer ";
             var directory = config.file_directory_randomized + randomizerString + seed + " " + iteration;  // Randomizer ### 1
 
-            Save(battleData, fighterData, directory, fileName, unencrypted:false, useFolderStructure: true);
+            Save(battleData, fighterData, directory, fileName, unencrypted:false, useFolderStructure: true, saveSpiritTitles:false);
 
             CopyPreloadFiles(directory);
             CopySpiritImages(directory);
         }
 
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false)
+        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false, bool saveSpiritTitles = true)
         {
             fileLocation += @"\";
 
@@ -44,7 +44,10 @@ namespace SmashUltimateEditor.Helpers
                 SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
             }
 
-            SaveSpiritTitles(battleData.GetBattles(), config.file_directory_preload);
+            if (saveSpiritTitles)
+            {
+                SaveSpiritTitles(battleData.GetBattles(), config.file_directory_preload);
+            }
         }
 
         // Replace Save calls to calls here.  
@@ -199,7 +202,7 @@ namespace SmashUltimateEditor.Helpers
 
         public static string GetFilePath(string fileName)
         {
-            foreach(var file in Defs.files)
+            foreach(var file in Defs.filesToCopy)
             {
                 if (file.Item1.Equals(fileName)){
                     return file.Item2;
@@ -329,7 +332,7 @@ namespace SmashUltimateEditor.Helpers
                     var x = 0;
                 }
 
-                var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
+                var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x)?.SpiritBattleId == battle?.battle_id);
                 if (match != null)
                 {
                     battle.SetSpiritTitleParameters(match.EditedText);

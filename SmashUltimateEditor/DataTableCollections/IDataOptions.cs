@@ -11,5 +11,6 @@ namespace SmashUltimateEditor.DataTableCollections
         public int GetCount();
         public bool HasData();
         public void SetData(List<IDataTbl> inData);
+        public IEnumerable<object> GetPropertyValuesFromName(string name);
     }
 }

@@ -53,6 +53,7 @@ namespace SmashUltimateEditor
         public static Color labelBack = Color.FromArgb(255, 205, 205);
 
         public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
+        public const string EDIT_SPIRIT_DETAILS_BUTTON_STRING = "Edit Spirit Details";
         public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";
         public const string FILE_WILDCARD_PATTERN = ".*";
         #endregion
@@ -70,7 +71,7 @@ namespace SmashUltimateEditor
 
         public static List<Tuple<string, string>> regExFiles = new List<Tuple<string, string>>(spiritUiLocations);
 
-        public static List<Tuple<string, string>> files = new List<Tuple<string, string>>()    // Include Spirit UI locations
+        public static List<Tuple<string, string>> filesToCopy = new List<Tuple<string, string>>()    // Include Spirit UI locations
         {
             new Tuple<string, string>("ui_spirits_battle_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_fighter_spirit_aw_db.prc", @"\ui\param\database\"),
@@ -78,8 +79,10 @@ namespace SmashUltimateEditor
             new Tuple<string, string>("spirits_battle_event.prc", @"\ui\param\spirits\"),
             new Tuple<string, string>("spirits_board_special_param.prc", @"\ui\param_patch\spirits_board_special\"),
             new Tuple<string, string>("spirits_battle_items.prc", @"\param\spirits\"),
-            new Tuple<string, string>("msg_spirits.msbt", @"\ui\message\")
+            new Tuple<string, string>("msg_spirits.msbt", @"\ui\message\"),
+            new Tuple<string, string>("ui_spirit_db.prc", @"\ui\param\database\")
         };
+
 
         public static List<string> filesToSave = new List<string>()
         {

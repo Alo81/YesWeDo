@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YesWeDo.DataTableCollections;
+using YesWeDo.DataTables.ui_spirit_db;
 using YesWeDo.Helpers;
 using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
@@ -29,6 +30,21 @@ namespace SmashUltimateEditor
         public TabControl tabs;
         public ProgressBar progress;
         public Label informativeLabel;
+
+        public TabPage _editSpiritDetailsPage;
+        public TabPage editSpiritDetailsPage
+        {
+            get 
+            {
+                if(_editSpiritDetailsPage == null)
+                {
+                    _editSpiritDetailsPage = EmptySpiritPage;
+                    _editSpiritDetailsPage.Size = new Size(300, 100);
+                }
+                return _editSpiritDetailsPage;
+            }
+            set { _editSpiritDetailsPage = value; }
+        }
 
         public List<IDataOptions> dataOptions;
 
@@ -60,6 +76,11 @@ namespace SmashUltimateEditor
         public SpiritBoardDataOptions spiritBoardData
         {
             get { return (SpiritBoardDataOptions)GetOptionsOfType(typeof(SpiritBoardDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
+        public SpiritDataOptions spiritData
+        {
+            get { return (SpiritDataOptions)GetOptionsOfType(typeof(SpiritDataOptions)); }
             set { UpdateDataOptions(value); }
         }
 
@@ -102,7 +123,14 @@ namespace SmashUltimateEditor
             get
             {
                 return Battle.BuildEmptyPage(this);
-            } 
+            }
+        }
+        public TabPage EmptySpiritPage
+        {
+            get
+            {
+                return Spirit.BuildEmptyPage(this);
+            }
         }
 
         public TabPage EmptyFighterPage
@@ -262,6 +290,11 @@ namespace SmashUltimateEditor
             b.Click += new System.EventHandler(RemoveFighterFromButtonNamedIndex);
         }
 
+        public void SetEditSpiritDetailsButtonMethod(ref Button b)
+        {
+            b.Click += new System.EventHandler(EditSpiritDetails);
+        }
+
         public void SetLoadSpiritImageButtonMethod(ref Button b)
         {
             b.Click += new System.EventHandler(LoadSpiritImageFromButton);
@@ -272,6 +305,26 @@ namespace SmashUltimateEditor
             selectedFighters.Remove(fighterData.GetFighterAtIndex(index));
             fighterData.RemoveFighterAtIndex(index);
             RefreshTabs();
+        }
+
+        public void EditSpiritDetails(object sender, EventArgs e)
+        {
+            try
+            {
+                //GetProperties
+                var selectedSpirit = spiritData.GetSpiritByName(selectedBattle.battle_id);
+
+                foreach (var subPage in UiHelper.GetPagesAsList(editSpiritDetailsPage, inclusive: false))
+                {
+                    selectedSpirit.UpdatePageValues(subPage);
+                }
+
+                editSpiritDetailsPage.Show();
+            }
+            catch(Exception ex)
+            {
+                UiHelper.PopUpMessage(ex.Message);
+            }
         }
 
         public void LoadSpiritImageFromButton(object sender, EventArgs e)
@@ -459,6 +512,10 @@ namespace SmashUltimateEditor
                 {
                     return battleData.GetOptionsFromName(name) ?? new List<string>();
                 }
+                if (type == typeof(Spirit))
+                {
+                    return spiritData.GetOptionsFromName(name) ?? new List<string>();
+                }
             }
             return new List<string>();
         }
@@ -518,20 +575,10 @@ namespace SmashUltimateEditor
         #region Randomizer
         public async void ExecuteRandomizer(int iteration, int seed, int characterUnlockSeed)
         {
-            Form form = new Form()
-            {
-                Text = $"Randomizer {iteration} progress.",
-                Size = new Size(300, 100),
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(0, 100*(iteration))
-            };
-
+            var form = UiHelper.GetRandomizerProgressWindow(iteration);
             var controlPoint = new Point();
 
-            var bar = new ProgressBar();
-            bar.Size = new Size(Defs.LABEL_WIDTH, Defs.LABEL_HEIGHT);
-            bar.Location = UiHelper.IncrementPoint(ref controlPoint, 0, Ui_Element.Label);
-            UiHelper.SetupRandomizeProgress(bar, battleData.GetCount());
+            var bar = UiHelper.GetRandomizerProgressBar(ref controlPoint, battleData.GetCount());
 
             form.Controls.Add(bar);
             form.Show();

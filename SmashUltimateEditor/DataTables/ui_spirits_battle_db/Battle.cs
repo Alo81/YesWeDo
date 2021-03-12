@@ -348,7 +348,7 @@ namespace SmashUltimateEditor
             }
             set 
             {
-                var totalLength = msbtSort.Length;
+                var totalLength = msbtSort?.Length ?? 0;
                 StringBuilder newString = new StringBuilder();  
                 newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
                 foreach (var ch in value)

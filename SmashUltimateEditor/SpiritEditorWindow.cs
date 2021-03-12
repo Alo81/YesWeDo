@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using YesWeDo.DataTableCollections;
+using YesWeDo.DataTables.ui_spirit_db;
 using YesWeDo.Helpers;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
@@ -38,9 +39,12 @@ namespace SmashUltimateEditor
             dataTbls.progress = randomizeProgress;
             dataTbls.informativeLabel = labelInformative;
 
+            FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
+            LoadAllFiles();
+
             if (dataTbls.battleData.HasData())
             {
-                buildFighterDataTab(dataTbls?.battleData?.battle_id?.First());
+                buildFighterDataTab((string)dataTbls?.battleData?.GetPropertyValuesFromName("battle_id")?.First());
             }
             else
             {
@@ -49,8 +53,6 @@ namespace SmashUltimateEditor
                     $"Download ParamLabels.csv from \"Tools\" dropdown.\r\n" +
                     $"Then restart application.");
             }
-            FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
-            LoadAllFiles();
 
             if (dataTbls.config.check_for_updates)
             {
@@ -60,7 +62,7 @@ namespace SmashUltimateEditor
 
         private void buildFighterDataTab(string battle_id)
         {
-            this.dropdownSpiritData.DataSource = dataTbls.battleData.battle_id;
+            this.dropdownSpiritData.DataSource = dataTbls.battleData.GetPropertyValuesFromName("battle_id").ToList();
             dataTbls.SetSelectedBattle(battle_id);
             dataTbls.SetSelectedFighters(battle_id);
         }
@@ -188,6 +190,11 @@ namespace SmashUltimateEditor
                     dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
                     fileDbType.Add("Spirit Board");
                 }
+                if (results.GetDataOptionsFromUnderlyingType(typeof(Spirit)).GetCount() > 0)
+                {
+                    dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
+                    fileDbType.Add("Spirit");
+                }
             }
             catch (Exception ex)
             {
@@ -265,15 +272,16 @@ namespace SmashUltimateEditor
             dataTbls.SaveLocal();
             BattleDataOptions singleBattle = new BattleDataOptions();
             FighterDataOptions fighters = new FighterDataOptions();
+            var battleId = dataTbls.selectedBattle.battle_id;
 
-            singleBattle.AddBattle(dataTbls.battleData.GetBattle(dataTbls.selectedBattle.battle_id));
+            singleBattle.AddBattle(dataTbls.battleData.GetBattle(battleId));
             fighters.AddFighters(dataTbls.selectedFighters);
 
             var saveDialog = new SaveFileDialog()
             {
                 Title = "Export Spirit Battle",
                 Filter = "PRC|*.prc*",
-                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, singleBattle.battle_id.First()),
+                FileName = String.Format("{0}_{1}", dataTbls.config.file_name, battleId),
                 InitialDirectory = dataTbls.config.file_directory_custom_battles
             };
 
@@ -426,6 +434,8 @@ namespace SmashUltimateEditor
             var allTasks = new Task[dataTbls.config.randomizer_iterations];
 
             UiHelper.ChangeControlsEnabled(this, false);
+
+            FileHelper.SaveSpiritTitles(dataTbls.battleData.GetBattles(), dataTbls.config.file_directory_preload);
 
             // If seed isn't positive, get random one. 
             for (int i = 0; i < dataTbls.config.randomizer_iterations; i++)

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesWeDo.DataTables.ui_spirit_db;
 using static SmashUltimateEditor.DataTables.DataTbl;
 using static SmashUltimateEditor.Enums;
 using static System.Windows.Forms.TabControl;
@@ -72,6 +73,10 @@ namespace SmashUltimateEditor.Helpers
             {
                 return Enum.GetValues(typeof(Fighter_Page));
             }
+            else if (type == typeof(Spirit))
+            {
+                return Enum.GetValues(typeof(Spirit_Page));
+            }
             else    // If no subpages are defined, get a single empty name tab.  
             {
                 return new string[] { "" };
@@ -86,6 +91,28 @@ namespace SmashUltimateEditor.Helpers
         public static int GetUiPageFromProperty(PropertyInfo field)
         {
             return field?.GetCustomAttributes(true)?.OfType<PageAttribute>()?.FirstOrDefault()?.Page ?? 0;
+        }
+        public static TabControl GetTabControlFromPage(TabPage page)
+        {
+            return page.Controls.OfType<TabControl>().FirstOrDefault();
+        }
+
+        public static TabPage GetSubPageMatchingName(TabPage page, string name)
+        {
+            return GetPagesAsList(page).Where(x => x.Name == name).FirstOrDefault();
+        }
+
+        public static void ReplaceSubPageMatchingName(TabPage page, TabPage replacementPage, string name)
+        {
+            var tabs = GetTabControlFromPage(page);
+
+            for (int i = 0; i < tabs.TabPages.Count; i++)
+            {
+                if(tabs.TabPages[i].Name == name)
+                {
+                    tabs.TabPages[i] = replacementPage;
+                }
+            }
         }
 
         public static TabPage GetEmptyTabPage()
@@ -123,6 +150,15 @@ namespace SmashUltimateEditor.Helpers
             var b = GetEmptyButton();
             b.Location = pos;
             b.Text = b.Name = Defs.REMOVE_FIGHTER_BUTTON_STRING;
+
+            return b;
+        }
+
+        public static Button GetEmptySpiritDetailsButton(Point pos)
+        {
+            var b = GetEmptyButton();
+            b.Location = pos;
+            b.Text = b.Name = Defs.EDIT_SPIRIT_DETAILS_BUTTON_STRING;
 
             return b;
         }
@@ -175,13 +211,37 @@ namespace SmashUltimateEditor.Helpers
             GetFighterButton(page).Enabled = true;
         }
 
-        public static void SetupRandomizeProgress(ProgressBar progress, int max)
+        public static ProgressBar GetRandomizerProgressBar(ref Point controlPoint, int max)
         {
-            progress.Visible = true;
-            progress.Minimum = 0;
-            progress.Maximum = max;
-            progress.Value = progress.Minimum;
-            progress.Step = 1;
+            var bar = new ProgressBar();
+            bar.Size = new Size(Defs.LABEL_WIDTH, Defs.LABEL_HEIGHT);
+            bar.Location = UiHelper.IncrementPoint(ref controlPoint, 0, Ui_Element.Label);
+            bar.Visible = true;
+            bar.Minimum = 0;
+            bar.Maximum = max;
+            bar.Value = bar.Minimum;
+            bar.Step = 1;
+
+            return bar;
+        }
+        public static Form GetRandomizerProgressWindow(int iteration)
+        {
+            return new Form()
+            {
+                Text = $"Randomizer {iteration} progress.",
+                Size = new Size(300, 100),
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(0, 100 * (iteration))
+            };
+        }
+
+        public static Form GetEmptySpiritDataForm()
+        {
+            return new Form()
+            {
+                Text = $"Spirit Details",
+                Size = new Size(800, 600)
+            };
         }
 
         public static void SetPageName(TabPage page, string tabName, int collectionIndex)

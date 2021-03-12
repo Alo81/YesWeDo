@@ -5,7 +5,7 @@ using YesWeDo.DataTables;
 
 namespace SmashUltimateEditor.DataTables
 {
-    class SpiritBoard : DataTbl
+    public class SpiritBoard : DataTbl
     {
         // This may end up clashing.... We may need further determination if there are other db_roots in the future.  
         internal static string XML_NAME = "0x1700f80264";

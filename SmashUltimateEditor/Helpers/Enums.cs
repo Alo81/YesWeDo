@@ -20,6 +20,10 @@
             Skills,
             Unknowns
         }
+        public enum Spirit_Page
+        {
+            SpiritDetails
+        }
         public enum Ui_Element
         {
             Label,

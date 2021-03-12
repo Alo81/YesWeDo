@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace SmashUltimateEditor.DataTables
 {
-    public class DataOptions : IDataOptions//, IXmlType
+    public class DataOptions : BaseDataOptions, IDataOptions//, IXmlType
     {
         //public ParamType TypeKey { get; } = ParamType.list;
         // Try this more?

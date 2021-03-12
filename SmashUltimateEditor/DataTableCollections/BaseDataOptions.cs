@@ -49,7 +49,14 @@ namespace SmashUltimateEditor.DataTableCollections
         }
         public IEnumerable<object> GetPropertyValuesFromName(string name)
         {
-            return _dataList.Select(x => x.GetPropertyValueFromName(name)).Distinct().OrderBy(x => x);
+            if (_dataList?.First()?.GetPropertyFromName(name)?.GetCustomAttribute<LoadSpecialAttribute>()?.LoadSpecial ?? false)
+            {
+                return (IEnumerable<object>)GetType().GetProperty(name).GetValue(this); //If its a special load, we've defined a means to load it from the related DataOptions object.  
+            }
+            else
+            {
+                return _dataList.Select(x => x.GetPropertyValueFromName(name)).Distinct().OrderBy(x => x);
+            }
         }
 
         public List<string> GetOptionsFromName(string name)

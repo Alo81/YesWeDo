@@ -108,6 +108,10 @@ namespace SmashUltimateEditor
         {
             return obj?.GetType()?.GetField(name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(obj)?.ToString()?.ToLower() ?? "";
         }
+        public static PropertyInfo GetPropertyFromName(this object obj, string name)
+        {
+            return obj?.GetType()?.GetProperty(name) ?? null;
+        }
 
         public static IEnumerable<Type> GetChildrenTypes(this object obj)
         {

@@ -78,6 +78,17 @@ namespace SmashUltimateEditor.DataTables
 
             public bool IsRange { get { return _range; } }
         }
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class LoadSpecialAttribute : Attribute
+        {
+            private readonly bool _loadSpecial;
+            public LoadSpecialAttribute(bool loadSpecial = false)
+            {
+                _loadSpecial = loadSpecial;
+            }
+
+            public bool LoadSpecial { get { return _loadSpecial; } }
+        }
 
         internal int pageCount { get { return 1; } }
 

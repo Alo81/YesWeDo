@@ -169,23 +169,23 @@ namespace SmashUltimateEditor
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
+        [Order][Page((int)Enums.Fighter_Page.Basics)]
         public byte color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_hat_id { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_body_id { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Mii)]
+        [Order][Page((int)Enums.Fighter_Page.Mii)][LoadSpecial(true)]
         public byte mii_color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_voice { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Mii)]
+        [Order][Page((int)Enums.Fighter_Page.Mii)][LoadSpecial(true)]
         public byte mii_sp_n { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Mii)]
+        [Order][Page((int)Enums.Fighter_Page.Mii)][LoadSpecial(true)]
         public byte mii_sp_s { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Mii)]
+        [Order][Page((int)Enums.Fighter_Page.Mii)][LoadSpecial(true)]
         public byte mii_sp_hi { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Mii)]
+        [Order][Page((int)Enums.Fighter_Page.Mii)][LoadSpecial(true)]
         public byte mii_sp_lw { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public byte cpu_lv { get; set; }

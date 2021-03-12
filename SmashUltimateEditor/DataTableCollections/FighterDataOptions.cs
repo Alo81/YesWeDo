@@ -109,5 +109,27 @@ namespace SmashUltimateEditor
                 return fighters;
             }
         }
+
+        public List<string> mii_color
+        {
+            get { return EnumUtil<mii_color_opt>.GetValuesSorted(); }
+        }
+        // NOT ORIGINAL TYPE.  Changed from BYTE tp string (?)
+        public List<string> mii_sp_n
+        {
+            get { return EnumUtil<mii_sp_n_opt>.GetValuesSorted(); }
+        }
+        public List<string> mii_sp_s
+        {
+            get { return EnumUtil<mii_sp_s_opt>.GetValuesSorted(); }
+        }
+        public List<string> mii_sp_hi
+        {
+            get { return EnumUtil<mii_sp_hi_opt>.GetValuesSorted(); }
+        }
+        public List<string> mii_sp_lw
+        {
+            get { return EnumUtil<mii_sp_lw_opt>.GetValuesSorted(); }
+        }
     }
 }

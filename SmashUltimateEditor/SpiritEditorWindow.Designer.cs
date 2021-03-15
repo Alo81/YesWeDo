@@ -365,6 +365,7 @@ namespace SmashUltimateEditor
             // 
             // SpiritEditorWindow
             // 
+            this.Shown += SpiritEditorWindow_Shown;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(882, 953);

@@ -26,13 +26,20 @@ namespace SmashUltimateEditor
         public SpiritEditorWindow()
         {
             InitializeComponent();
-
             //this.
             // this.DataContext = // Must be a window for this to work(?)  Essentially for us to data bind.  Have an intermediary object that has all the data to be maniuplated.  
             // Convert to getting all objects from Factorys?
             // Genericize UI from actual logic with a ViewModel
             // Implement unit tests.  
+        }
 
+        private void SpiritEditorWindow_Shown(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
+        private void LoadData()
+        {
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
             //dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);

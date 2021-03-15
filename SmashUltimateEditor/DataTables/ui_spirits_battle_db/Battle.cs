@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static SmashUltimateEditor.Enums;
 
@@ -18,7 +19,9 @@ namespace SmashUltimateEditor
         internal static string XML_NAME = "battle_data_tbl";
         internal string msbtTitle;
         internal string msbtSort;
-        internal string msbtSeparator;
+        internal int msbtLength;
+        internal string msbtOriginal;
+        internal bool msbtUpdated;
 
         // Make an event object dawg.  
         public void Cleanup(ref Random rnd, int fighterCount, DataTbls dataTbls, bool isUnlockableFighterType = false)
@@ -186,9 +189,18 @@ namespace SmashUltimateEditor
             return newCopy;
         }
 
+        public static TabPage BuildEmptyPage(DataTbls dataTbls)
+        {
+            return BuildEmptyPage(dataTbls, typeof(Battle));
+        }
+
         public string GetCombinedMsbtTitle()
         {
-            return string.Concat(msbtTitle, msbtSeparator, msbtSort);
+            if (msbtUpdated)
+            {
+                return PadString(string.Concat(msbtTitle, Defs.msbtSeparator, msbtSort), msbtLength);
+            }
+            return msbtOriginal;
         }
 
         public void SetSpiritTitleParameters(string title)
@@ -196,12 +208,16 @@ namespace SmashUltimateEditor
 
             try
             {
+                // Save original length and title in case we don't change.  
+                msbtOriginal = title;
+                msbtLength = GetLengthFromUnicodeString(title);
+
                 // Find boundaries of string separator.  
                 var sepStart = title.LastIndexOf('\u000e'); //For strange titles, there can be multiple instances of this, so we want the last one we see.  
                 var sepEnd = sepStart + title.Substring(sepStart).IndexOf('\0');   //Search the first instance of \0 that shows up after the parsed display title, add that index amount to the already found SepStart size.  
 
                 msbtTitle = title.Substring(0, sepStart);
-                msbtSeparator = title.Substring(sepStart, sepEnd - sepStart);
+                //msbtSeparator = title.Substring(sepStart, sepEnd - sepStart);
                 msbtSort = title.Substring(sepEnd, title.Length - sepEnd);
             }
             catch
@@ -210,9 +226,71 @@ namespace SmashUltimateEditor
             }
         }
 
-        public static TabPage BuildEmptyPage(DataTbls dataTbls)
+
+        [Order]
+        [Page((int)Enums.Battle_Page.Basics)]
+        [Excluded(true)]
+        public string spiritTitle
         {
-            return BuildEmptyPage(dataTbls, typeof(Battle));
+            get { return msbtTitle; }
+            set
+            {
+                if (!spiritTitle?.Equals(value) ?? true)
+                {
+                    msbtUpdated = true;
+                    msbtTitle = value;
+                }
+            }
+        }
+        [Order]
+        [Page((int)Enums.Battle_Page.Basics)]
+        [Excluded(true)]
+        public string spiritSortTitle
+        {
+            get
+            {
+                return msbtSort?.Replace(Convert.ToString('\0'), "") ?? String.Empty;
+            }
+            set
+            {
+                if (!spiritSortTitle?.Equals(value) ?? true)
+                {
+                    msbtUpdated = true;
+                    StringBuilder newString = new StringBuilder();
+                    newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
+                    foreach (var ch in value)
+                    {
+                        newString.Append(ch);
+                        newString.Append('\0');
+                    }
+                    msbtSort = newString.ToString();
+                }
+            }
+        }
+
+        public string PadString(string inText, int paddedLength, string afterText = "", char padChar = ' ', bool isSortTitle = true)
+        {
+            var newSb = new StringBuilder(inText);
+            while (newSb.Length + afterText.Length < paddedLength)
+            {
+                newSb.Append(padChar);
+                if (isSortTitle)
+                {
+                    newSb.Append('\0');
+                }
+            }
+
+            if (!String.IsNullOrEmpty(afterText))
+            {
+                newSb.Append(afterText);
+            }
+
+            return newSb.ToString();
+        }
+
+        public int GetLengthFromUnicodeString(string inText)
+        {
+            return inText?.ToCharArray()?.Length ?? 0;
         }
 
         [Order][Page((int)Enums.Battle_Page.Basics)]
@@ -333,37 +411,5 @@ namespace SmashUltimateEditor
         public string	_0x0ff8afd14f { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public uint	    battle_power { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
-        public string spiritTitle 
-        { 
-            get { return msbtTitle; }
-            set { msbtTitle = value; } 
-        }
-        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
-        public string spiritSortTitle 
-        {
-            get 
-            {
-                return msbtSort?.Replace(Convert.ToString('\0'), "") ?? String.Empty;  
-            }
-            set 
-            {
-                var totalLength = msbtSort?.Length ?? 0;
-                StringBuilder newString = new StringBuilder();  
-                newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
-                foreach (var ch in value)
-                {
-                    newString.Append(ch);
-                    newString.Append('\0');
-                }
-                while(newString.Length < totalLength)
-                {
-                    newString.Append(" ");
-                    newString.Append('\0');
-                }
-
-                msbtSort = newString.ToString(); 
-            } 
-        }
     }
 }

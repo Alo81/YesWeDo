@@ -101,6 +101,11 @@ namespace SmashUltimateEditor
         };
         #endregion
 
+        #region MSBT
+
+        public static string msbtSeparator = "\u000e\u0001\n\f\n";
+        #endregion
+
         #region Spirit Battles
         public static Dictionary<string, List<string>> HAZARD_SKILLS = new Dictionary<string, List<string>>()
         {

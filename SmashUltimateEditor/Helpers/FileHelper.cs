@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using YesWeDo.DataTableCollections;
+using YesWeDo.MSBT;
 
 namespace SmashUltimateEditor.Helpers
 {
@@ -348,9 +349,9 @@ namespace SmashUltimateEditor.Helpers
         }
 
 
-        public static text_msbt.MsbtAdapter GetLoadedMsbtAdapter(string fileName)
+        public static MsbtAdapter GetLoadedMsbtAdapter(string fileName)
         {
-            var adapter = new text_msbt.MsbtAdapter();
+            var adapter = new MsbtAdapter();
             try
             {
                 adapter.Load(fileName);
@@ -373,7 +374,7 @@ namespace SmashUltimateEditor.Helpers
                     var x = 0;
                 }
 
-                var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x)?.SpiritBattleId == battle?.battle_id);
+                var match = adapter.Entries.FirstOrDefault(x => ((MsbtEntry)x)?.SpiritBattleId == battle?.battle_id);
                 if (match != null)
                 {
                     battle.SetSpiritTitleParameters(match.EditedText);
@@ -403,7 +404,7 @@ namespace SmashUltimateEditor.Helpers
 
                     foreach (var battle in battles)
                     {
-                        var match = adapter.Entries.FirstOrDefault(x => ((text_msbt.MsbtEntry)x).SpiritBattleId == battle.battle_id);
+                        var match = adapter.Entries.FirstOrDefault(x => ((MsbtEntry)x).SpiritBattleId == battle.battle_id);
                         if (match != null)
                         {
                             match.EditedText = battle.GetCombinedMsbtTitle();

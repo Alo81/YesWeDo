@@ -6,6 +6,14 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="BattleDataTbl.txt" />
     <None Remove="DataTables\BattleDataTblValues.txt" />
@@ -18,17 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Cetera">
-      <HintPath>References\Cetera.dll</HintPath>
-    </Reference>
-    <Reference Include="Kontract">
-      <HintPath>References\Kontract.dll</HintPath>
-    </Reference>
     <Reference Include="paracobNET">
       <HintPath>References\paracobNet.dll</HintPath>
-    </Reference>
-    <Reference Include="text_msbt">
-      <HintPath>References\text_msbt.dll</HintPath>
     </Reference>
   </ItemGroup>
 

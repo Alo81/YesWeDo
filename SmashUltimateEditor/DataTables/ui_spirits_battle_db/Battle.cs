@@ -325,41 +325,41 @@ namespace SmashUltimateEditor
         public string	item_level { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	result_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event1_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event1_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event1_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event1_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public byte	    event1_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event1_damage { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event2_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event2_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event2_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event2_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public byte	    event2_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event2_damage { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event3_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)]
+        [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event3_label { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event3_start_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public int		event3_range_time { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public byte	    event3_count { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)]
+        [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event3_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d41ef8328 { get; set; }
@@ -371,41 +371,41 @@ namespace SmashUltimateEditor
         public string	_0x18d9441f71 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x18404d4ecb { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill1 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill2 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill3 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill4 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill5 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill6 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill7 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill8 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill9 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill10 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill11 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill12 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill13 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill1 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill2 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill3 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill4 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Skills)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill5 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x0ff8afd14f { get; set; }

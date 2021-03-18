@@ -145,6 +145,15 @@ namespace SmashUltimateEditor
             }
         }
 
+        public List<byte> event_count
+        {
+            get { return _dataList.Select(x => x.event1_count).Distinct().OrderBy(x => x).ToList(); }
+        }
+
+        public List<ushort> event_damage
+        {
+            get { return _dataList.Select(x => x.event1_damage).Distinct().OrderBy(x => x).ToList(); }
+        }
         public List<BattleEvent> events
         {
             get { 
@@ -189,14 +198,92 @@ namespace SmashUltimateEditor
                 }
         }
 
-        public List<byte> event_count
+        public List<string> event1_type
         {
-            get { return _dataList.Select(x => x.event1_count).Distinct().OrderBy(x => x).ToList(); }
+            get { return event_type; }
         }
 
-        public List<ushort> event_damage
+        public List<string> event1_label
         {
-            get { return _dataList.Select(x => x.event1_damage).Distinct().OrderBy(x => x).ToList(); }
+            get { return event_label; }
+        }
+
+        public List<string> event1_start_time
+        {
+            get { return event_start_time; }
+        }
+
+        public List<string> event1_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event1_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event1_damage
+        {
+            get { return event_damage; }
+        }
+        public List<string> event2_type
+        {
+            get { return event_type; }
+        }
+
+        public List<string> event2_label
+        {
+            get { return event_label; }
+        }
+
+        public List<string> event2_start_time
+        {
+            get { return event_start_time; }
+        }
+
+        public List<string> event2_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event2_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event2_damage
+        {
+            get { return event_damage; }
+        }
+        public List<string> event3_type
+        {
+            get { return event_type; }
+        }
+
+        public List<string> event3_label
+        {
+            get { return event_label; }
+        }
+
+        public List<string> event3_start_time
+        {
+            get { return event_start_time; }
+        }
+
+        public List<string> event3_range_time
+        {
+            get { return event_range_time; }
+        }
+
+        public List<byte> event3_count
+        {
+            get { return event_count; }
+        }
+
+        public List<ushort> event3_damage
+        {
+            get { return event_damage; }
         }
 
         public List<string> recommended_skill
@@ -232,6 +319,83 @@ namespace SmashUltimateEditor
                 }
                 return _recommended_skill;
             }
+        }
+        public List<string> recommended_skill1
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill2
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill3
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill4
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill5
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill6
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill7
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill8
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill9
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill10
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill11
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill12
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> recommended_skill13
+        {
+            get { return recommended_skill; }
+        }
+
+        public List<string> un_recommended_skill
+        {
+            get { return recommended_skill; }
+        }
+        public List<string> un_recommended_skill1
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill2
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill3
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill4
+        {
+            get { return un_recommended_skill; }
+        }
+        public List<string> un_recommended_skill5
+        {
+            get { return un_recommended_skill; }
         }
     }
 }

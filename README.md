@@ -35,6 +35,12 @@ __________________________________
     >@\ui\message\
   - ui_spirit_db.prc
     >\ui\param\database\
+  - ui_spirits_ability_db.prc
+    >\ui\param\database\
+  - ui_stage_db.prc
+    >\ui\param\database\
+  - ui_bgm_db.prc
+    >\ui\param\database\
   
 __________________________________
 

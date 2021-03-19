@@ -1,4 +1,4 @@
-﻿namespace SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db
+﻿namespace YesWeDo.DataTables
 {
     public class SpiritFighter : DataTbl
     {

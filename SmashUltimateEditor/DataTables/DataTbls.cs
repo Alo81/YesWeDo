@@ -1,7 +1,4 @@
-﻿using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -10,14 +7,15 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesweDo.Helpers;
 using YesWeDo.DataTableCollections;
-using YesWeDo.DataTables.ui_spirit_db;
+using YesWeDo.DataTables;
 using YesWeDo.Helpers;
-using static SmashUltimateEditor.DataTables.DataTbl;
-using static SmashUltimateEditor.Enums;
 using static System.Windows.Forms.TabControl;
+using static YesweDo.Enums;
+using static YesWeDo.DataTables.DataTbl;
 
-namespace SmashUltimateEditor
+namespace YesweDo
 {
     public partial class DataTbls
     {

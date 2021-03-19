@@ -1,6 +1,6 @@
 ﻿using paracobNET;
 
-namespace SmashUltimateEditor.Interfaces
+namespace YesweDo.Interfaces
 {
     interface IXmlType
     {

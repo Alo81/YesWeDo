@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
+using YesweDo;
 
-namespace SmashUltimateEditor.DataTables
+namespace YesWeDo.DataTables
 {
     public class Event : DataTbl
     {

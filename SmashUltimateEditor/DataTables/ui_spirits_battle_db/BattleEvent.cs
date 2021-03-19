@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SmashUltimateEditor.DataTables.ui_spirits_battle_db
+namespace YesWeDo.DataTables
 {
     public class BattleEvent
     {

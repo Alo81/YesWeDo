@@ -1,26 +1,20 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
-using SmashUltimateEditor.DataTables.ui_item_db;
-using SmashUltimateEditor.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using YesweDo.Helpers;
 using YesWeDo.DataTableCollections;
-using YesWeDo.DataTables.ui_spirit_db;
-using YesWeDo.DataTables.ui_spirits_ability;
+using YesWeDo.DataTables;
 using YesWeDo.Helpers;
-using static SmashUltimateEditor.Enums;
-using static SmashUltimateEditor.Extensions;
+using static YesweDo.Enums;
+using static YesweDo.Extensions;
 
-namespace SmashUltimateEditor
+namespace YesweDo
 {
     public partial class SpiritEditorWindow : Form
     {

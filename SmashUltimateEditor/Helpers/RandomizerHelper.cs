@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     public class RandomizerHelper
     {

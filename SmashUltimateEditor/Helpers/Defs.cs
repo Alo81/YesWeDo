@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace SmashUltimateEditor
+namespace YesweDo
 {
     public static class Defs
     {

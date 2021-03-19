@@ -1,21 +1,20 @@
-﻿using SmashUltimateEditor.Helpers;
-using SmashUltimateEditor.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-using YesWeDo.DataTables;
-using static SmashUltimateEditor.Enums;
-using static SmashUltimateEditor.Extensions;
+using YesweDo;
+using YesweDo.Helpers;
+using YesweDo.UI;
+using static YesweDo.Enums;
+using static YesweDo.Extensions;
 
-namespace SmashUltimateEditor.DataTables
+namespace YesWeDo.DataTables
 {
     // IF YOU'RE GRABBING EMPTY VALUES, JUST SET THEM TO NULL?
     public class DataTbl : IDataTbl //: IXmlType

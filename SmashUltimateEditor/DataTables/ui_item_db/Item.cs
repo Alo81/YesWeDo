@@ -1,4 +1,4 @@
-﻿namespace SmashUltimateEditor.DataTables.ui_item_db
+﻿namespace YesWeDo.DataTables
 {
     public class Item : DataTbl
     {

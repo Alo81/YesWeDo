@@ -1,16 +1,13 @@
-﻿using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.Helpers;
-using SmashUltimateEditor.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using static SmashUltimateEditor.Enums;
-using static SmashUltimateEditor.Extensions;
+using YesweDo;
+using YesweDo.Helpers;
+using static YesweDo.Extensions;
 
-namespace SmashUltimateEditor
+namespace YesWeDo.DataTables
 {
     public class Fighter : DataTbl
     {

@@ -5,15 +5,13 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using YesWeDo.DataTables.ui_spirit_db;
-using static SmashUltimateEditor.DataTables.DataTbl;
-using static SmashUltimateEditor.Enums;
-using static System.Windows.Forms.TabControl;
+using YesWeDo.DataTables;
+using static YesweDo.Enums;
+using static YesWeDo.DataTables.DataTbl;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     class UiHelper
     {

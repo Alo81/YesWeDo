@@ -1,4 +1,4 @@
-﻿namespace SmashUltimateEditor
+﻿namespace YesweDo
 {
     public class Enums
     {

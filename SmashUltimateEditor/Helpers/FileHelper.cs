@@ -7,9 +7,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using YesWeDo.DataTableCollections;
+using YesWeDo.DataTables;
 using YesWeDo.MSBT;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     class FileHelper
     {

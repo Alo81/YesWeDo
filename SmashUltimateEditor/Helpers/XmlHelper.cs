@@ -1,14 +1,12 @@
-﻿using paracobNET;
-using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using YesWeDo.DataTableCollections;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     class XmlHelper
     {

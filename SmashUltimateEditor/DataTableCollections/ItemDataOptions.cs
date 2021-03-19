@@ -1,10 +1,10 @@
-﻿using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.DataTables.ui_item_db;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using YesweDo;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.DataTableCollections
+namespace YesWeDo.DataTableCollections
 {
     public class ItemDataOptions : BaseDataOptions, IDataOptions
     {

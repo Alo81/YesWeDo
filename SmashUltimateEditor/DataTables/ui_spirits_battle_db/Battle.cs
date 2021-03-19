@@ -1,18 +1,12 @@
-﻿using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
-using SmashUltimateEditor.Helpers;
-using SmashUltimateEditor.UI;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using static SmashUltimateEditor.Enums;
+using YesweDo;
+using YesweDo.Helpers;
 
-namespace SmashUltimateEditor
+namespace YesWeDo.DataTables
 {
     public class Battle : DataTbl
     {

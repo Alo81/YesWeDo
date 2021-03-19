@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmashUltimateEditor;
-using SmashUltimateEditor.DataTables;
+using YesweDo;
+using YesWeDo.DataTables;
 
 namespace SmashUltimateEditorTests
 {

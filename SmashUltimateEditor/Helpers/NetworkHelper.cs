@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SmashUltimateEditor;
-using SmashUltimateEditor.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
+using YesweDo;
+using YesweDo.Helpers;
 
 namespace YesWeDo.Helpers
 {

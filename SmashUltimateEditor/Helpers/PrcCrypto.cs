@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     class PrcCrypto
     {

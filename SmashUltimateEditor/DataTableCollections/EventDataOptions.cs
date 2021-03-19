@@ -1,13 +1,11 @@
-﻿using SmashUltimateEditor.DataTables;
-using SmashUltimateEditor.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using static SmashUltimateEditor.Extensions;
+using YesweDo;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.DataTableCollections
+namespace YesWeDo.DataTableCollections
 {
     public class EventDataOptions : BaseDataOptions, IDataOptions
     {

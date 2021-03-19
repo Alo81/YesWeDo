@@ -1,11 +1,7 @@
-﻿using SmashUltimateEditor;
-using SmashUltimateEditor.DataTables;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using YesweDo;
 
-namespace YesWeDo.DataTables.ui_spirit_db
+namespace YesWeDo.DataTables
 {
     public class Spirit : DataTbl
     {

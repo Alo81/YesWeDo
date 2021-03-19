@@ -1,13 +1,11 @@
-﻿using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
-using SmashUltimateEditor.DataTables.ui_item_db;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using YesweDo;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.DataTables
+namespace YesWeDo.DataTableCollections
 {
     public class DataOptions : BaseDataOptions, IDataOptions//, IXmlType
     {

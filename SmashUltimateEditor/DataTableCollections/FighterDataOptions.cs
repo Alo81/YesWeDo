@@ -1,11 +1,12 @@
-﻿using SmashUltimateEditor.DataTableCollections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static SmashUltimateEditor.Enums;
-using static SmashUltimateEditor.Extensions;
+using YesweDo;
+using YesWeDo.DataTables;
+using static YesweDo.Enums;
+using static YesweDo.Extensions;
 
-namespace SmashUltimateEditor
+namespace YesWeDo.DataTableCollections
 {
     public class FighterDataOptions : BaseDataOptions, IDataOptions
     {

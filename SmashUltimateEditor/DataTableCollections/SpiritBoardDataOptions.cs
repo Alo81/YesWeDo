@@ -1,10 +1,7 @@
-﻿using SmashUltimateEditor;
-using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using YesWeDo.DataTables;
 
 namespace YesWeDo.DataTableCollections
 {

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.DataTableCollections
+namespace YesWeDo.DataTableCollections
 {
     public interface IDataOptions
     {

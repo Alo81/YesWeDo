@@ -1,10 +1,9 @@
-﻿using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables.ui_spirits_battle_db;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor
+namespace YesWeDo.DataTableCollections
 {
     public class BattleDataOptions : BaseDataOptions, IDataOptions
     {

@@ -1,9 +1,4 @@
-﻿using SmashUltimateEditor.DataTables;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace YesWeDo.DataTables.ui_spirits_ability
+﻿namespace YesWeDo.DataTables
 {
     public class SpiritAbilities : DataTbl
     {

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml;
-using YesWeDo.DataTables;
+using YesweDo;
 
-namespace SmashUltimateEditor.DataTables
+namespace YesWeDo.DataTables
 {
     public class SpiritBoard : DataTbl
     {

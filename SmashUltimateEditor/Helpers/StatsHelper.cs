@@ -1,13 +1,12 @@
-﻿using SmashUltimateEditor.DataTableCollections;
-using SmashUltimateEditor.DataTables;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using YesWeDo.DataTableCollections;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.Helpers
+namespace YesweDo.Helpers
 {
     class StatsHelper
     {

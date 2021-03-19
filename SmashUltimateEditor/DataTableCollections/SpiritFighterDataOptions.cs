@@ -1,9 +1,10 @@
-﻿using SmashUltimateEditor.DataTables.ui_fighter_spirit_aw_db;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using YesweDo;
+using YesWeDo.DataTables;
 
-namespace SmashUltimateEditor.DataTableCollections
+namespace YesWeDo.DataTableCollections
 {
     public class SpiritFighterDataOptions : BaseDataOptions, IDataOptions
     {

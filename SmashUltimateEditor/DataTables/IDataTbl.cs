@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace SmashUltimateEditor
+namespace YesWeDo.DataTables
 {
     public interface IDataTbl
     {

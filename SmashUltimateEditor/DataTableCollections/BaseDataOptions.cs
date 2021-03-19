@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using static SmashUltimateEditor.DataTables.DataTbl;
+using YesweDo;
+using YesWeDo.DataTables;
+using static YesWeDo.DataTables.DataTbl;
 
-namespace SmashUltimateEditor.DataTableCollections
+namespace YesWeDo.DataTableCollections
 {
     public class BaseDataOptions : IDataOptions
     {

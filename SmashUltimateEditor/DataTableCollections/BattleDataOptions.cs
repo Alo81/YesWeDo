@@ -13,6 +13,8 @@ namespace YesWeDo.DataTableCollections
 
         private List<BattleEvent> _events;
         private List<string> _recommended_skill;
+        private List<string> _stage_bgm;
+        private List<string> _ui_stage_id;
 
         public BattleDataOptions()
         {
@@ -196,6 +198,83 @@ namespace YesWeDo.DataTableCollections
                 return _events; 
                 }
         }
+        private IEnumerable<string> basicSkills
+        {
+            get
+            {
+                return recommended_skill.Where(x => !(x.StartsWith("personal_") || x.StartsWith("style_")));
+            }
+        }
+        public List<string> recommended_skill
+        {
+            get
+            {
+                if (_recommended_skill is null)
+                {
+                    _recommended_skill = new List<string>();
+
+                    _recommended_skill.Add("");
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill1).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill2).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill3).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill4).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill5).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill6).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill7).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill8).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill9).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill10).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill11).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill12).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill13).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill1).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill2).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill3).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill4).Distinct()));
+                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill5).Distinct()));
+
+                    _recommended_skill = _recommended_skill.Distinct().OrderBy(x => x).ToList();
+                }
+                return _recommended_skill;
+            }
+            set
+            {
+                _recommended_skill = value.Distinct().OrderBy(x => x).ToList();
+            }
+        }
+
+        public List<string> ui_stage_id
+        {
+            get
+            {
+                if(_ui_stage_id is null)
+                {
+                    _ui_stage_id = new List<string>();
+                    _ui_stage_id.AddRange(_dataList.Select(x => x.ui_stage_id).Distinct().OrderBy(x => x));
+                }
+                return _ui_stage_id;
+            }
+            set
+            {
+                _ui_stage_id = value.Distinct().OrderBy(x => x).ToList();
+            }
+        }
+        public List<string> stage_bgm
+        {
+            get
+            {
+                if (_stage_bgm is null)
+                {
+                    _stage_bgm = new List<string>();
+                    _stage_bgm.AddRange(_dataList.Select(x => x.stage_bgm).Distinct().OrderBy(x => x));
+                }
+                return _stage_bgm;
+            }
+            set
+            {
+                _stage_bgm = value.Distinct().OrderBy(x => x).ToList();
+            }
+        }
 
         public List<string> event1_type
         {
@@ -285,51 +364,6 @@ namespace YesWeDo.DataTableCollections
             get { return event_damage; }
         }
 
-        public List<string> recommended_skill
-        {
-            get
-            {
-                if (_recommended_skill is null)
-                {
-                    _recommended_skill = new List<string>();
-
-                    _recommended_skill.Add("");
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill1).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill2).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill3).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill4).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill5).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill6).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill7).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill8).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill9).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill10).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill11).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill12).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.recommended_skill13).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill1).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill2).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill3).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill4).Distinct()));
-                    _recommended_skill.AddRange((_dataList.Select(x => x.un_recommended_skill5).Distinct()));
-
-                    _recommended_skill = _recommended_skill.Distinct().OrderBy(x => x).ToList();
-                    //
-                }
-                return _recommended_skill;
-            }
-            set
-            {
-                _recommended_skill = value.Distinct().OrderBy(x => x).ToList();
-            }
-        }
-        private IEnumerable<string> basicSkills
-        {
-            get
-            {
-                return recommended_skill.Where(x => !(x.StartsWith("personal_") || x.StartsWith("style_")));
-            }
-        }
         public IEnumerable<string> recommended_skill1
         {
             get { return basicSkills; }

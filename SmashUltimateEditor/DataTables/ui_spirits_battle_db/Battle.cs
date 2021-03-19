@@ -302,13 +302,13 @@ namespace YesWeDo.DataTables
         public ushort	basic_init_hp { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public byte	    basic_stock { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	ui_stage_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public sbyte _0x18e536d4f7 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	stage_bgm { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    stage_gimmick { get; set; }

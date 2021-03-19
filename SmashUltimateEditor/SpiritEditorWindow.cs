@@ -201,10 +201,24 @@ namespace YesweDo
                 if (results.ContainsItemsOfType(typeof(SpiritAbilities)))
                 {
                     var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
-                    var names = abilities?.Select(x => x?.GetPropertyValueFromName("ui_spirits_ability_id")).ToList();
+                    var names = abilities?.Select(x => x?.GetPropertyValueFromName(SpiritAbilities.fieldKey)).ToList();
                     dataTbls.battleData.recommended_skill = names;
                     dataTbls.fighterData.abilities = names;
-                    fileDbType.Add("Spirit Abilities");
+                    fileDbType.Add("Spirit Ability");
+                }
+                if (results.ContainsItemsOfType(typeof(Bgm)))
+                {
+                    var bgms = results.GetItemsOfType(typeof(Bgm));
+                    var names = bgms?.Select(x => x?.GetPropertyValueFromName(Bgm.fieldKey)).ToList();
+                    dataTbls.battleData.stage_bgm = names;
+                    fileDbType.Add("Bgm");
+                }
+                if (results.ContainsItemsOfType(typeof(Stage)))
+                {
+                    var stages = results.GetItemsOfType(typeof(Stage));
+                    var names = stages?.Select(x => x?.GetPropertyValueFromName(Stage.fieldKey)).ToList();
+                    dataTbls.battleData.ui_stage_id = names;
+                    fileDbType.Add("Stage");
                 }
             }
             catch (Exception ex)

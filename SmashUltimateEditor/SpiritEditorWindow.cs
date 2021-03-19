@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using YesWeDo.DataTableCollections;
 using YesWeDo.DataTables.ui_spirit_db;
+using YesWeDo.DataTables.ui_spirits_ability;
 using YesWeDo.Helpers;
 using static SmashUltimateEditor.Enums;
 using static SmashUltimateEditor.Extensions;
@@ -46,6 +47,11 @@ namespace SmashUltimateEditor
             dataTbls.progress = randomizeProgress;
             dataTbls.informativeLabel = labelInformative;
 
+            if (dataTbls.config.check_for_updates)
+            {
+                Task.Factory.StartNew(() => NetworkHelper.UpdateCheck());
+            }
+
             FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
             LoadAllFiles();
 
@@ -61,10 +67,6 @@ namespace SmashUltimateEditor
                     $"Then restart application.");
             }
 
-            if (dataTbls.config.check_for_updates)
-            {
-                NetworkHelper.UpdateCheck();
-            }
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -157,14 +159,14 @@ namespace SmashUltimateEditor
             {
                 var results = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
 
-                if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() + results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
+                if (    results.ContainsItemsOfType(typeof(Battle)) && results.ContainsItemsOfType(typeof(Fighter)) )
                 {
-                    if (results.GetDataOptionsFromUnderlyingType(typeof(Battle)).GetCount() > 0)
+                    if (results.ContainsItemsOfType(typeof(Battle)))
                     {
                         dataTbls.battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
                         fileDbType.Add("Battle");
                     }
-                    if (results.GetDataOptionsFromUnderlyingType(typeof(Fighter)).GetCount() > 0)
+                    if (results.ContainsItemsOfType(typeof(Fighter)))
                     {
                         dataTbls.fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
                         fileDbType.Add("Fighter");
@@ -172,7 +174,7 @@ namespace SmashUltimateEditor
                     
                     buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
                 }
-                if (results.GetDataOptionsFromUnderlyingType(typeof(Event)).GetCount() > 0)
+                if (results.ContainsItemsOfType(typeof(Event)))
                 {
                     dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
                     dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);
@@ -180,27 +182,35 @@ namespace SmashUltimateEditor
 
                     fileDbType.Add("Event");
                 }
-                if (results.GetDataOptionsFromUnderlyingType(typeof(Item)).GetCount() > 0)
+                if (results.ContainsItemsOfType(typeof(Item)))
                 {
                     dataTbls.itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
                     var itemEvents = dataTbls.itemData.GetAsEvents();
                     dataTbls.eventData.AddUniqueEvents(itemEvents);
                     fileDbType.Add("Item");
                 }
-                if (results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter)).GetCount() > 0)
+                if (results.ContainsItemsOfType(typeof(SpiritFighter)))
                 {
                     dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
                     fileDbType.Add("Spirit Fighter");
                 }
-                if (results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard)).GetCount() > 0)
+                if (results.ContainsItemsOfType(typeof(SpiritBoard)))
                 {
                     dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
                     fileDbType.Add("Spirit Board");
                 }
-                if (results.GetDataOptionsFromUnderlyingType(typeof(Spirit)).GetCount() > 0)
+                if (results.ContainsItemsOfType(typeof(Spirit)))
                 {
                     dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
                     fileDbType.Add("Spirit");
+                }
+                if (results.ContainsItemsOfType(typeof(SpiritAbilities)))
+                {
+                    var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
+                    var names = abilities?.Select(x => x?.GetPropertyValueFromName("ui_spirits_ability_id")).ToList();
+                    dataTbls.battleData.recommended_skill = names;
+                    dataTbls.fighterData.abilities = names;
+                    fileDbType.Add("Spirit Abilities");
                 }
             }
             catch (Exception ex)

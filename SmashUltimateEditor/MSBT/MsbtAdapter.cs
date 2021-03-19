@@ -16,6 +16,7 @@ namespace YesWeDo.MSBT
     {
         private MSBT _msbt;
         private List<MsbtEntry> _entries;
+        private HashSet<MsbtEntry> _hashEntries;
 
         #region Properties
 
@@ -106,6 +107,23 @@ namespace YesWeDo.MSBT
                     return _entries.OrderBy(e => e.Name).ThenBy(e => e.EditedLabel.Index);
 
                 return _entries;
+            }
+        }
+        public HashSet<MsbtEntry> HashEntries
+        {
+            get
+            {
+                if (_hashEntries == null)
+                {
+                    if (_msbt.HasLabels)
+                        _hashEntries = _msbt.LBL1.Labels.Select(o => new MsbtEntry(o)).ToHashSet();
+                    else if (_msbt.HasIDs)
+                        _hashEntries = _msbt.TXT2.Strings.Select(o => new MsbtEntry(new Label { Index = o.Index, String = o, Name = _msbt.NLI1.GlobalIDs[o.Index].ToString() })).ToHashSet();
+                    else
+                        _hashEntries = _msbt.TXT2.Strings.Select(o => new MsbtEntry(new Label { Index = o.Index, String = o })).ToHashSet();
+                }
+
+                return _hashEntries;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using paracobNET;
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -63,7 +64,8 @@ namespace YesweDo.Helpers
             try
             {
                 // Try opening again, and decrypting this time.
-                XmlDocument doc = PrcCrypto.DisassembleEncrypted(fileName, fileLocationLabels);
+                PrcCrypto encryptedSaver = new PrcCrypto();
+                XmlDocument doc = encryptedSaver.DisassembleEncrypted(fileName, fileLocationLabels);
                 doc.Save(stream);
                 stream.Position = 0;
                 return stream;
@@ -89,7 +91,7 @@ namespace YesweDo.Helpers
             }
         }
 
-        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "")
+        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "", OrderedDictionary<ulong, string> hashes = null)
         {
             bool parseData = false;
             bool firstPass = false;
@@ -133,7 +135,8 @@ namespace YesweDo.Helpers
                 // Read the whole file.  
                 while (!reader.EOF)
                 {
-                    dataTable = DataTbl.GetDataTblFromXmlName(reader?.GetAttribute("hash"));
+                    var attribute = reader?.GetAttribute("hash");
+                    dataTable = attribute == null? null :  DataTbl.GetDataTblFromXmlName(attribute);
 
                     if (dataTable != null)
                     {

@@ -10,22 +10,24 @@ namespace YesweDo.Helpers
     {
         #region PRC Cryptography
 
-        static ParamFile file { get; set; }
-        static XmlDocument xml { get; set; }
-        static string labelName { get; set; }
+        ParamFile file { get; set; }
+        XmlDocument xml { get; set; }
+        string labelName { get; set; }
         static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
         static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
 
-        public static XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "")
+        public XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "")
         {
             labelName = labelsFileLocation;
-            hashToStringLabels = new OrderedDictionary<ulong, string>();
 
             if (!string.IsNullOrEmpty(labelName))
             {
                 try
                 {
-                    hashToStringLabels = LabelIO.GetHashStringDict(labelName);
+                    if (hashToStringLabels == null)
+                    {
+                        hashToStringLabels = LabelIO.GetHashStringDict(labelName);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -44,7 +46,7 @@ namespace YesweDo.Helpers
             return xml;
         }
 
-        public static void AssmebleEncrypted(XmlDocument doc, string fileLocation, string labelsFileLocation)
+        public void AssmebleEncrypted(XmlDocument doc, string fileLocation, string labelsFileLocation)
         {
             stringToHashLabels = new OrderedDictionary<string, ulong>();
             if (!string.IsNullOrEmpty(labelsFileLocation))
@@ -65,7 +67,7 @@ namespace YesweDo.Helpers
             file.Save(fileLocation);
         }
 
-        static XmlNode Param2Node(IParam param)
+        XmlNode Param2Node(IParam param)
         {
             switch (param.TypeKey)
             {
@@ -78,7 +80,7 @@ namespace YesweDo.Helpers
             }
         }
 
-        static XmlNode ParamStruct2Node(ParamStruct structure)
+        XmlNode ParamStruct2Node(ParamStruct structure)
         {
             XmlNode xmlNode = xml.CreateElement(ParamType.@struct.ToString());
             foreach (var node in structure.Nodes)
@@ -92,7 +94,7 @@ namespace YesweDo.Helpers
             return xmlNode;
         }
 
-        static XmlNode ParamArray2Node(ParamList array)
+        XmlNode ParamArray2Node(ParamList array)
         {
             XmlNode xmlNode = xml.CreateElement(ParamType.list.ToString());
             XmlAttribute mainAttr = xml.CreateAttribute("size");
@@ -109,7 +111,7 @@ namespace YesweDo.Helpers
             return xmlNode;
         }
 
-        static XmlNode ParamValue2Node(ParamValue value)
+        XmlNode ParamValue2Node(ParamValue value)
         {
             XmlNode xmlNode = xml.CreateElement(value.TypeKey.ToString());
             XmlText text = xml.CreateTextNode(value.ToString(hashToStringLabels));
@@ -117,7 +119,7 @@ namespace YesweDo.Helpers
             return xmlNode;
         }
 
-        static IParam Node2Param(XmlNode node)
+        IParam Node2Param(XmlNode node)
         {
             try
             {
@@ -150,7 +152,7 @@ namespace YesweDo.Helpers
             }
         }
 
-        static ParamStruct Node2ParamStruct(XmlNode node)
+        ParamStruct Node2ParamStruct(XmlNode node)
         {
             Hash40Pairs<IParam> childParams = new Hash40Pairs<IParam>();
             foreach (XmlNode child in node.ChildNodes)
@@ -158,7 +160,7 @@ namespace YesweDo.Helpers
             return new ParamStruct(childParams);
         }
 
-        static ParamList Node2ParamArray(XmlNode node)
+        ParamList Node2ParamArray(XmlNode node)
         {
             int count = node.ChildNodes.Count;
             List<IParam> children = new List<IParam>(count);
@@ -167,7 +169,7 @@ namespace YesweDo.Helpers
             return new ParamList(children);
         }
 
-        static ParamValue Node2ParamValue(XmlNode node, ParamType type)
+        ParamValue Node2ParamValue(XmlNode node, ParamType type)
         {
             ParamValue param = new ParamValue(type);
             param.SetValue(node.InnerText, stringToHashLabels);

@@ -87,7 +87,10 @@ namespace YesweDo
             new Tuple<string, string>("spirits_board_special_param.prc", @"\ui\param_patch\spirits_board_special\"),
             new Tuple<string, string>("spirits_battle_items.prc", @"\param\spirits\"),
             new Tuple<string, string>("msg_spirits.msbt", @"\ui\message\"),
-            new Tuple<string, string>("ui_spirit_db.prc", @"\ui\param\database\")
+            new Tuple<string, string>("ui_spirit_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("ui_spirits_ability_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("ui_stage_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("ui_bgm_db.prc", @"\ui\param\database\")
         };
 
         public static List<string> msbtFilesToSave = new List<string>()

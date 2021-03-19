@@ -243,7 +243,7 @@ namespace YesWeDo.DataTableCollections
             }
         }
 
-        public List<string> ui_stage_id
+        public IEnumerable<string> ui_stage_id
         {
             get
             {
@@ -259,7 +259,7 @@ namespace YesWeDo.DataTableCollections
                 _ui_stage_id = value.Distinct().OrderBy(x => x).ToList();
             }
         }
-        public List<string> stage_bgm
+        public IEnumerable<string> stage_bgm
         {
             get
             {

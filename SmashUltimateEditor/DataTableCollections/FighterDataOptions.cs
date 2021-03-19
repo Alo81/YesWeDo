@@ -118,7 +118,7 @@ namespace YesWeDo.DataTableCollections
             {
                 if(_abilities == null)
                 {
-
+                    _abilities = new List<string>();
                     _abilities.Add("");
                     _abilities.AddRange((_dataList.Select(x => x.ability1).Distinct()));
                     _abilities.AddRange((_dataList.Select(x => x.ability2).Distinct()));

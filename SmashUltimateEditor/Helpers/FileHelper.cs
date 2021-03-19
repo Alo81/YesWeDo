@@ -106,7 +106,8 @@ namespace YesweDo.Helpers
 
         public static void SaveToEncryptedFile(XDocument doc, string fileLocation)
         {
-            PrcCrypto.AssmebleEncrypted(doc.ToXmlDocument(), fileLocation, config.labels_file_location);
+            PrcCrypto encryptedSaver = new PrcCrypto();
+            encryptedSaver.AssmebleEncrypted(doc.ToXmlDocument(), fileLocation, config.labels_file_location);
         }
 
         public static void SaveToFile(XDocument doc, string fileLocation)

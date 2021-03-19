@@ -282,7 +282,7 @@ namespace YesweDo.Helpers
             {
                 foreach (string text in strings)
                 {
-                    csv += text + ",";
+                    csv += text + ", ";
                 }
                 if (csv.Length > 0)
                 {

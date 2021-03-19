@@ -103,7 +103,11 @@ namespace YesWeDo.DataTableCollections
         }
         public bool ContainsItemsOfType(Type type)
         {
-            return _dataList.Exists(x => x.GetType() == type);
+            return _dataList.Exists(x => x.GetType().IsAssignableFrom(type));
+        }
+        public bool ContainsItemsOfUnderlyingType(Type type)
+        {
+            return GetDataOptionsFromUnderlyingType(type).GetCount() > 0;
         }
         public List<Type> GetContainerTypes()
         {

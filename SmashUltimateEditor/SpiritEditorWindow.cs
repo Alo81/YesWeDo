@@ -1,7 +1,9 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using paracobNET;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -18,8 +20,12 @@ namespace YesweDo
 {
     public partial class SpiritEditorWindow : Form
     {
+
+        Stopwatch watch;
         public SpiritEditorWindow()
         {
+            watch = new Stopwatch();
+            watch.Start();
             InitializeComponent();
             //this.
             // this.DataContext = // Must be a window for this to work(?)  Essentially for us to data bind.  Have an intermediary object that has all the data to be maniuplated.  
@@ -28,12 +34,14 @@ namespace YesweDo
             // Implement unit tests.  
         }
 
-        private void SpiritEditorWindow_Shown(object sender, EventArgs e)
+        private async void SpiritEditorWindow_Shown(object sender, EventArgs e)
         {
-            LoadData();
+            UiHelper.ChangeControlsEnabled(this, false);
+            await LoadDataAsync();
+            UiHelper.ChangeControlsEnabled(this, true);
         }
 
-        private void LoadData()
+        private async Task LoadDataAsync()
         {
             dataTbls = new DataTbls();
             dataTbls.tabs = tabControlData;
@@ -47,7 +55,7 @@ namespace YesweDo
             }
 
             FileHelper.CreateDirectories(dataTbls.config.GetFileDirectories());
-            LoadAllFiles();
+            await LoadAllFiles();
 
             if (dataTbls.battleData.HasData())
             {
@@ -60,7 +68,6 @@ namespace YesweDo
                     $"Download ParamLabels.csv from \"Tools\" dropdown.\r\n" +
                     $"Then restart application.");
             }
-
         }
 
         private void buildFighterDataTab(string battle_id)
@@ -132,13 +139,15 @@ namespace YesweDo
 
         private void OpenDbFile_Click(object sender, EventArgs e)
         {
-            var openDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
+            var openDialog = new OpenFileDialog() { Title = "Open Db.", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory};
             var result = openDialog.ShowDialog();
-            List<string> dbTypes;
+            List<string> dbTypes = new List<string>();
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                dbTypes = OpenDbWithFileName(openDialog.FileName);
+                var task = Task<DataOptions>.Run(() => OpenDbWithFileName(openDialog.FileName));
+
+                dbTypes.AddRange(AddResultsToDataTbls(task.Result));
                 dataTbls.RefreshTabs();
                 var dbTypeCSV = UiHelper.ListToCSV(dbTypes);
 
@@ -146,84 +155,89 @@ namespace YesweDo
             }
         }
 
-        public List<string> OpenDbWithFileName(string fileName)
+        public async Task<DataOptions> OpenDbWithFileName(string fileName)
         {
-            var fileDbType = new List<string>();
             try
             {
-                var results = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
-
-                if (    results.ContainsItemsOfType(typeof(Battle)) && results.ContainsItemsOfType(typeof(Fighter)) )
-                {
-                    if (results.ContainsItemsOfType(typeof(Battle)))
-                    {
-                        dataTbls.battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                        fileDbType.Add("Battle");
-                    }
-                    if (results.ContainsItemsOfType(typeof(Fighter)))
-                    {
-                        dataTbls.fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
-                        fileDbType.Add("Fighter");
-                    }
-                    
-                    buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
-                }
-                if (results.ContainsItemsOfType(typeof(Event)))
-                {
-                    dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
-                    dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);
-                    dataTbls.UpdateEventsForDbValues();
-
-                    fileDbType.Add("Event");
-                }
-                if (results.ContainsItemsOfType(typeof(Item)))
-                {
-                    dataTbls.itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
-                    var itemEvents = dataTbls.itemData.GetAsEvents();
-                    dataTbls.eventData.AddUniqueEvents(itemEvents);
-                    fileDbType.Add("Item");
-                }
-                if (results.ContainsItemsOfType(typeof(SpiritFighter)))
-                {
-                    dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
-                    fileDbType.Add("Spirit Fighter");
-                }
-                if (results.ContainsItemsOfType(typeof(SpiritBoard)))
-                {
-                    dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
-                    fileDbType.Add("Spirit Board");
-                }
-                if (results.ContainsItemsOfType(typeof(Spirit)))
-                {
-                    dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
-                    fileDbType.Add("Spirit");
-                }
-                if (results.ContainsItemsOfType(typeof(SpiritAbilities)))
-                {
-                    var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
-                    var names = abilities?.Select(x => x?.GetPropertyValueFromName(SpiritAbilities.fieldKey)).ToList();
-                    dataTbls.battleData.recommended_skill = names;
-                    dataTbls.fighterData.abilities = names;
-                    fileDbType.Add("Spirit Ability");
-                }
-                if (results.ContainsItemsOfType(typeof(Bgm)))
-                {
-                    var bgms = results.GetItemsOfType(typeof(Bgm));
-                    var names = bgms?.Select(x => x?.GetPropertyValueFromName(Bgm.fieldKey)).ToList();
-                    dataTbls.battleData.stage_bgm = names;
-                    fileDbType.Add("Bgm");
-                }
-                if (results.ContainsItemsOfType(typeof(Stage)))
-                {
-                    var stages = results.GetItemsOfType(typeof(Stage));
-                    var names = stages?.Select(x => x?.GetPropertyValueFromName(Stage.fieldKey)).ToList();
-                    dataTbls.battleData.ui_stage_id = names;
-                    fileDbType.Add("Stage");
-                }
+                return XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
             }
             catch (Exception ex)
             {
                 UiHelper.PopUpMessage(String.Format("Couldn't read XML.  Is it encrypted?\r\n{0}", ex.Message));
+                return null;
+            }
+        }
+
+        public List<string> AddResultsToDataTbls(DataOptions results)
+        {
+            var fileDbType = new List<string>();
+
+            if (results.ContainsItemsOfType(typeof(Battle)) && results.ContainsItemsOfType(typeof(Fighter)))
+            {
+                if (results.ContainsItemsOfType(typeof(Battle)))
+                {
+                    dataTbls.battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                    fileDbType.Add("Battle");
+                }
+                if (results.ContainsItemsOfType(typeof(Fighter)))
+                {
+                    dataTbls.fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                    fileDbType.Add("Fighter");
+                }
+
+                buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
+            }
+            if (results.ContainsItemsOfUnderlyingType(typeof(Event)))
+            {
+                dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
+                dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);
+                dataTbls.UpdateEventsForDbValues();
+
+                fileDbType.Add("Event");
+            }
+            if (results.ContainsItemsOfType(typeof(Item)))
+            {
+                dataTbls.itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
+                var itemEvents = dataTbls.itemData.GetAsEvents();
+                dataTbls.eventData.AddUniqueEvents(itemEvents);
+                fileDbType.Add("Item");
+            }
+            if (results.ContainsItemsOfType(typeof(SpiritFighter)))
+            {
+                dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
+                fileDbType.Add("Spirit Fighter");
+            }
+            if (results.ContainsItemsOfType(typeof(SpiritBoard)))
+            {
+                dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
+                fileDbType.Add("Spirit Board");
+            }
+            if (results.ContainsItemsOfType(typeof(Spirit)))
+            {
+                dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
+                fileDbType.Add("Spirit");
+            }
+            if (results.ContainsItemsOfType(typeof(SpiritAbilities)))
+            {
+                var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
+                var names = abilities?.Select(x => x?.GetPropertyValueFromName(SpiritAbilities.fieldKey)).ToList();
+                dataTbls.battleData.recommended_skill = names;
+                dataTbls.fighterData.abilities = names;
+                fileDbType.Add("Spirit Ability");
+            }
+            if (results.ContainsItemsOfType(typeof(Bgm)))
+            {
+                var bgms = results.GetItemsOfType(typeof(Bgm));
+                var names = bgms?.Select(x => x?.GetPropertyValueFromName(Bgm.fieldKey));
+                dataTbls.battleData.stage_bgm = names;
+                fileDbType.Add("BGM");
+            }
+            if (results.ContainsItemsOfType(typeof(Stage)))
+            {
+                var stages = results.GetItemsOfType(typeof(Stage));
+                var names = stages?.Select(x => x?.GetPropertyValueFromName(Stage.fieldKey));
+                dataTbls.battleData.ui_stage_id = names;
+                fileDbType.Add("Stage");
             }
 
             return fileDbType;
@@ -234,7 +248,7 @@ namespace YesweDo
             return FileHelper.OpenMsbtWithFilename(dataTbls.battleData.GetBattles(), fileName);
         }
 
-        public void LoadAllFiles()
+        public async Task LoadAllFiles()
         {
             var config = dataTbls.config;
             var directory = config.file_directory_preload;
@@ -250,21 +264,31 @@ namespace YesweDo
             }
             var dbTypes = new List<string>();
             string dbTypeCSV;
+            var allTasks = new List<Task<DataOptions>>();
 
             foreach (string fileName in fileNames.Where(x => x.EndsWith(Defs.dbFileExtension)))
             {
-                dbTypes.AddRange(OpenDbWithFileName(fileName));
+                allTasks.Add(Task.Run(() => OpenDbWithFileName(fileName)));
             }
             foreach (string fileName in fileNames.Where(x => x.EndsWith(Defs.textFileExtension)))
             {
                 dbTypes.Add(OpenMsbtWithFileName(fileName));
             }
 
+            await Task.WhenAll(allTasks);
+
+            foreach(var task in allTasks)
+            {
+                dbTypes.AddRange(AddResultsToDataTbls(task.Result));
+            }
+
+
             dbTypeCSV = UiHelper.ListToCSV(dbTypes);
 
+            watch.Stop();
             if (fileNames.Length > 0)
             {
-                UiHelper.SetInformativeLabel(ref labelInformative, $"Loaded files: {dbTypeCSV}");
+                UiHelper.SetInformativeLabel(ref labelInformative, $"Loaded files: {dbTypeCSV} | Took {watch.ElapsedMilliseconds} milli-seconds.");
             }
         }
 

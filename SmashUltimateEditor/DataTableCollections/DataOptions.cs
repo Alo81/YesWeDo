@@ -98,6 +98,15 @@ namespace SmashUltimateEditor.DataTables
                 return options;
             }
         }
+
+        public IEnumerable<IDataTbl> GetItemsOfType(Type type)
+        {
+            return _dataList.Where(x => x.GetType() == type);
+        }
+        public bool ContainsItemsOfType(Type type)
+        {
+            return _dataList.Exists(x => x.GetType() == type);
+        }
         public List<Type> GetContainerTypes()
         {
             return dataList.Select(x => x.GetType()).Distinct().ToList();

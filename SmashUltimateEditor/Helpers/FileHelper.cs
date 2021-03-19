@@ -369,16 +369,7 @@ namespace SmashUltimateEditor.Helpers
 
             foreach (var battle in battles)
             {
-                if(battle.battle_id.Contains("agitha"))
-                {
-                    var x = 0;
-                }
-
-                var match = adapter.Entries.FirstOrDefault(x => ((MsbtEntry)x)?.SpiritBattleId == battle?.battle_id);
-                if (match != null)
-                {
-                    battle.SetSpiritTitleParameters(match.EditedText);
-                }
+                battle.SetSpiritTitleParameters(adapter.HashEntries.FirstOrDefault(x => x?.SpiritBattleId == battle?.battle_id)?.EditedText);
             }
 
             if (adapter != null && adapter.Entries.Count() > 0)
@@ -400,18 +391,21 @@ namespace SmashUltimateEditor.Helpers
                 foreach(var file in files.Where( x=> Defs.msbtFilesToSave.Contains(x.Name)))
                 {
                     var adapter = GetLoadedMsbtAdapter(file.FullName);
+                    var updated = false;
 
-
-                    foreach (var battle in battles)
+                    foreach (var battle in battles.Where(x => x.msbtUpdated))
                     {
+                        updated = true;
                         var match = adapter.Entries.FirstOrDefault(x => ((MsbtEntry)x).SpiritBattleId == battle.battle_id);
                         if (match != null)
                         {
                             match.EditedText = battle.GetCombinedMsbtTitle();
                         }
                     }
-
-                    adapter.Save();
+                    if (updated)
+                    {
+                        adapter.Save();
+                    }
                 }
 
             }

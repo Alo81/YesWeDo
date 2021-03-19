@@ -205,7 +205,10 @@ namespace SmashUltimateEditor
 
         public void SetSpiritTitleParameters(string title)
         {
-
+            if (String.IsNullOrWhiteSpace(title))
+            {
+                return;
+            }
             try
             {
                 // Save original length and title in case we don't change.  
@@ -367,9 +370,9 @@ namespace SmashUltimateEditor
         public bool	    aw_flap_delay { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d6f19abae { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	_0x18d9441f71 { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	_0x18404d4ecb { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill1 { get; set; }

@@ -405,13 +405,13 @@ namespace SmashUltimateEditor.DataTables
                 }
             }
 
-            var attribute = reader.GetAttribute("hash");
+            var attribute = reader?.GetAttribute("hash");
             reader.Read();
 
             return new DbValue()
             {
                 hash = attribute,
-                value = reader.Value
+                value = reader?.Value
             };
         }
 

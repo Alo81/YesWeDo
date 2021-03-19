@@ -127,10 +127,13 @@ namespace SmashUltimateEditor
 
         public static void SetValueFromName(this object obj, string name, string val)
         {
-            PropertyInfo field = obj.GetType().GetProperty(name);
+            PropertyInfo field = obj?.GetType()?.GetProperty(name);
             // If val is null, interpret as empty string for our purposes.  
             val ??= "";
-
+            if(field == null)
+            {
+                return;
+            }
             try
             {
                 field?.SetValue(obj, Convert.ChangeType(val, field.PropertyType));

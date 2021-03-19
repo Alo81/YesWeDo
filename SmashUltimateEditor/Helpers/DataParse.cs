@@ -84,7 +84,7 @@ namespace SmashUltimateEditor
         }
         public static string ImportNameFixer(string name)
         {
-            if (name.Length > 0)
+            if (name?.Length > 0)
                 return name.Substring(0,2) == "0x" ? '_' + name : name;
             else
                 return name;

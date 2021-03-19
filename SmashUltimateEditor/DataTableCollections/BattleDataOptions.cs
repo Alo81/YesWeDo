@@ -319,83 +319,102 @@ namespace SmashUltimateEditor
                 }
                 return _recommended_skill;
             }
+            set
+            {
+                _recommended_skill = value.Distinct().OrderBy(x => x).ToList();
+            }
         }
-        public List<string> recommended_skill1
+        private IEnumerable<string> basicSkills
         {
-            get { return recommended_skill; }
+            get
+            {
+                return recommended_skill.Where(x => !(x.StartsWith("personal_") || x.StartsWith("style_")));
+            }
         }
-        public List<string> recommended_skill2
+        public IEnumerable<string> recommended_skill1
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill3
+        public IEnumerable<string> recommended_skill2
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill4
+        public IEnumerable<string> recommended_skill3
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill5
+        public IEnumerable<string> recommended_skill4
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill6
+        public IEnumerable<string> recommended_skill5
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill7
+        public IEnumerable<string> recommended_skill6
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill8
+        public IEnumerable<string> recommended_skill7
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill9
+        public IEnumerable<string> recommended_skill8
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill10
+        public IEnumerable<string> recommended_skill9
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill11
+        public IEnumerable<string> recommended_skill10
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill12
+        public IEnumerable<string> recommended_skill11
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> recommended_skill13
+        public IEnumerable<string> recommended_skill12
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
+        }
+        public IEnumerable<string> recommended_skill13
+        {
+            get { return basicSkills; }
         }
 
-        public List<string> un_recommended_skill
+        public IEnumerable<string> un_recommended_skill
         {
-            get { return recommended_skill; }
+            get { return basicSkills; }
         }
-        public List<string> un_recommended_skill1
+        public IEnumerable<string> un_recommended_skill1
         {
             get { return un_recommended_skill; }
         }
-        public List<string> un_recommended_skill2
+        public IEnumerable<string> un_recommended_skill2
         {
             get { return un_recommended_skill; }
         }
-        public List<string> un_recommended_skill3
+        public IEnumerable<string> un_recommended_skill3
         {
             get { return un_recommended_skill; }
         }
-        public List<string> un_recommended_skill4
+        public IEnumerable<string> un_recommended_skill4
         {
             get { return un_recommended_skill; }
         }
-        public List<string> un_recommended_skill5
+        public IEnumerable<string> un_recommended_skill5
         {
             get { return un_recommended_skill; }
+        }
+        public IEnumerable<string> _0x18d9441f71
+        {
+            get { return basicSkills; }
+        }
+        public IEnumerable<string> _0x18404d4ecb
+        {
+            get { return basicSkills; }
         }
     }
 }

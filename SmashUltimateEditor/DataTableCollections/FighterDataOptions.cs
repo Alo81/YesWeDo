@@ -12,6 +12,7 @@ namespace SmashUltimateEditor
         internal int pageCount { get { return _dataList.Sum(x=>x.pageCount); } }
 
         public List<Fighter> _dataList;
+        private List<string> _abilities;
         public List<IDataTbl> dataList { get { return _dataList.OfType<IDataTbl>().ToList(); } }
         internal static Type underlyingType = typeof(Fighter);
 
@@ -108,6 +109,59 @@ namespace SmashUltimateEditor
                 fighters.RemoveAll(x => Defs.EXCLUDED_FIGHTERS.Contains(x));
                 return fighters;
             }
+        }
+
+        public List<string> abilities
+        {
+            get
+            {
+                if(_abilities == null)
+                {
+
+                    _abilities.Add("");
+                    _abilities.AddRange((_dataList.Select(x => x.ability1).Distinct()));
+                    _abilities.AddRange((_dataList.Select(x => x.ability2).Distinct()));
+                    _abilities.AddRange((_dataList.Select(x => x.ability3).Distinct()));
+                    _abilities.AddRange((_dataList.Select(x => x.ability_personal).Distinct()));
+                }
+                return _abilities;
+            }
+            set
+            {
+                _abilities = value.Distinct().OrderBy(x => x).ToList();
+            }
+        }
+
+        private IEnumerable<string> basicAbilities
+        {
+            get
+            {
+                return abilities.Where(x => !(x.StartsWith("personal_") || x.StartsWith("style_")));
+            }
+        }
+        private IEnumerable<string> personalAbilities
+        {
+            get
+            {
+                return abilities.Where(x => x.StartsWith("personal_"));
+            }
+        }
+
+        public IEnumerable<string> ability1
+        {
+            get { return basicAbilities; }
+        }
+        public IEnumerable<string> ability2
+        {
+            get { return basicAbilities; }
+        }
+        public IEnumerable<string> ability3
+        {
+            get { return basicAbilities; }
+        }
+        public IEnumerable<string> ability_personal
+        {
+            get { return personalAbilities; }
         }
 
         public List<string> mii_color

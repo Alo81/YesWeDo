@@ -223,13 +223,13 @@ namespace SmashUltimateEditor
         public short defense { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string attr { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][LoadSpecial(true)]
         public string ability1 { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][LoadSpecial(true)]
         public string ability2 { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][LoadSpecial(true)]
         public string ability3 { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Attributes)]
+        [Order][Page((int)Enums.Fighter_Page.Attributes)][LoadSpecial(true)]
         public string ability_personal { get; set; }
     }
 }

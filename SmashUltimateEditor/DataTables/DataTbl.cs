@@ -149,7 +149,7 @@ namespace YesWeDo.DataTables
         public void Randomize(ref Random rnd, DataTbls dataTbls)
         {
             Type type = GetType();
-            foreach (PropertyInfo field in type.GetProperties().Where(x => ! x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false))
+            foreach (PropertyInfo field in type.GetProperties().Where(x => ! (x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false)))
             {
                 var val = GetRandomFieldValue(field, ref rnd, dataTbls);
                 SaveRandomizedField(ref rnd, field, val, dataTbls);

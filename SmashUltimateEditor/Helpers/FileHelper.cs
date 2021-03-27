@@ -314,8 +314,7 @@ namespace YesweDo.Helpers
                 FileHelper.ToDefaultBattleExportFolder(filename) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
                 filename;
 
-            FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true, unencrypted : false, encrypted : true, spiritData: dataTbls.spiritData);
-            SaveSpiritTitles(dataTbls.battleData.GetBattles(), config.file_directory_preload);
+            FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true, unencrypted : false, encrypted : true, spiritData: dataTbls.spiritData, saveSpiritTitles: true);
             FileHelper.CopyPreloadFiles(packPath);
             FileHelper.CopySpiritImages(packPath);
         }
@@ -386,13 +385,17 @@ namespace YesweDo.Helpers
 
         public static void SaveSpiritTitles(IEnumerable<Battle> battles, string fileName)
         {
+            MsbtAdapter adapter;
+            MsbtAdapter backupAdapter;
             try
             {
                 var files = GetFiles(fileName);
 
                 foreach(var file in files.Where( x=> Defs.msbtFilesToSave.Contains(x.Name)))
                 {
-                    var adapter = GetLoadedMsbtAdapter(file.FullName);
+                    var originalSize = file.Length;
+                    adapter = GetLoadedMsbtAdapter(file.FullName);
+                    backupAdapter = GetLoadedMsbtAdapter(file.FullName);
                     var updated = false;
 
                     foreach (var battle in battles.Where(x => x.msbtUpdated))
@@ -407,6 +410,14 @@ namespace YesweDo.Helpers
                     if (updated)
                     {
                         adapter.Save();
+
+                        // See if the file broke.  If so, write the old version back and throw exception.  
+                        file.Refresh();
+                        if(file.Length < originalSize / 2)
+                        {
+                            backupAdapter.Save();
+                            throw new Exception("Error trying to save spirit titles.  Spirit Title changes unsaved.");
+                        }
                     }
                 }
 

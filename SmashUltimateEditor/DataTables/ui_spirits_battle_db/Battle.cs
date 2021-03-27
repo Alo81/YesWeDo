@@ -12,6 +12,7 @@ namespace YesWeDo.DataTables
     {
         internal static string XML_NAME = "battle_data_tbl";
         internal string msbtTitle;
+        internal string msbtSeparator;
         internal string msbtSort;
         internal int msbtLength;
         internal string msbtOriginal;
@@ -192,7 +193,7 @@ namespace YesWeDo.DataTables
         {
             if (msbtUpdated)
             {
-                return PadString(string.Concat(msbtTitle, Defs.msbtSeparator, msbtSort), msbtLength);
+                return PadString(string.Concat(msbtTitle, msbtSeparator, msbtSort), msbtLength);
             }
             return msbtOriginal;
         }
@@ -214,7 +215,7 @@ namespace YesWeDo.DataTables
                 var sepEnd = sepStart + title.Substring(sepStart).IndexOf('\0');   //Search the first instance of \0 that shows up after the parsed display title, add that index amount to the already found SepStart size.  
 
                 msbtTitle = title.Substring(0, sepStart);
-                //msbtSeparator = title.Substring(sepStart, sepEnd - sepStart);
+                msbtSeparator = title.Substring(sepStart, sepEnd - sepStart);
                 msbtSort = title.Substring(sepEnd, title.Length - sepEnd);
             }
             catch

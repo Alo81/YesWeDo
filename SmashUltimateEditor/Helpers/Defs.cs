@@ -68,6 +68,7 @@ namespace YesweDo
         #region Files
         public static string dbFileExtension = ".prc";
         public static string textFileExtension = ".msbt";
+        public static string standaloneExportExtension= ".json";
 
         public static List<Tuple<string, string>> spiritUiLocations = new List<Tuple<string, string>>()
         {

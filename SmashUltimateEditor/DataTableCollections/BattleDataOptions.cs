@@ -95,11 +95,14 @@ namespace YesWeDo.DataTableCollections
         {
             foreach(var replBattle in replacement.GetBattles())
             {
-                var ogBattleSpiritTitle = GetBattle(replBattle.battle_id).GetCombinedMsbtTitle();
+                var ogBattleSpiritTitle = GetBattle(replBattle.battle_id).combinedMsbtTitle;
 
                 _dataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
 
-                _dataList[GetBattleIndex(replBattle.battle_id)].SetSpiritTitleParameters(ogBattleSpiritTitle);
+                if (String.IsNullOrWhiteSpace(replBattle.combinedMsbtTitle))
+                {
+                    _dataList[GetBattleIndex(replBattle.battle_id)].SetSpiritTitleParameters(ogBattleSpiritTitle);
+                }
             }
         }
         public void ReplaceBattleAtIndex(int index, Battle newBattle)

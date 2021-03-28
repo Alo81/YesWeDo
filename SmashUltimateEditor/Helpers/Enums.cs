@@ -41,6 +41,11 @@
             Packaged,
             Standalone
         }
+        public enum Import_Filters
+        {
+            JSON = 1,
+            PRC = 2
+        }
 
         #region FighterDataTbl
 

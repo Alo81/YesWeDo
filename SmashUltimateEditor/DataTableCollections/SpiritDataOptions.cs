@@ -22,6 +22,15 @@ namespace YesWeDo.DataTableCollections
             return _dataList.FirstOrDefault(x => x.ui_spirit_id == name);
         }
 
+        public void ReplaceSpiritBySpiritId(Spirit replacement)
+        {
+            var index = _dataList.FindIndex(x => x.ui_spirit_id == replacement.ui_spirit_id);
+            if(index > 0)
+            {
+                _dataList[index] = replacement;
+            }
+        }
+
         public int GetSpiritIndex(string spiritId)
         {
             return _dataList.FindIndex(x => x.ui_spirit_id == spiritId);

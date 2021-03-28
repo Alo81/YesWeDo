@@ -189,15 +189,6 @@ namespace YesWeDo.DataTables
             return BuildEmptyPage(dataTbls, typeof(Battle));
         }
 
-        public string GetCombinedMsbtTitle()
-        {
-            if (msbtUpdated)
-            {
-                return PadString(string.Concat(msbtTitle, msbtSeparator, msbtSort), msbtLength);
-            }
-            return msbtOriginal;
-        }
-
         public void SetSpiritTitleParameters(string title)
         {
             if (String.IsNullOrWhiteSpace(title))
@@ -224,48 +215,6 @@ namespace YesWeDo.DataTables
             }
         }
 
-
-        [Order]
-        [Page((int)Enums.Battle_Page.Basics)]
-        [Excluded(true)]
-        public string spiritTitle
-        {
-            get { return msbtTitle; }
-            set
-            {
-                if (!spiritTitle?.Equals(value) ?? true)
-                {
-                    msbtUpdated = true;
-                    msbtTitle = value;
-                }
-            }
-        }
-        [Order]
-        [Page((int)Enums.Battle_Page.Basics)]
-        [Excluded(true)]
-        public string spiritSortTitle
-        {
-            get
-            {
-                return msbtSort?.Replace(Convert.ToString('\0'), "") ?? String.Empty;
-            }
-            set
-            {
-                if (!spiritSortTitle?.Equals(value) ?? true)
-                {
-                    msbtUpdated = true;
-                    StringBuilder newString = new StringBuilder();
-                    newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
-                    foreach (var ch in value)
-                    {
-                        newString.Append(ch);
-                        newString.Append('\0');
-                    }
-                    msbtSort = newString.ToString();
-                }
-            }
-        }
-
         public string PadString(string inText, int paddedLength, string afterText = "", char padChar = ' ', bool isSortTitle = true)
         {
             var newSb = new StringBuilder(inText);
@@ -289,6 +238,59 @@ namespace YesWeDo.DataTables
         public int GetLengthFromUnicodeString(string inText)
         {
             return inText?.ToCharArray()?.Length ?? 0;
+        }
+
+        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
+        public string spiritTitle
+        {
+            get { return msbtTitle; }
+            set
+            {
+                if (!spiritTitle?.Equals(value) ?? true)
+                {
+                    msbtUpdated = true;
+                    msbtTitle = value;
+                }
+            }
+        }
+        [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
+        public string spiritSortTitle
+        {
+            get
+            {
+                return msbtSort?.Replace(Convert.ToString('\0'), "") ?? String.Empty;
+            }
+            set
+            {
+                if (!spiritSortTitle?.Equals(value) ?? true)
+                {
+                    StringBuilder newString = new StringBuilder();
+                    newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
+                    foreach (var ch in value)
+                    {
+                        newString.Append(ch);
+                        newString.Append('\0');
+                    }
+                    msbtSort = newString.ToString();
+                    msbtUpdated = true;
+                }
+            }
+        }
+        [Excluded(true)][Order]
+        public string combinedMsbtTitle
+        {
+            get 
+            {
+                if (msbtUpdated)
+                {
+                    return PadString(string.Concat(msbtTitle, msbtSeparator, msbtSort), msbtLength);
+                }
+                return msbtOriginal;
+            }
+            set
+            {
+                SetSpiritTitleParameters(value);
+            }
         }
 
         [Order][Page((int)Enums.Battle_Page.Basics)]

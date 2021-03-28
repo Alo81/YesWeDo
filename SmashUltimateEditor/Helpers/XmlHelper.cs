@@ -1,4 +1,5 @@
-﻿using paracobNET;
+﻿using Newtonsoft.Json;
+using paracobNET;
 using System;
 using System.IO;
 using System.Linq;
@@ -256,6 +257,27 @@ namespace YesweDo.Helpers
             writer.Write(xmlDoc.Declaration.ToString() + "\r\n" + xmlDoc.ToString());
             writer.Close();
             writer.Dispose();
+        }
+
+        public static void SerializeToFile(string fileName, ExportedBattle battle)
+        {
+            // Save the version for local editing. 
+            Directory.CreateDirectory(UiHelper.GetParentFolder(fileName));
+            using (var writer = new StreamWriter(fileName))
+            {
+                var serial = new JsonSerializer();
+                serial.Formatting = Newtonsoft.Json.Formatting.Indented;
+                serial.Serialize(writer, battle);
+            }
+        }
+        public static ExportedBattle DeserializeFromFile(string fileName)
+        {
+            using (StreamReader file = File.OpenText(fileName))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                var serial = new JsonSerializer();
+                return serial.Deserialize<ExportedBattle>(reader);
+            }
         }
     }
 }

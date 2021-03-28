@@ -287,22 +287,23 @@ namespace YesweDo.Helpers
 
         public static void ExportStandalone(DataTbls dataTbls, string filename)
         {
-            BattleDataOptions singleBattle = new BattleDataOptions();
-            FighterDataOptions fighters = new FighterDataOptions();
-
             var selectedBattleId = dataTbls.selectedBattle.battle_id;
 
-            singleBattle.AddBattle(dataTbls.battleData.GetBattle(selectedBattleId));
-            fighters.AddFighters(dataTbls.selectedFighters);
+            ExportedBattle export = new ExportedBattle()
+            {
+                battle = dataTbls.battleData.GetBattle(selectedBattleId),
+                fighters = dataTbls.selectedFighters,
+                spirit = dataTbls?.spiritData?.GetSpiritByName(selectedBattleId)
+            };
 
-            var unencryptedFileName = String.Format("{0}_{1}", selectedBattleId, dataTbls.config.file_name);
+            var unencryptedFileName = String.Format("{0}{1}", selectedBattleId, Defs.standaloneExportExtension);
 
             // Check whether user entered custom folder name.  If not, use standard format.  
             var standalonePath = FileHelper.IsDefaultFolderDialogPath(filename) ?
                 FileHelper.ToDefaultBattleExportFolder(filename) :
                 filename;
 
-            FileHelper.Save(singleBattle, fighters, standalonePath, unencryptedFileName, unencrypted : true, encrypted : false, useFolderStructure : true, spiritData: dataTbls.spiritData);
+            XmlHelper.SerializeToFile($"{standalonePath}\\{unencryptedFileName}", export);
         }
 
         public static void ExportPackaged(DataTbls dataTbls, string filename)
@@ -404,7 +405,7 @@ namespace YesweDo.Helpers
                         var match = adapter.Entries.FirstOrDefault(x => ((MsbtEntry)x).SpiritBattleId == battle.battle_id);
                         if (match != null)
                         {
-                            match.EditedText = battle.GetCombinedMsbtTitle();
+                            match.EditedText = battle.combinedMsbtTitle;
                         }
                     }
                     if (updated)

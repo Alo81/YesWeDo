@@ -335,32 +335,49 @@ namespace YesweDo
                 var standalone = selectedFilter.DisplayName.Contains(Export_Filters.Standalone.ToString());
                 var packaged = selectedFilter.DisplayName.Contains(Export_Filters.Packaged.ToString());
 
-                if (standalone)
-                {
-                    FileHelper.ExportStandalone(dataTbls, dialog.FileName);
-                }
-
                 // Save encrypted version for releasing straight to Switch.
                 if (packaged)
                 {
                     FileHelper.ExportPackaged(dataTbls, dialog.FileName);
                 }
+
+                if (standalone)
+                {
+                    FileHelper.ExportStandalone(dataTbls, dialog.FileName);
+                }
+
                 UiHelper.SetInformativeLabel(ref labelInformative, "Export Complete.");
             }
         }
 
         private void ImportBattle_Click(object sender, EventArgs e)
         {
-            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory };
+            var importDialog = new OpenFileDialog() { Title = "Import Custom Spirit", Filter = "JSON|*.json*|PRC - (Old. Saves only Battle)|*.prc", InitialDirectory = dataTbls.config.file_directory_custom_battles };
             var result = importDialog.ShowDialog();
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
+                BattleDataOptions battles = new BattleDataOptions();
+                FighterDataOptions fighters = new FighterDataOptions();
 
-                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                if (importDialog.FilterIndex == (int)Import_Filters.JSON)
+                {
+                    var importedBattle = XmlHelper.DeserializeFromFile(importDialog.FileName);
 
+                    importedBattle.battle.msbtUpdated = true;   // We want to be sure we write the new title when we save.  
+
+                    battles.AddBattle(importedBattle.battle);
+                    fighters.AddFighters(importedBattle.fighters);
+
+                    dataTbls.spiritData.ReplaceSpiritBySpiritId(importedBattle.spirit);
+                }
+                else if (importDialog.FilterIndex == (int)Import_Filters.PRC)
+                {
+                    var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
+
+                    battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
+                    fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                }
                 dataTbls.ImportBattle(battles, fighters);
 
                 var battle_id = battles.GetBattleAtIndex(0).battle_id;
@@ -371,7 +388,7 @@ namespace YesweDo
         }
         private void ImportBattleOverFile_Click(object sender, EventArgs e)
         {
-            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory };
+            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory_custom_battles };
             var result = importDialog.ShowDialog();
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))

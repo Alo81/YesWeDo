@@ -172,14 +172,16 @@ namespace YesweDo
         {
             var fileDbType = new List<string>();
 
-            if (results.ContainsItemsOfType(typeof(Battle)) && results.ContainsItemsOfType(typeof(Fighter)))
+            var types = results.GetContainerTypes();
+
+            if (types.Contains(typeof(Battle)) && types.Contains(typeof(Fighter)))
             {
-                if (results.ContainsItemsOfType(typeof(Battle)))
+                if (types.Contains(typeof(Battle)))
                 {
                     dataTbls.battleData = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
                     fileDbType.Add("Battle");
                 }
-                if (results.ContainsItemsOfType(typeof(Fighter)))
+                if (types.Contains(typeof(Fighter)))
                 {
                     dataTbls.fighterData = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
                     fileDbType.Add("Fighter");
@@ -187,7 +189,7 @@ namespace YesweDo
 
                 buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
             }
-            if (results.ContainsItemsOfUnderlyingType(typeof(Event)))
+            if (types.Exists(x => x.IsAssignableFrom(typeof(Event))))
             {
                 dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
                 dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);
@@ -195,29 +197,29 @@ namespace YesweDo
 
                 fileDbType.Add("Event");
             }
-            if (results.ContainsItemsOfType(typeof(Item)))
+            if (types.Contains(typeof(Item)))
             {
                 dataTbls.itemData = (ItemDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Item));
                 var itemEvents = dataTbls.itemData.GetAsEvents();
                 dataTbls.eventData.AddUniqueEvents(itemEvents);
                 fileDbType.Add("Item");
             }
-            if (results.ContainsItemsOfType(typeof(SpiritFighter)))
+            if (types.Contains(typeof(SpiritFighter)))
             {
                 dataTbls.spiritFighterData = (SpiritFighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritFighter));
                 fileDbType.Add("Spirit Fighter");
             }
-            if (results.ContainsItemsOfType(typeof(SpiritBoard)))
+            if (types.Contains(typeof(SpiritBoard)))
             {
                 dataTbls.spiritBoardData = (SpiritBoardDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritBoard));
                 fileDbType.Add("Spirit Board");
             }
-            if (results.ContainsItemsOfType(typeof(Spirit)))
+            if (types.Contains(typeof(Spirit)))
             {
                 dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
                 fileDbType.Add("Spirit");
             }
-            if (results.ContainsItemsOfType(typeof(SpiritAbilities)))
+            if (types.Contains(typeof(SpiritAbilities)))
             {
                 var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
                 var names = abilities?.Select(x => x?.GetPropertyValueFromName(SpiritAbilities.fieldKey)).ToList();
@@ -225,14 +227,14 @@ namespace YesweDo
                 dataTbls.fighterData.abilities = names;
                 fileDbType.Add("Spirit Ability");
             }
-            if (results.ContainsItemsOfType(typeof(Bgm)))
+            if (types.Contains(typeof(Bgm)))
             {
                 var bgms = results.GetItemsOfType(typeof(Bgm));
                 var names = bgms?.Select(x => x?.GetPropertyValueFromName(Bgm.fieldKey));
                 dataTbls.battleData.stage_bgm = names;
                 fileDbType.Add("BGM");
             }
-            if (results.ContainsItemsOfType(typeof(Stage)))
+            if (types.Contains(typeof(Stage)))
             {
                 var stages = results.GetItemsOfType(typeof(Stage));
                 var names = stages?.Select(x => x?.GetPropertyValueFromName(Stage.fieldKey));
@@ -275,11 +277,11 @@ namespace YesweDo
                 dbTypes.Add(OpenMsbtWithFileName(fileName));
             }
 
-            await Task.WhenAll(allTasks);
-
-            foreach(var task in allTasks)
+            while (allTasks.Any<Task<DataOptions>>())
             {
-                dbTypes.AddRange(AddResultsToDataTbls(task.Result));
+                var task = await Task.WhenAny(allTasks);
+                allTasks.Remove(task);
+                dbTypes.AddRange(AddResultsToDataTbls(await task));
             }
 
 
@@ -352,15 +354,14 @@ namespace YesweDo
 
         private void ImportBattle_Click(object sender, EventArgs e)
         {
-            var importDialog = new OpenFileDialog() { Title = "Import Custom Spirit", Filter = "JSON|*.json*|PRC - (Old. Saves only Battle)|*.prc", InitialDirectory = dataTbls.config.file_directory_custom_battles };
-            var result = importDialog.ShowDialog();
+            var importDialog = FileHelper.GetImportBattleFileDialog(title : "Import Custom Spirit", initialDirectory: dataTbls.config.file_directory_custom_battles);
 
-            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
+            if (importDialog.ShowDialog() == CommonFileDialogResult.Ok && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
                 BattleDataOptions battles = new BattleDataOptions();
                 FighterDataOptions fighters = new FighterDataOptions();
 
-                if (importDialog.FilterIndex == (int)Import_Filters.JSON)
+                if (importDialog.SelectedFileTypeIndex == (int)Import_Filters.json)
                 {
                     var importedBattle = XmlHelper.DeserializeFromFile(importDialog.FileName);
 
@@ -371,7 +372,7 @@ namespace YesweDo
 
                     dataTbls.spiritData.ReplaceSpiritBySpiritId(importedBattle.spirit);
                 }
-                else if (importDialog.FilterIndex == (int)Import_Filters.PRC)
+                else if (importDialog.SelectedFileTypeIndex == (int)Import_Filters.prc)
                 {
                     var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
 

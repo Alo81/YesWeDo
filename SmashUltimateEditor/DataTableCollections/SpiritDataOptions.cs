@@ -30,6 +30,13 @@ namespace YesWeDo.DataTableCollections
                 _dataList[index] = replacement;
             }
         }
+        public void ReplaceSpirits(SpiritDataOptions replacements)
+        {
+            foreach (Spirit replBattle in replacements.GetData() )
+            {
+                ReplaceSpiritBySpiritId(replBattle);
+            }
+        }
 
         public int GetSpiritIndex(string spiritId)
         {

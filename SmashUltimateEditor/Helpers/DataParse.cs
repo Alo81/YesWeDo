@@ -85,7 +85,7 @@ namespace YesweDo
         public static string ImportNameFixer(string name)
         {
             if (name?.Length > 0)
-                return name.Substring(0,2) == "0x" ? '_' + name : name;
+                return name.Replace("0x", "_0x");
             else
                 return name;
         }

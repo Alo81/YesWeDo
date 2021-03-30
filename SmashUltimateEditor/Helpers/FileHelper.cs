@@ -9,6 +9,8 @@ using System.Xml.Linq;
 using YesWeDo.DataTableCollections;
 using YesWeDo.DataTables;
 using YesWeDo.MSBT;
+using static YesweDo.Enums;
+using static YesweDo.Extensions;
 
 namespace YesweDo.Helpers
 {
@@ -271,6 +273,20 @@ namespace YesweDo.Helpers
                 EnsureFileExists = false,
                 EnsurePathExists = false
             };
+
+            return dialog;
+        }
+
+        public static CommonOpenFileDialog GetImportBattleFileDialog(string title = null, string initialDirectory = null)
+        {
+            var dialog = new CommonOpenFileDialog();
+            dialog.Title = title ?? dialog.Title;
+            dialog.InitialDirectory = initialDirectory ?? dialog.InitialDirectory;
+
+            foreach (var filter in EnumUtil<Import_Filters>.GetValues())
+            {
+                dialog.Filters.Add(new CommonFileDialogFilter(filter, $"*{filter}"));
+            }
 
             return dialog;
         }

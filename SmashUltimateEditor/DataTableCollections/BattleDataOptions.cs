@@ -91,9 +91,9 @@ namespace YesWeDo.DataTableCollections
             _dataList = newBattles;
         }
 
-        public void ReplaceBattles(BattleDataOptions replacement)
+        public void ReplaceBattles(IDataOptions replacement)
         {
-            foreach(var replBattle in replacement.GetBattles())
+            foreach(Battle replBattle in replacement.dataList)
             {
                 var ogBattleSpiritTitle = GetBattle(replBattle.battle_id).combinedMsbtTitle;
 

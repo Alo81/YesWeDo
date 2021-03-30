@@ -52,26 +52,7 @@ namespace YesWeDo.DataTableCollections
         {
             return dataList.Where(x => x.GetType().IsAssignableFrom(type) || x.GetType().IsSubclassOf(type)).ToList();
         }
-        public List<Battle> GetBattles()
-        {
-            return dataList.OfType<Battle>().ToList();
-        }
-        public List<Fighter> GetFighters()
-        {
-            return dataList.OfType<Fighter>().ToList();
-        }
-        public List<Event> GetEvents()
-        {
-            return dataList.OfType<Event>().ToList();
-        }
-        public List<Item> GetItems()
-        {
-            return dataList.OfType<Item>().ToList();
-        }
-        public List<SpiritFighter> GetSpiritFighters()
-        {
-            return dataList.OfType<SpiritFighter>().ToList();
-        }
+
         public IDataOptions GetDataOptionsFromUnderlyingType(Type underlyingType)
         {
             if (underlyingType is null)

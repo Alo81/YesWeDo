@@ -159,10 +159,12 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string entry_type { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("This character will already be on stage when match starts, rather than spawning in.")]
         public bool first_appear { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         public ushort appear_rule_time { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
+        [ToolTip("Amount of enemies to that can be spawned with this enemy.")]
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
@@ -195,8 +197,10 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public byte stock { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("If a character has multiple stocks, allows multiple of fighter to appear simultaneously.")]
         public bool corps { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("When corps color is enabled, it makes all enemies 1 color instead of cycling through recolors for team matches.")]
         public bool fix_corps_color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public ushort hp { get; set; }

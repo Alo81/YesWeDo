@@ -17,12 +17,19 @@ namespace YesweDo.UI
             label = new Label();
         }
 
-        public void SetLabel(string name, Point pos)
+        public void SetLabel(string name, Point pos, string tooltipText = null)
         {
             SetLabelValue(name);
             label.Width = Defs.LABEL_WIDTH;
             label.Height = Defs.LABEL_HEIGHT;
             label.Location = pos;
+
+            if(! (tooltipText == null))
+            {
+                var tip = new ToolTip();
+                tip.SetToolTip(label, tooltipText);
+                label.ForeColor = Defs.labelTooltipTextColor;
+            }
         }
         public void SetTextBox(string name, Point pos, string value = "")
         {

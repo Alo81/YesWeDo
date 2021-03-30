@@ -88,6 +88,17 @@ namespace YesWeDo.DataTables
 
             public bool LoadSpecial { get { return _loadSpecial; } }
         }
+        [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+        public sealed class ToolTipAttribute : Attribute
+        {
+            private readonly string _tooltip;
+            public ToolTipAttribute(string tooltip)
+            {
+                _tooltip = tooltip;
+            }
+
+            public string ToolTip { get { return _tooltip; } }
+        }
 
         internal int pageCount { get { return 1; } }
 
@@ -505,7 +516,7 @@ namespace YesWeDo.DataTables
                 page = subControl.TabPages[pageNum];
                 currentPos = points[pageNum];
 
-                lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label));
+                lb.SetLabel(field.Name, UiHelper.IncrementPoint(ref currentPos, page.Controls.Count, Ui_Element.Label), field.GetCustomAttribute<ToolTipAttribute>()?.ToolTip);
 
                 // Range values?  Use a textbox.
                 if (field?.GetCustomAttribute<RangeAttribute>()?.IsRange ?? false)

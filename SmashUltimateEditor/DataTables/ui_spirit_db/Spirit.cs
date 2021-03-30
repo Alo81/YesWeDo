@@ -107,6 +107,10 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Spirit_Page.Summon)][Range(true)]
         public uint shop_price { get; set; }
         [Order][Page((int)Enums.Spirit_Page.Unknown)]
+        [ToolTip(
+            "Enable a rematch option with spirits in collections/inventory.\r\n" +
+            "Does NOT work with Bosses. Will result in freezing."
+            )]
         public bool _0x11730b0c1d { get; set; }
         [Order][Page((int)Enums.Spirit_Page.Unknown)]
         public string _0x13656d7462 { get; set; }

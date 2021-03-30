@@ -141,8 +141,7 @@ namespace YesweDo
             {
                 try
                 {
-                    var numVal = val == "" ? "0" : val;
-                    field?.SetValue(obj, Convert.ChangeType(numVal, field.PropertyType));
+                    field?.SetValue(obj, 0);    // Could be attempting to set numeric value to empty string.  Try 0 for default value.  
                 }
                 catch(Exception ex2)
                 {

@@ -43,8 +43,8 @@
         }
         public enum Import_Filters
         {
-            JSON = 1,
-            PRC = 2
+            json = 1,
+            prc = 2
         }
 
         #region FighterDataTbl

@@ -300,16 +300,20 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public ushort	battle_time_sec { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
+        [ToolTip("How much damage you start with.  Can also be used to subtract from starting HP.")]
         public ushort	basic_init_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
+        [ToolTip("How much HP you start with.")]
         public ushort	basic_init_hp { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
+        [ToolTip("How many lives you start with.")]
         public byte	    basic_stock { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	ui_stage_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [ToolTip("Determines stage form.  Example: On WuHu Island, a value of 10 starts at fountain.")]
         public sbyte _0x18e536d4f7 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	stage_bgm { get; set; }
@@ -318,12 +322,23 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_attr { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip(
+            "Preset 1 = Final Destination Stage Only/Affects Main Platform\r\n" +
+            "Preset 2 = Battlefield Platforms Only\r\n" +
+            "Preset 3 = Affects Main Stage"
+            )]
         public string	floor_place_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	item_table { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	item_level { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip(
+            "Lose Escort = Ally is defeated.\r\n" +
+            "Normal Rule = All opponents defeated.\r\n" +
+            "Win Alive = Last one survive.\r\n" +
+            "Win Beat Main = Defeat the main opponent to win.\r\n"
+            )]
         public string	result_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event1_type { get; set; }
@@ -362,14 +377,17 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event3_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [ToolTip("Show battle detail conditions on pre-fight screen.")]
         public bool	    _0x0d41ef8328 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    aw_flap_delay { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public bool	    _0x0d6f19abae { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
+        [ToolTip("Highest recommended skill.  Will usually be included as first \"Autopick\".")]
         public string	_0x18d9441f71 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
+        [ToolTip("Second-most recommended skill.  Will usually be included as second \"Autopick\".")]
         public string	_0x18404d4ecb { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill1 { get; set; }
@@ -410,6 +428,7 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
         public string	_0x0ff8afd14f { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
+        [ToolTip("Multiplies high score.")]
         public uint	    battle_power { get; set; }
     }
 }

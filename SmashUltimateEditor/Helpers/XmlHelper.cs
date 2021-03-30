@@ -188,6 +188,8 @@ namespace YesweDo.Helpers
 
                     reader.Read();
                 }
+                reader.Dispose();
+                stream.Dispose();
                 return results;
             }
             catch (Exception ex)

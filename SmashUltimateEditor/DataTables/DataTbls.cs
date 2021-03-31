@@ -356,8 +356,6 @@ namespace YesweDo
 
                     var tabControl = spiritDetailsPage.Controls.OfType<TabControl>().FirstOrDefault();
 
-
-
                     foreach (var subPage in UiHelper.GetPagesFromTabControl(tabControl))
                     {
                         selectedSpirit.UpdatePageValues(subPage);
@@ -370,7 +368,6 @@ namespace YesweDo
                 {
                     throw new Exception();
                 }
-
             }
             catch(Exception ex)
             {

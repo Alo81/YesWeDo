@@ -247,7 +247,7 @@ namespace YesweDo.Helpers
         }
         public static string GetFilePathFromLikeName(string fileName)
         {
-            foreach (var file in Defs.spiritUiLocations)
+            foreach (var file in Defs.regExFiles)
             {
                 if (Regex.IsMatch(fileName, file.Item1))
                 {

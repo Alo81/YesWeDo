@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using YesWeDo.DataTableCollections;
 using YesWeDo.DataTables;
+using static YesWeDo.DataTables.DataTbl;
 
 namespace YesweDo.Helpers
 {
@@ -19,13 +20,48 @@ namespace YesweDo.Helpers
                   Count = g.Select(l => l.GetPropertyValueFromName(field)).Count()
               }).OrderByDescending(x => x.Count);
         }
+        public static void GetNumericStatsForField(IDataOptions tbl, string field)
+        {
+            var results = tbl.dataList.GroupBy(x => x.GetPropertyValueFromName(field))
+              .Select(g => new
+              {
+                  Field = Convert.ToInt32(g.Key),
+                  Count = g.Select(l => l.GetPropertyValueFromName(field)).Count()
+              }).OrderBy(x => x.Count);
 
-        public static IEnumerable<string> GetBattlesWhereFieldIsValue(IDataOptions tbl, string field, string val)
+            var leastCommon = results.Where(x => x.Field > 1).First();
+            var midCommon = results.ElementAt(results.Count() / 2);
+            var mostCommon = results.Last();
+
+            results = results.OrderBy(x => x.Field);
+
+            var min = results.Where(x => x.Field > 1).First();
+            var avg = results.Average(x => x.Field);
+            var max = results.Last();
+
+            var vals = new List<int>() { leastCommon.Field, midCommon.Field, mostCommon.Field, min.Field, max.Field };
+
+            var examples = new List<IDataTbl>();
+
+            examples.AddRange(GetTblsWhereFieldIsValue(tbl, field, vals));
+        }
+
+        public static IEnumerable<string> GetBattleIdsWhereFieldIsValue(IDataOptions tbl, string field, string val)
         {
             var results = tbl.dataList.Where(x => x.GetPropertyValueFromName(field) == val);
             var battleIdStrings = results.Select(x => x.GetPropertyValueFromName("battle_id"));
 
             return battleIdStrings;
+        }
+        public static IEnumerable<IDataTbl> GetTblsWhereFieldIsValue(IDataOptions tbl, string field, IEnumerable<int> vals)
+        {
+            var results = new List<IDataTbl>();
+            foreach (var val in vals)
+            {
+                results.Add(tbl.dataList.Where(x => x.GetPropertyValueFromName(field) == val.ToString()).FirstOrDefault());
+            }
+
+            return results;
         }
         public static void GetNamesPerType(Type type)
         {
@@ -42,6 +78,25 @@ namespace YesweDo.Helpers
                     allProperties.Add(indProp.Name);
                 }
             }
+        }
+        public static void GetAttributeValues(IEnumerable<IDataOptions> tbls, string attribute)
+        {
+            var results = new Dictionary<string, string>();
+            foreach(var options in tbls)
+            {
+                foreach (var tbl in options.dataList)
+                {
+                    foreach (var prop in tbl.GetType().GetProperties())
+                    {
+                        var attributeInfo = prop?.GetCustomAttribute<ToolTipAttribute>()?.ToolTip;
+                        if(attributeInfo != null)
+                        {
+                            results.TryAdd(prop.Name, attributeInfo);
+                        }
+                    }
+                }
+            }
+            results.Distinct();
         }
 
         public static void WriteHashSetToFile(IEnumerable<string> dict, string fileName)

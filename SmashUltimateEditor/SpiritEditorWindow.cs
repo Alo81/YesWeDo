@@ -44,6 +44,12 @@ namespace YesweDo
         private async Task LoadDataAsync()
         {
             dataTbls = new DataTbls();
+
+            //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "attack");
+            //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "defense");
+            //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "cpu_lv");
+            //StatsHelper.GetAttributeValues(dataTbls.dataOptions, "DataTbl.ToolTipAttribute");
+
             dataTbls.tabs = tabControlData;
             //dataTbls.tabs.TabIndexChanged += new System.EventHandler(dataTbls.SetSaveTabChange);
             dataTbls.progress = randomizeProgress;
@@ -358,8 +364,43 @@ namespace YesweDo
 
             if (importDialog.ShowDialog() == CommonFileDialogResult.Ok && !String.IsNullOrWhiteSpace(importDialog?.FileName))
             {
-                BattleDataOptions battles = new BattleDataOptions();
-                FighterDataOptions fighters = new FighterDataOptions();
+                ImportBattleFromTypeAndFile(importDialog.SelectedFileTypeIndex, importDialog.FileName);
+            }
+        }
+
+        private void ImportBattleFromTypeAndFile(int selectedFileType, string fileName, bool setBattle = true)
+        {
+            DataOptions options = new DataOptions();
+
+            if (selectedFileType == (int)Import_Filters.json)
+            {
+                var importedBattle = XmlHelper.DeserializeFromFile(fileName);
+
+                importedBattle.battle.msbtUpdated = true;   // We want to be sure we write the new title when we save.  
+
+                options.AddDataTbl(importedBattle.battle);
+                options.AddRangeDataTbl(importedBattle.fighters);
+                options.AddDataTbl(importedBattle.spirit);
+            }
+            else if (selectedFileType == (int)Import_Filters.prc)
+            {
+                options = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
+            }
+
+            SaveImportToDataTbls(options);
+            if (setBattle)
+            {
+                var battle = (Battle)options.GetItemsOfType(typeof(Battle)).FirstOrDefault();
+                SetSelectedBattleByBattle(battle);
+            }
+        }
+        private void ImportBattleOverFile_Click(object sender, EventArgs e)
+        {
+            var importDialog = FileHelper.GetImportBattleFileDialog(title : "Import Custom Spirit Over Current.", initialDirectory: dataTbls.config.file_directory_custom_battles);
+
+            if (importDialog.ShowDialog() == CommonFileDialogResult.Ok && !String.IsNullOrWhiteSpace(importDialog?.FileName))
+            {
+                DataOptions options = new DataOptions();
 
                 if (importDialog.SelectedFileTypeIndex == (int)Import_Filters.json)
                 {
@@ -367,47 +408,32 @@ namespace YesweDo
 
                     importedBattle.battle.msbtUpdated = true;   // We want to be sure we write the new title when we save.  
 
-                    battles.AddBattle(importedBattle.battle);
-                    fighters.AddFighters(importedBattle.fighters);
-
-                    dataTbls.spiritData.ReplaceSpiritBySpiritId(importedBattle.spirit);
+                    options.AddDataTbl(importedBattle.battle);
+                    options.AddRangeDataTbl(importedBattle.fighters);
                 }
                 else if (importDialog.SelectedFileTypeIndex == (int)Import_Filters.prc)
                 {
-                    var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
-
-                    battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                    fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                    options = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
                 }
-                dataTbls.ImportBattle(battles, fighters);
+                options.SetBattleIdsForAll(dataTbls.selectedBattle.battle_id);
 
-                var battle_id = battles.GetBattleAtIndex(0).battle_id;
-                dropdownSpiritData.SelectedItem = battle_id;
+                var battle = (Battle)options.GetItemsOfType(typeof(Battle)).FirstOrDefault();
 
-                UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
+                SaveImportToDataTbls(options);
+                SetSelectedBattleByBattle(battle);
             }
         }
-        private void ImportBattleOverFile_Click(object sender, EventArgs e)
+
+        private void SaveImportToDataTbls(DataOptions options)
         {
-            var importDialog = new OpenFileDialog() { Title = "Import Unencrypted Spirit Battle", Filter = "PRC|*.prc*", InitialDirectory = dataTbls.config.file_directory_custom_battles };
-            var result = importDialog.ShowDialog();
+            dataTbls.ImportBattle(options);
+        }
 
-            if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(importDialog?.FileName))
-            {
-                var results = XmlHelper.ReadXML(importDialog.FileName, dataTbls.config.labels_file_location);
+        private void SetSelectedBattleByBattle(Battle battle)
+        {
+            dropdownSpiritData.SelectedItem = battle.battle_id;
 
-                results.SetBattleIdsForAll(dataTbls.selectedBattle.battle_id);
-
-                BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
-
-                dataTbls.ImportBattle(battles, fighters);
-
-                var battle_id = battles.GetBattleAtIndex(0).battle_id;
-                dropdownSpiritData.SelectedItem = battle_id;
-
-                UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
-            }
+            UiHelper.SetInformativeLabel(ref labelInformative, "Import Complete.");
         }
 
         private void ImportFolderFile_Click(object sender, EventArgs e)
@@ -417,23 +443,19 @@ namespace YesweDo
             {
                 if ((openDialog.ShowDialog() == CommonFileDialogResult.Ok) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
                 {
-                    var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.Contains(".prc"));
+                    var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.EndsWith(".prc") || x.EndsWith(".json"));
                     foreach (string file in files)
                     {
-                        var results = XmlHelper.ReadXML(file, dataTbls.config.labels_file_location);
-                        BattleDataOptions battles = (BattleDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Battle));
-                        FighterDataOptions fighters = (FighterDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Fighter));
+                        int fileType =
+                            file.EndsWith(Import_Filters.json.ToString()) ?
+                            (int)Import_Filters.json
+                        :
+                            file.EndsWith(Import_Filters.prc.ToString()) ?
+                            (int)Import_Filters.prc
+                        :
+                            -1;
 
-                        dataTbls.battleData.ReplaceBattles(battles);
-                        dataTbls.fighterData.ReplaceFighters(fighters);
-
-                        var battle_id = battles.GetBattleAtIndex(0).battle_id;
-
-                        if (dataTbls.selectedBattle.battle_id == battle_id)
-                        {
-                            dataTbls.SetSelectedBattle(battle_id);
-                            dataTbls.SetSelectedFighters(battle_id);
-                        }
+                        ImportBattleFromTypeAndFile(fileType, file, false);
                     }
                     var selected_battle_id = dataTbls.selectedBattle.battle_id;
                     dropdownSpiritData.SelectedItem = selected_battle_id;

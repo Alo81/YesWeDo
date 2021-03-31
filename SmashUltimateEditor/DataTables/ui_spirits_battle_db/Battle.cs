@@ -318,14 +318,15 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	stage_bgm { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip("Determines whether to use stage events.  Example: Yellow Devil on Megaman Stage.")]
         public bool	    stage_gimmick { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_attr { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip(
-            "Preset 1 = Final Destination Stage Only/Affects Main Platform\r\n" +
-            "Preset 2 = Battlefield Platforms Only\r\n" +
-            "Preset 3 = Affects Main Stage"
+            "Preset 1 = Final Destination Stage Only/Affects Main Platform.\r\n" +
+            "Preset 2 = Battlefield Platforms Only.\r\n" +
+            "Preset 3 = Affects Main Stage."
             )]
         public string	floor_place_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
@@ -337,7 +338,7 @@ namespace YesWeDo.DataTables
             "Lose Escort = Ally is defeated.\r\n" +
             "Normal Rule = All opponents defeated.\r\n" +
             "Win Alive = Last one survive.\r\n" +
-            "Win Beat Main = Defeat the main opponent to win.\r\n"
+            "Win Beat Main = Defeat the main opponent to win."
             )]
         public string	result_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
@@ -426,6 +427,7 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill5 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [ToolTip("Predefined sets of skills to unrecommend because they're not effective against something.")]
         public string	_0x0ff8afd14f { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         [ToolTip("Multiplies high score.")]

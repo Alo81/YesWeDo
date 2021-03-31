@@ -403,6 +403,13 @@ namespace YesweDo
             fighterData.ReplaceFighters(fighters);
         }
 
+        public void ImportBattle(DataOptions tbls)
+        {
+            battleData.ReplaceBattles((BattleDataOptions)tbls.GetDataOptionsFromUnderlyingType(typeof(Battle)));
+            fighterData.ReplaceFighters((FighterDataOptions)tbls.GetDataOptionsFromUnderlyingType(typeof(Fighter)));
+            spiritData.ReplaceSpirits((SpiritDataOptions)tbls.GetDataOptionsFromUnderlyingType(typeof(Spirit)));
+        }
+
         public void RefreshTabs()
         {
             PopulateTabs();

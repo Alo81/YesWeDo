@@ -157,6 +157,10 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string battle_id { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("Boss Type = For Boss Spirit Battles\r\n" +
+            "Friend Type = Enables this character to be your ally.\r\n" +
+            "Main Type = The main fighter.\r\n" +
+            "Sub Type = Side enemies, not required to be defeated in \"Win Beat Main\" conditions.\r\n")]
         public string entry_type { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         [ToolTip("This character will already be on stage when match starts, rather than spawning in.")]
@@ -164,7 +168,7 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         public ushort appear_rule_time { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
-        [ToolTip("Amount of enemies to that can be spawned with this enemy.")]
+        [ToolTip("Amount of fighters to that can be spawned from this fighter.")]
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
@@ -213,14 +217,25 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
         public float fly_rate { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("When enabled, Fighter will not drop starting item.")]
         public bool invalid_drop { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public bool enable_charge_final { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string spirit_name { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
+        [ToolTip("Stats in base game:\r\n" +
+            "Highest: 10000.  Fierce Deity Link.\r\n" +
+            "Lowest: 35.  Cait Sith.\r\n" +
+            "Most Common: 2000.  Iridescent Glint Beetle\r\n" +
+            "Average: 3177")]
         public short attack { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)][Range(true)]
+        [ToolTip("Stats in base game:\r\n" +
+            "Highest: 10000.  Ganon BotW.\r\n" +
+            "Lowest: 70.  Sidestepper.\r\n" +
+            "Most Common: 1300.  Iridescent Glint Beetle\r\n" +
+            "Average: 2276")]
         public short defense { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string attr { get; set; }

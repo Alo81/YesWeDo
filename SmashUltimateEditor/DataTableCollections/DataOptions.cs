@@ -27,6 +27,10 @@ namespace YesWeDo.DataTableCollections
         {
             dataList.Add(tbl);
         }
+        public void AddRangeDataTbl(IEnumerable<IDataTbl> tbl)
+        {
+            dataList.AddRange(tbl);
+        }
         public int GetCount()
         {
             return dataList.Count;

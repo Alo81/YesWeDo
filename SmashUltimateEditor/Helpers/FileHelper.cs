@@ -207,7 +207,16 @@ namespace YesweDo.Helpers
                 var definedLocation = GetFilePathFromLikeName(file.Name);
                 if (!String.IsNullOrWhiteSpace(definedLocation))
                 {
-                    errorMessage.Append(CopyFile(file, dest + definedLocation, file.Name));
+                    var name = file.Name;
+                    if (file.Name.Contains(Defs.FILE_PATCH_PATTERN))
+                    {
+                        foreach(var replacement in Defs.fileNameReplacements)
+                        {
+                            definedLocation = definedLocation.Replace(replacement.Item1, replacement.Item2);
+                        }
+                        name = name.Replace(Defs.FILE_PATCH_PATTERN, "");
+                    }
+                    errorMessage.Append(CopyFile(file, dest + definedLocation, name));
                 }
             }
 

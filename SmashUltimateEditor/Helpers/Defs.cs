@@ -63,6 +63,7 @@ namespace YesweDo
         public const string EDIT_SPIRIT_DETAILS_BUTTON_STRING = "Edit Spirit Details";
         public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";
         public const string FILE_WILDCARD_PATTERN = ".*";
+        public const string FILE_PATCH_PATTERN = ".PATCH";
         #endregion
 
         #region Files
@@ -78,6 +79,10 @@ namespace YesweDo
         };
 
         public static List<Tuple<string, string>> regExFiles = new List<Tuple<string, string>>(spiritUiLocations);
+        public static List<Tuple<string, string>> fileNameReplacements = new List<Tuple<string, string>>()
+        {
+            new Tuple<string, string>(@"\ui\replace", @"\ui\replace_patch"),
+        };
 
         public static List<Tuple<string, string>> filesToCopy = new List<Tuple<string, string>>()    // Include Spirit UI locations
         {

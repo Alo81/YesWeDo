@@ -79,15 +79,13 @@ namespace YesweDo
         private void buildFighterDataTab(string battle_id)
         {
             this.dropdownSpiritData.DataSource = dataTbls.battleData.GetPropertyValuesFromName("battle_id").ToList();
-            dataTbls.SetSelectedBattle(battle_id);
-            dataTbls.SetSelectedFighters(battle_id);
+            dataTbls.SetSelecteds(battle_id);
         }
 
         private async void dropdownSpiritData_SelectedIndexChanged(object sender, EventArgs e)
         {
             dataTbls.SaveLocal();
-            dataTbls.SetSelectedBattle((string)dropdownSpiritData.SelectedItem);
-            dataTbls.SetSelectedFighters((string)dropdownSpiritData.SelectedItem);
+            dataTbls.SetSelecteds((string)dropdownSpiritData.SelectedItem);
             dataTbls.RefreshTabs();
         }
 

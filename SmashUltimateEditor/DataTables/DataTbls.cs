@@ -386,7 +386,11 @@ namespace YesweDo
             {
                 var source = openDialog.FileName;
                 var fileDetails = Defs.spiritUiLocations[(int)index];
-                var name = fileDetails.Item1.Replace(Defs.FILE_WILDCARD_PATTERN, selectedBattle.battle_id);
+
+                // If we know its a DLC spirit, mark it for placement in the replace_patch folder.  
+                var replacementText = @$"{selectedBattle.battle_id}{((selectedSpirit?.is_dlc ?? false) ? Defs.FILE_PATCH_PATTERN : "")}";
+                var name = fileDetails.Item1.Replace(Defs.FILE_WILDCARD_PATTERN, replacementText);
+
                 var dest = config.file_directory_spirit_images;
 
                 FileHelper.CopyFile(source, dest, name);
@@ -550,6 +554,12 @@ namespace YesweDo
         {
             eventData.SetEventLabelOptions(combo, page);
         }
+        public void SetSelecteds(string battle_id)
+        {
+            SetSelectedBattle(battle_id);
+            SetSelectedFighters(battle_id);
+            SetSelectedSpirit(battle_id);
+        }
 
         public void SetSelectedBattle(string battle_id)
         {
@@ -558,6 +568,10 @@ namespace YesweDo
         public void SetSelectedFighters(string battle_id)
         {
             selectedFighters = fighterData.GetFightersByBattleId(battle_id);
+        }
+        public void SetSelectedSpirit(string battle_id)
+        {
+            selectedSpirit = spiritData.GetSpiritByName(battle_id);
         }
 
         public List<string> GetOptionsFromTypeAndName(Type type, string name)

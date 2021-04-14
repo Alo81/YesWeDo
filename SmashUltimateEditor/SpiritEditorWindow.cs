@@ -193,7 +193,7 @@ namespace YesweDo
 
                 buildFighterDataTab(dataTbls.battleData.GetBattleAtIndex(0).battle_id);
             }
-            if (types.Exists(x => x.IsAssignableFrom(typeof(Event))))
+            if (types.Exists(x => x.IsSubclassOf(typeof(Event))))
             {
                 dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
                 dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);

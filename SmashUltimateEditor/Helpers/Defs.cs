@@ -54,7 +54,7 @@ namespace YesweDo
         public static int COLUMN_WIDTH = MAX_WIDTH + (MAX_PADDING * 3);
         public static int ROW_HEIGHT = (LABEL_HEIGHT + LABEL_PADDING) * ROWS;
 
-        public const int ROWS = 18;
+        public const int ROWS = 20;
         public const int COLUMNS = 4;
 
         public static Color labelTooltipTextColor = Color.FromArgb(23, 96, 144);

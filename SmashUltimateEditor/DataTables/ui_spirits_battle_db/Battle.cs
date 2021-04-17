@@ -312,9 +312,15 @@ namespace YesWeDo.DataTables
         public string	ui_stage_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_type { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Unknowns)]
+        [Order][Excluded(true)]
+        public sbyte _0x18e536d4f7
+        {
+            get { return stage_additional_setting; }
+            set { stage_additional_setting = value; }
+        }
+        [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip("Determines stage form.  Example: On WuHu Island, a value of 10 starts at fountain.")]
-        public sbyte _0x18e536d4f7 { get; set; }
+        public sbyte stage_additional_setting { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][LoadSpecial(true)]
         public string	stage_bgm { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
@@ -324,6 +330,7 @@ namespace YesWeDo.DataTables
         public string	stage_attr { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip(
+            "Determines where Stage_Attr affects will appear (Electric floor, poison floor, etc)\r\n" + 
             "Preset 1 = Final Destination Stage Only/Affects Main Platform.\r\n" +
             "Preset 2 = Battlefield Platforms Only.\r\n" +
             "Preset 3 = Affects Main Stage."
@@ -377,13 +384,26 @@ namespace YesWeDo.DataTables
         public byte	    event3_count { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event3_damage { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Unknowns)]
-        [ToolTip("Show battle detail conditions on pre-fight screen.")]
-        public bool	    _0x0d41ef8328 { get; set; }
+        [Order][Excluded(true)]
+        public bool	    _0x0d41ef8328 
+        { 
+            get { return hint1_visible; }
+            set { hint1_visible = value; }
+        }
+        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip("Show first battle detail conditions on pre-fight screen.")]
+        public bool hint1_visible { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    aw_flap_delay { get; set; }
-        [Order][Page((int)Enums.Battle_Page.Unknowns)]
-        public bool	    _0x0d6f19abae { get; set; }
+        [Order][Excluded(true)]
+        public bool _0x0d6f19abae
+        {
+            get { return hint3_visible; }
+            set { hint3_visible = value; }
+        }
+        [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip("Show third battle detail conditions on pre-fight screen.")]
+        public bool hint3_visible { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         [ToolTip("Highest recommended skill.  Will usually be included as first \"Autopick\".")]
         public string	_0x18d9441f71 { get; set; }

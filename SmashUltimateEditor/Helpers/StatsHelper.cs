@@ -53,6 +53,13 @@ namespace YesweDo.Helpers
 
             return battleIdStrings;
         }
+        public static IEnumerable<string> GetBattleIdsWhereFieldIsLikeValue(IDataOptions tbl, string field, string val)
+        {
+            var results = tbl.dataList.Where(x => x.GetPropertyValueFromName(field).Contains(val));
+            var battleIdStrings = results.Select(x => x.GetPropertyValueFromName("battle_id")).Distinct();
+
+            return battleIdStrings;
+        }
         public static IEnumerable<IDataTbl> GetTblsWhereFieldIsValue(IDataOptions tbl, string field, IEnumerable<int> vals)
         {
             var results = new List<IDataTbl>();

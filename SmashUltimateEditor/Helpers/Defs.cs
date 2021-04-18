@@ -57,7 +57,8 @@ namespace YesweDo
         public const int ROWS = 20;
         public const int COLUMNS = 4;
 
-        public static Color labelTooltipTextColor = Color.FromArgb(23, 96, 144);
+        public static Color LABEL_TOOLTIP_TEXT_COLOR = Color.FromArgb(23, 96, 144);
+        public const int TOOLTIP_DISPLAY_TIME_MS = 20000;
 
         public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
         public const string EDIT_SPIRIT_DETAILS_BUTTON_STRING = "Edit Spirit Details";

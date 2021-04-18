@@ -26,9 +26,9 @@ namespace YesweDo.UI
 
             if(! (tooltipText == null))
             {
-                var tip = new ToolTip();
+                var tip = new ToolTip() { AutoPopDelay = Defs.TOOLTIP_DISPLAY_TIME_MS };
                 tip.SetToolTip(label, tooltipText);
-                label.ForeColor = Defs.labelTooltipTextColor;
+                label.ForeColor = Defs.LABEL_TOOLTIP_TEXT_COLOR;
             }
         }
         public void SetTextBox(string name, Point pos, string value = "")

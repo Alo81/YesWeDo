@@ -240,6 +240,7 @@ namespace YesWeDo.DataTables
             return inText?.ToCharArray()?.Length ?? 0;
         }
 
+        public const string spiritTitleToolTip = "The name which displays for the Spirit Battle.";
         [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
         public string spiritTitle
         {
@@ -253,6 +254,7 @@ namespace YesWeDo.DataTables
                 }
             }
         }
+        public const string spiritSortTitleToolTip = "The text used for sorting how spirits will display in collection.";
         [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
         public string spiritSortTitle
         {
@@ -292,10 +294,24 @@ namespace YesWeDo.DataTables
                 SetSpiritTitleParameters(value);
             }
         }
+        [Order][Excluded(true)]
+        public sbyte _0x18e536d4f7
+        { get { return stage_additional_setting; } set { stage_additional_setting = value; } }
+        [Order][Excluded(true)]
+        public bool _0x0d41ef8328
+        { get { return hint1_visible; } set { hint1_visible = value; } }
+        [Order][Excluded(true)]
+        public bool _0x0d6f19abae
+        { get { return hint3_visible; } set { hint3_visible = value; } }
 
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string   battle_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip("Boss = Health Bar instead of damage/stamina. Seems to be for boss battles.\r\n" +
+            "Hp = Turns match into a hp / stamina match /\r\n" +
+            "Hp_Time = Turns match into a timed hp / stamina match.\r\n" +
+            "Stock = A match with lives.\r\n" +
+            "Stock_Time = A timed match with lives.\r\n")]
         public string	battle_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)][Range(true)]
         public ushort	battle_time_sec { get; set; }
@@ -312,12 +328,6 @@ namespace YesWeDo.DataTables
         public string	ui_stage_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public string	stage_type { get; set; }
-        [Order][Excluded(true)]
-        public sbyte _0x18e536d4f7
-        {
-            get { return stage_additional_setting; }
-            set { stage_additional_setting = value; }
-        }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip("Determines stage form.  Example: On WuHu Island, a value of 10 starts at fountain.")]
         public sbyte stage_additional_setting { get; set; }
@@ -327,13 +337,24 @@ namespace YesWeDo.DataTables
         [ToolTip("Determines whether to use stage events.  Example: Yellow Devil on Megaman Stage.")]
         public bool	    stage_gimmick { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
+        [ToolTip("Stage effect on the stage. Must set a preset.\r\n" +
+            "-Damage Floor = Floor that burns you.\r\n" +
+            "-Elec Floor = Floor that shocks you.\r\n" +
+            "-Gum Floor = Floor that slows ground move speed.\r\n" +
+            "-Ice Floor = Floor that freezes you.\r\n" +
+            "-Mist Floor = Put a fog on that stage that make you unable to see your character.\r\n" +
+            "-No Stage Attr = No stage effect.\r\n" +
+            "-Poison Area = Make the entire stage in a poison fog. This damages everyone.\r\n" +
+            "-Poison Floor = A floor that hurts you with poison damage.\r\n" +
+            "-Sleep Floor = A floor that puts you to sleep.\r\n" +
+            "-Wind Area = A floor that always has high winds blowings.\r\n")]
         public string	stage_attr { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip(
             "Determines where Stage_Attr affects will appear (Electric floor, poison floor, etc)\r\n" + 
-            "Preset 1 = Final Destination Stage Only/Affects Main Platform.\r\n" +
-            "Preset 2 = Battlefield Platforms Only.\r\n" +
-            "Preset 3 = Affects Main Stage."
+            "Preset 1 = Main Stage/No Platforms.\r\n" +
+            "Preset 2 = Main Stage/Platforms.\r\n" +
+            "Preset 3 = Main Stage on Battlefield/Nothing on Final Destination or Regular."
             )]
         public string	floor_place_id { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
@@ -351,14 +372,21 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event1_type { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
+        [ToolTip("A qualifier for event type, determining who, what, or how it affects the battle.")]
         public string	event1_label { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
+        [ToolTip("When the event starts, in seconds.")]
         public int		event1_start_time { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
+        [ToolTip("How long the event last after it starts - in seconds.\r\n" +
+            "-1 = Infinite\r\n" +
+            "60 = 1 Minute")]
         public int		event1_range_time { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
+        [ToolTip("Number of times this event activates.")]
         public byte	    event1_count { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
+        [ToolTip("The amount of damage the enemy needs to activate the event.")]
         public ushort	event1_damage { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][LoadSpecial(true)]
         public string	event2_type { get; set; }
@@ -384,23 +412,11 @@ namespace YesWeDo.DataTables
         public byte	    event3_count { get; set; }
         [Order][Page((int)Enums.Battle_Page.Events)][Range(true)][LoadSpecial(true)]
         public ushort	event3_damage { get; set; }
-        [Order][Excluded(true)]
-        public bool	    _0x0d41ef8328 
-        { 
-            get { return hint1_visible; }
-            set { hint1_visible = value; }
-        }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip("Show first battle detail conditions on pre-fight screen.")]
         public bool hint1_visible { get; set; }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         public bool	    aw_flap_delay { get; set; }
-        [Order][Excluded(true)]
-        public bool _0x0d6f19abae
-        {
-            get { return hint3_visible; }
-            set { hint3_visible = value; }
-        }
         [Order][Page((int)Enums.Battle_Page.Basics)]
         [ToolTip("Show third battle detail conditions on pre-fight screen.")]
         public bool hint3_visible { get; set; }
@@ -410,7 +426,10 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         [ToolTip("Second-most recommended skill.  Will usually be included as second \"Autopick\".")]
         public string	_0x18404d4ecb { get; set; }
+        
+        // Skills.
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
+        [ToolTip("Skills recommended when automatically selecting assist spirits to make fights easier.")]
         public string	recommended_skill1 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill2 { get; set; }
@@ -437,6 +456,7 @@ namespace YesWeDo.DataTables
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	recommended_skill13 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
+        [ToolTip("Skills which will not be recommended when automatically selecting assist spirits.")]
         public string	un_recommended_skill1 { get; set; }
         [Order][Page((int)Enums.Battle_Page.Skills)][LoadSpecial(true)]
         public string	un_recommended_skill2 { get; set; }

@@ -45,7 +45,7 @@ namespace YesweDo
         {
             dataTbls = new DataTbls();
 
-            //StatsHelper.GetBattleIdsWhereFieldIsLikeValue(dataTbls.fighterData, "fighter_kind", "mii");
+            //StatsHelper.GetBattleIdsWhereFieldIsLikeValue(dataTbls.fighterData, "color", "10");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "attack");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "defense");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "cpu_lv");

@@ -565,14 +565,14 @@ namespace YesWeDo.DataTables
                 if (spiritTitles?.Exists ?? false)
                 {
                     lb = new LabelBox();
-                    lb.SetLabel("Spirit Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                    lb.SetLabel("Spirit Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label), Battle.spiritTitleToolTip);
                     subPage.Controls.Add(lb.label);
 
                     lb.SetTextBox("spiritTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
                     subPage.Controls.Add(lb.text);
 
                     lb = new LabelBox();
-                    lb.SetLabel("Spirit Sort Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                    lb.SetLabel("Spirit Sort Title", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label), Battle.spiritSortTitleToolTip);
                     subPage.Controls.Add(lb.label);
 
                     lb.SetTextBox("spiritSortTitle", UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));

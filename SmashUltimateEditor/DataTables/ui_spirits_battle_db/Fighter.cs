@@ -166,13 +166,16 @@ namespace YesWeDo.DataTables
         [ToolTip("This character will already be on stage when match starts, rather than spawning in.")]
         public bool first_appear { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
+        [ToolTip("When this character will appear, in seconds.")]
         public ushort appear_rule_time { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
-        [ToolTip("Amount of fighters to that can be spawned from this fighter.")]
+        [ToolTip("The spawn number of this character. \r\n" +
+            "Example if set to 3. This character will spawn after character 0, 1, and 2 have appeared.")]
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("Outfit Slot 0 - 7. For Miis, changes base body from 0 - 10")]
         public byte color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]
         public string mii_hat_id { get; set; }
@@ -220,6 +223,7 @@ namespace YesWeDo.DataTables
         [ToolTip("When enabled, Fighter will not drop starting item.")]
         public bool invalid_drop { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [ToolTip("Whether this fighter charges its' final smash meter.")]
         public bool enable_charge_final { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Basics)]
         public string spirit_name { get; set; }

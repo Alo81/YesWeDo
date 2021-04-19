@@ -102,6 +102,11 @@ namespace YesWeDo.DataTableCollections
             return GetFightersByBattleId(battle_id).Single().Copy();
         }
 
+        public void AddNewAbilities(IEnumerable<string> newAbilities)
+        {
+            abilities.AddRange(newAbilities.Where(x => !(newAbilities.Contains(x))).OrderBy(x => x).ToList());
+        }
+
         public List<string> Fighters
         {
             get 
@@ -125,7 +130,7 @@ namespace YesWeDo.DataTableCollections
                     _abilities.AddRange((_dataList.Select(x => x.ability3).Distinct()));
                     _abilities.AddRange((_dataList.Select(x => x.ability_personal).Distinct()));
                 }
-                return _abilities;
+                return _abilities.Distinct().OrderBy(x => x).ToList();
             }
             set
             {

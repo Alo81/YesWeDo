@@ -117,6 +117,11 @@ namespace YesWeDo.DataTableCollections
         {
             return _dataList[0].GetType();
         }
+
+        public void AddRecommendedSkills(IEnumerable<string> skills)
+        {
+            recommended_skill.AddRange(skills.Where(x => !(recommended_skill.Contains(x))).OrderBy(x => x).ToList());
+        }
         public List<string> event_type
         {
             get 
@@ -238,7 +243,7 @@ namespace YesWeDo.DataTableCollections
 
                     _recommended_skill = _recommended_skill.Distinct().OrderBy(x => x).ToList();
                 }
-                return _recommended_skill;
+                return _recommended_skill.Distinct().OrderBy(x => x).ToList();
             }
             set
             {

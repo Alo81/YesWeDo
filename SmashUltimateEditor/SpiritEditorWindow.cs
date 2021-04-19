@@ -228,8 +228,8 @@ namespace YesweDo
             {
                 var abilities = results.GetItemsOfType(typeof(SpiritAbilities));
                 var names = abilities?.Select(x => x?.GetPropertyValueFromName(SpiritAbilities.fieldKey)).ToList();
-                dataTbls.battleData.recommended_skill = names;
-                dataTbls.fighterData.abilities = names;
+                dataTbls.battleData.AddRecommendedSkills(names);
+                dataTbls.fighterData.AddNewAbilities(names);
                 fileDbType.Add("Spirit Ability");
             }
             if (types.Contains(typeof(Bgm)))

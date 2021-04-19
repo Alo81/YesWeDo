@@ -67,6 +67,7 @@ namespace YesweDo
             if (dataTbls.battleData.HasData())
             {
                 buildFighterDataTab((string)dataTbls?.battleData?.GetPropertyValuesFromName("battle_id")?.First());
+                dataTbls.UpdateEventsForDbValues();
             }
             else
             {
@@ -197,8 +198,7 @@ namespace YesweDo
             if (types.Exists(x => x.IsSubclassOf(typeof(Event))))
             {
                 dataTbls.eventData = (EventDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Event));
-                dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);
-                dataTbls.UpdateEventsForDbValues();
+                dataTbls.eventData.SetFoundEventTypes(dataTbls.battleData.event_type);  //Some unique values in battleData, so we combine the two sets.  
 
                 fileDbType.Add("Event");
             }

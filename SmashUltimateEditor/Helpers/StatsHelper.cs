@@ -105,6 +105,21 @@ namespace YesweDo.Helpers
             }
             results.Distinct();
         }
+        public static void GetPairedValues(IEnumerable<IDataOptions> tbls, string field1, string field2)
+        {
+            var results = new List<KeyValuePair<string, string>>();
+            foreach (var options in tbls)
+            {
+                foreach (var tbl in options.dataList)
+                {
+                    if (!tbl.GetPropertyValueFromName(field2).Equals("0"))
+                    {
+                        results.Add(new KeyValuePair<string, string>(tbl.GetPropertyValueFromName(field1), tbl.GetPropertyValueFromName(field2)));
+                    }
+                }
+            }
+            results.Distinct().OrderBy(x => x.Key).ThenBy(x => x.Value).ToList();
+        }
 
         public static void WriteHashSetToFile(IEnumerable<string> dict, string fileName)
         {

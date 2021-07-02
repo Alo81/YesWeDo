@@ -54,7 +54,7 @@ namespace YesWeDo.DataTableCollections
 
         public List<IDataTbl> GetOfType(Type type)
         {
-            return dataList.Where(x => x.GetType().IsAssignableFrom(type) || x.GetType().IsSubclassOf(type)).ToList();
+            return dataList.Where(x => (x?.GetType()?.IsAssignableFrom(type) ?? false) || (x?.GetType()?.IsSubclassOf(type) ?? false)).ToList();
         }
 
         public IDataOptions GetDataOptionsFromUnderlyingType(Type underlyingType)

@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YesWeDo", "SmashUltimateEditor\YesWeDo.csproj", "{42CAD0A7-50D2-4376-934D-4B91839EAF75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YesWeDoTests", "SmashUltimateEditorTests\YesWeDoTests.csproj", "{08BAD841-DE7F-463F-956B-70F2A659A7BC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{42CAD0A7-50D2-4376-934D-4B91839EAF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CAD0A7-50D2-4376-934D-4B91839EAF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42CAD0A7-50D2-4376-934D-4B91839EAF75}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08BAD841-DE7F-463F-956B-70F2A659A7BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

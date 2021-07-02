@@ -45,6 +45,7 @@ namespace YesweDo
         {
             dataTbls = new DataTbls();
 
+            StatsHelper.GetPairedValues(dataTbls.dataOptions, "ui_stage_id", "stage_additional_setting");
             //StatsHelper.GetBattleIdsWhereFieldIsLikeValue(dataTbls.fighterData, "color", "10");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "attack");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "defense");
@@ -385,6 +386,10 @@ namespace YesweDo
             {
                 options = XmlHelper.ReadXML(fileName, dataTbls.config.labels_file_location);
             }
+            else
+            {
+                return;
+            }
 
             SaveImportToDataTbls(options);
             if (setBattle)
@@ -437,25 +442,22 @@ namespace YesweDo
 
         private void ImportFolderFile_Click(object sender, EventArgs e)
         {
-            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
+            var openDialog = new CommonOpenFileDialog() { Title = "Replace loaded battles with all JSON battles in folder", InitialDirectory = dataTbls.config.file_directory_custom_battles, IsFolderPicker = true };
+
             try
             {
                 if ((openDialog.ShowDialog() == CommonFileDialogResult.Ok) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
                 {
-                    var files = Directory.EnumerateFiles(openDialog.FileName).Where(x => x.EndsWith(".prc") || x.EndsWith(".json"));
-                    foreach (string file in files)
-                    {
-                        int fileType =
-                            file.EndsWith(Import_Filters.json.ToString()) ?
-                            (int)Import_Filters.json
-                        :
-                            file.EndsWith(Import_Filters.prc.ToString()) ?
-                            (int)Import_Filters.prc
-                        :
-                            -1;
+                    var enumerator = new EnumerationOptions() { RecurseSubdirectories = true };
+                    var files = Directory.EnumerateFiles(openDialog.FileName, "*.json", enumerator);
+                    ImportAllBattlesFromFiles(files);
 
-                        ImportBattleFromTypeAndFile(fileType, file, false);
+                    if (UiHelper.PopUpQuestion("JSON battles imported.  Import PRC Battles? (This can be VERY slow, and unnecessary if you don't have old exported custom battles.)"))
+                    {
+                        files = Directory.EnumerateFiles(openDialog.FileName, "*.PRC", enumerator);
+                        ImportAllBattlesFromFiles(files);
                     }
+
                     var selected_battle_id = dataTbls.selectedBattle.battle_id;
                     dropdownSpiritData.SelectedItem = selected_battle_id;
 
@@ -468,6 +470,23 @@ namespace YesweDo
             { 
                 UiHelper.PopUpMessage("Couldn't import battles due to error."); 
             };
+        }
+
+        private void ImportAllBattlesFromFiles(IEnumerable<string> files)
+        {
+            foreach (string file in files)
+            {
+                int fileType =
+                    file.EndsWith(Import_Filters.json.ToString()) ?
+                    (int)Import_Filters.json
+                :
+                    file.EndsWith(Import_Filters.prc.ToString()) ?
+                    (int)Import_Filters.prc
+                :
+                    -1;
+
+                ImportBattleFromTypeAndFile(fileType, file, false);
+            }
         }
 
         private async void RandomizeAllTool_Click(object sender, EventArgs e)

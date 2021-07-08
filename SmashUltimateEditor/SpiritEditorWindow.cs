@@ -376,8 +376,6 @@ namespace YesweDo
             {
                 var importedBattle = XmlHelper.DeserializeFromFile(fileName);
 
-                importedBattle.battle.msbtUpdated = true;   // We want to be sure we write the new title when we save.  
-
                 options.AddDataTbl(importedBattle.battle);
                 options.AddRangeDataTbl(importedBattle.fighters);
                 options.AddDataTbl(importedBattle.spirit);

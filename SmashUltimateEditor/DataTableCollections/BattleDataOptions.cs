@@ -95,14 +95,21 @@ namespace YesWeDo.DataTableCollections
         {
             foreach(Battle replBattle in replacement.dataList)
             {
-                var ogBattleSpiritTitle = GetBattle(replBattle.battle_id).combinedMsbtTitle;
+                var ogBattleSpiritTitle = GetBattle(replBattle?.battle_id)?.combinedMsbtTitle;
+                var battleIndex = GetBattleIndex(replBattle.battle_id);
 
-                _dataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
-
-                if (String.IsNullOrWhiteSpace(replBattle.combinedMsbtTitle))
+                if(battleIndex >= 0)
                 {
-                    _dataList[GetBattleIndex(replBattle.battle_id)].SetSpiritTitleParameters(ogBattleSpiritTitle);
+                    var msbtUpdated = !(replBattle?.combinedMsbtTitle.Equals(ogBattleSpiritTitle)) ?? false;
+                    _dataList[GetBattleIndex(replBattle.battle_id)] = replBattle;
+
+                    if (String.IsNullOrWhiteSpace(replBattle.combinedMsbtTitle))
+                    {
+                        _dataList[GetBattleIndex(replBattle.battle_id)].SetSpiritTitleParameters(ogBattleSpiritTitle);
+                    }
+                    _dataList[GetBattleIndex(replBattle.battle_id)].msbtUpdated = msbtUpdated;
                 }
+
             }
         }
         public void ReplaceBattleAtIndex(int index, Battle newBattle)

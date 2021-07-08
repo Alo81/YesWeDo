@@ -7,7 +7,7 @@
 ### Prerequisites:
 
   - Hacked Switch preconfigured for playing modded Super Smash Bros Ultimate
-  - [.Net Core 3.1 Runtime installed](https://dotnet.microsoft.com/download/dotnet/3.1/runtime)
+  - [.Net 5.0 Runtime installed](https://dotnet.microsoft.com/download/dotnet/5.0/runtime)
   - Ability to extract files from data.arc:  
     >Details on extracting files can be found here: https://gamebanana.com/tuts/12827)
   

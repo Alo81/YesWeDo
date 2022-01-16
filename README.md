@@ -30,7 +30,7 @@ __________________________________
   - ui_fighter_spirit_aw_db.prc
     >@\ui\param\database\  
   - spirits_battle_event.prc
-    >@\ui\param\spirits\  
+    >@param\spirits\  
   - msg_spirits.msbt
     >@\ui\message\
   - ui_spirit_db.prc

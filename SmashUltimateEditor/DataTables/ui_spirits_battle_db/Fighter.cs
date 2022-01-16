@@ -174,7 +174,7 @@ namespace YesWeDo.DataTables
         public ushort appear_rule_count { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Attributes)]
         public string fighter_kind { get; set; }
-        [Order][Page((int)Enums.Fighter_Page.Basics)]
+        [Order][Page((int)Enums.Fighter_Page.Basics)][Range(true)]
         [ToolTip("Outfit Slot 0 - 7. For Miis, changes base body from 0 - 10")]
         public byte color { get; set; }
         [Order][Page((int)Enums.Fighter_Page.Mii)]

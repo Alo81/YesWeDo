@@ -45,7 +45,7 @@ namespace YesweDo
         {
             dataTbls = new DataTbls();
 
-            StatsHelper.GetPairedValues(dataTbls.dataOptions, "ui_stage_id", "stage_additional_setting");
+            //StatsHelper.GetPairedValues(dataTbls.dataOptions, "ui_stage_id", "stage_additional_setting");
             //StatsHelper.GetBattleIdsWhereFieldIsLikeValue(dataTbls.fighterData, "color", "10");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "attack");
             //StatsHelper.GetNumericStatsForField(dataTbls.fighterData, "defense");
@@ -224,6 +224,11 @@ namespace YesweDo
             {
                 dataTbls.spiritData = (SpiritDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(Spirit));
                 fileDbType.Add("Spirit");
+            }
+            if (types.Contains(typeof(SpiritLayout)))
+            {
+                dataTbls.spiritLayoutData = (SpiritLayoutDataOptions)results.GetDataOptionsFromUnderlyingType(typeof(SpiritLayout));
+                fileDbType.Add("Spirit Layout");
             }
             if (types.Contains(typeof(SpiritAbilities)))
             {

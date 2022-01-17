@@ -97,6 +97,11 @@ namespace YesweDo
             get { return (SpiritDataOptions)GetOptionsOfType(typeof(SpiritDataOptions)); }
             set { UpdateDataOptions(value); }
         }
+        public SpiritLayoutDataOptions spiritLayoutData
+        {
+            get { return (SpiritLayoutDataOptions)GetOptionsOfType(typeof(SpiritLayoutDataOptions)); }
+            set { UpdateDataOptions(value); }
+        }
 
         public IDataOptions GetOptionsOfType(Type type)
         {

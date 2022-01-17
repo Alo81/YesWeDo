@@ -6,7 +6,7 @@ namespace YesweDo
 {
     public static class Defs
     {
-        public const string paramLabelsGitUrl = @"https://github.com/Alo81/param-labels/raw/master/ParamLabels.csv";
+        public const string paramLabelsGitUrl = @"https://raw.githubusercontent.com/ultimate-research/param-labels/master/ParamLabels.csv";
         public const string paramLabelsName = @"ParamLabels.csv";
 
         public const string gitReleasesUrl = "https://api.github.com/repos/Alo81/YesWeDo/releases";

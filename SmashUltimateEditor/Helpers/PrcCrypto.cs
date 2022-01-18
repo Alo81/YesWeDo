@@ -27,6 +27,7 @@ namespace YesweDo.Helpers
                     if (hashToStringLabels == null)
                     {
                         hashToStringLabels = LabelIO.GetHashStringDict(labelName);
+                        hashToStringLabels.Add(0x07c9e447b6, "");
                     }
                 }
                 catch (Exception ex)
@@ -54,6 +55,7 @@ namespace YesweDo.Helpers
                 try
                 {
                     stringToHashLabels = LabelIO.GetStringHashDict(labelsFileLocation);
+                    stringToHashLabels.Add("", 0x07c9e447b6);
                 }
                 catch (Exception ex)
                 {
@@ -125,6 +127,7 @@ namespace YesweDo.Helpers
             {
                 if (!Enum.IsDefined(typeof(ParamType), node.Name))
                 {
+                    var x = "";
                     //throw new FormatException($"\"{node.Name}\" is not a valid param type");
                 }
                 ParamType type = (ParamType)Enum.Parse(typeof(ParamType), node.Name);
@@ -155,8 +158,13 @@ namespace YesweDo.Helpers
         ParamStruct Node2ParamStruct(XmlNode node)
         {
             Hash40Pairs<IParam> childParams = new Hash40Pairs<IParam>();
-            foreach (XmlNode child in node.ChildNodes)
+            foreach (XmlNode child in node.ChildNodes) {
+                if (child.Attributes["hash"].Value == "fighter_kind")
+                {
+                    var x = "";
+                }
                 childParams.Add(child.Attributes["hash"].Value, stringToHashLabels, Node2Param(child));
+            }
             return new ParamStruct(childParams);
         }
 
@@ -172,6 +180,10 @@ namespace YesweDo.Helpers
         ParamValue Node2ParamValue(XmlNode node, ParamType type)
         {
             ParamValue param = new ParamValue(type);
+            if(node.InnerText == "jeann")
+            {
+                var x = "";
+            }
             param.SetValue(node.InnerText, stringToHashLabels);
             return param;
         }

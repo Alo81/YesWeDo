@@ -116,6 +116,12 @@ namespace YesWeDo.DataTableCollections
         {
             _dataList[index] = newBattle;
         }
+
+        public bool NewBattleIdValid(string battleId)
+        {
+            return GetBattle(battleId.ToLower()) == null;
+        }
+
         public string GetXmlName()
         {
             return "battle_data_tbl";

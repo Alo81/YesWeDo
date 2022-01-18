@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Linq;
+using System.Reflection;
+using System.Windows.Forms;
 using YesweDo;
 
 namespace YesWeDo.DataTables
@@ -14,6 +16,15 @@ namespace YesWeDo.DataTables
         public static TabPage BuildEmptyPage(DataTbls dataTbls)
         {
             return DataTbl.BuildEmptyPage(dataTbls, typeof(Spirit));
+        }
+        public void SetAllValuesToDefault()
+        {
+            var spiritId = this.ui_spirit_id;
+            foreach (PropertyInfo field in GetType().GetProperties().Where(x => !(x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false)))
+            {
+                SetFieldToDefaultValue(field);
+            }
+            this.ui_spirit_id = spiritId;
         }
 
         [Excluded(true)]

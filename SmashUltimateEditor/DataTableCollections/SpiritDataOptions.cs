@@ -42,6 +42,10 @@ namespace YesWeDo.DataTableCollections
         {
             return _dataList.FindIndex(x => x.ui_spirit_id == spiritId);
         }
+        public Spirit GetSpiritAtIndex(int index)
+        {
+            return _dataList[index];
+        }
         public void SetData(List<IDataTbl> inSpiritBoard)
         {
             _dataList = inSpiritBoard.OfType<Spirit>().ToList();
@@ -54,6 +58,11 @@ namespace YesWeDo.DataTableCollections
         public bool HasData()
         {
             return GetCount() > 0;
+        }
+
+        public void AddSpirit(Spirit spirit)
+        {
+            _dataList.Add(spirit);
         }
     }
 }

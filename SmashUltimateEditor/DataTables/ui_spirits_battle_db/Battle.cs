@@ -46,6 +46,15 @@ namespace YesWeDo.DataTables
         {
             return new Fighter() { battle_id = battle_id, spirit_name = battle_id};
         }
+        public void SetAllValuesToDefault()
+        {
+            var battleId = this.battle_id;
+            foreach (PropertyInfo field in GetType().GetProperties().Where(x => !(x?.GetCustomAttribute<ExcludedAttribute>()?.Excluded ?? false)))
+            {
+                SetFieldToDefaultValue(field);
+            }
+            this.battle_id = battleId;
+        }
 
         public void EventSet(ref Random rnd, DataTbls dataTbls)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -357,6 +358,11 @@ namespace YesweDo.Helpers
         public static bool PopUpQuestion(string message)
         {
             return MessageBox.Show(message, "", MessageBoxButtons.YesNo) == DialogResult.Yes;
+        }
+
+        public static string PopUpTextPrompt(string message, string title)
+        {
+            return Interaction.InputBox(message, title, "");
         }
         public static void SetInformativeLabel(ref Label label, string message)
         {

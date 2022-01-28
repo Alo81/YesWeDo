@@ -127,7 +127,11 @@ namespace YesWeDo.DataTableCollections
 
         public void AddRecommendedSkills(IEnumerable<string> skills)
         {
-            recommended_skill.AddRange(skills.Where(x => !(recommended_skill.Contains(x))).OrderBy(x => x).ToList());
+            if (_recommended_skill == null)
+            {
+                _recommended_skill = new List<string>();
+            }
+            _recommended_skill.AddRange(skills.Where(x => !(recommended_skill.Contains(x))).OrderBy(x => x).ToList());
         }
         public List<string> event_type
         {

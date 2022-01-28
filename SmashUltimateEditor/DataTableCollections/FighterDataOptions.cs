@@ -104,6 +104,10 @@ namespace YesWeDo.DataTableCollections
 
         public void AddNewAbilities(IEnumerable<string> newAbilities)
         {
+            if(_abilities == null)
+            {
+                _abilities = new List<string>();
+            }
             abilities.AddRange(newAbilities.Where(x => !(newAbilities.Contains(x))).OrderBy(x => x).ToList());
         }
 

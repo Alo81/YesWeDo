@@ -55,7 +55,10 @@ namespace YesweDo.Helpers
                 try
                 {
                     stringToHashLabels = LabelIO.GetStringHashDict(labelsFileLocation);
-                    stringToHashLabels.Add("", 0x07c9e447b6);
+                    if (!stringToHashLabels.ContainsKey(""))
+                    {
+                        stringToHashLabels.Add("", 0x07c9e447b6);
+                    }
                 }
                 catch (Exception ex)
                 {

@@ -108,7 +108,7 @@ namespace YesWeDo.DataTableCollections
             {
                 _abilities = new List<string>();
             }
-            abilities.AddRange(newAbilities.Where(x => !(newAbilities.Contains(x))).OrderBy(x => x).ToList());
+            _abilities.AddRange(newAbilities.Where(x => !(abilities.Contains(x))).OrderBy(x => x).ToList());
         }
 
         public List<string> Fighters

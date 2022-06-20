@@ -8,6 +8,7 @@ namespace YesweDo
     {
         public const string paramLabelsGitUrl = @"https://raw.githubusercontent.com/ultimate-research/param-labels/master/ParamLabels.csv";
         public const string paramLabelsName = @"ParamLabels.csv";
+        public const string paramLabelsUserName = @"ParamLabelsUser.csv";
 
         public const string gitReleasesUrl = "https://api.github.com/repos/Alo81/YesWeDo/releases";
 

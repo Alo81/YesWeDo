@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Xml.Linq;
 using YesWeDo.DataTableCollections;
 using YesWeDo.DataTables;
@@ -109,7 +110,7 @@ namespace YesweDo.Helpers
         public static void SaveToEncryptedFile(XDocument doc, string fileLocation)
         {
             PrcCrypto encryptedSaver = new PrcCrypto();
-            encryptedSaver.AssmebleEncrypted(doc.ToXmlDocument(), fileLocation, config.labels_file_location);
+            encryptedSaver.AssmebleEncrypted(doc.ToXmlDocument(), fileLocation, config.labels_file_location, config.labels_file_user_location);
         }
 
         public static void SaveToFile(XDocument doc, string fileLocation)
@@ -396,6 +397,10 @@ namespace YesweDo.Helpers
 
             foreach (var battle in battles)
             {
+                if(battle.battle_id.Equals("3_volt"))
+                {
+                    var x = 0;
+                }
                 battle.SetSpiritTitleParameters(adapter.HashEntries.FirstOrDefault(x => x?.SpiritBattleId == battle?.battle_id)?.EditedText);
             }
 
@@ -419,7 +424,6 @@ namespace YesweDo.Helpers
 
                 foreach(var file in files.Where( x=> Defs.msbtFilesToSave.Contains(x.Name)))
                 {
-                    var originalSize = file.Length;
                     adapter = GetLoadedMsbtAdapter(file.FullName);
                     backupAdapter = GetLoadedMsbtAdapter(file.FullName);
                     var updated = false;
@@ -435,15 +439,7 @@ namespace YesweDo.Helpers
                     }
                     if (updated)
                     {
-                        adapter.Save();
-
-                        // See if the file broke.  If so, write the old version back and throw exception.  
-                        file.Refresh();
-                        if(file.Length < originalSize / 2)
-                        {
-                            backupAdapter.Save();
-                            throw new Exception("Error trying to save spirit titles.  Spirit Title changes unsaved.");
-                        }
+                        SaveSpiritTitles(adapter, file, backupAdapter);
                     }
                 }
 
@@ -452,6 +448,64 @@ namespace YesweDo.Helpers
             {
                 UiHelper.PopUpMessage(ex.Message);
             }
+        }
+
+        public static void AddSpiritTitle(string battleId, string fileName)
+        {
+            MsbtAdapter adapter;
+            var files = GetFiles(fileName);
+            foreach (var file in files.Where(x => Defs.msbtFilesToSave.Contains(x.Name)))
+            {
+                adapter = GetLoadedMsbtAdapter(file.FullName);
+                var entryToCopy = adapter.Entries.FirstOrDefault();
+                var entryToCopy2 = adapter.Entries.LastOrDefault();
+                var maxIndex = adapter.Entries.Select(x => ((MsbtEntry)x).EditedLabel.Index).Max();
+
+                // Bah! These new MSBT labels are breaking.  Best bet would probably be copying something, but not really sure the right way to do so.  
+                var entry = new MsbtEntry() { EditedText = $"{battleId}{"\u000e\0\u0002\u0002d\0\u000e\u0001\nJH"}{battleId}"};
+                entry.Name = $"spi_{battleId}";
+                
+                // Some reason, MSBT adapter seems to load asynchronously?  Wait up to 2 seconds before crashing.  
+                int counter = 0;
+                while(adapter?.Entries == null && counter < 20)
+                {
+                    Thread.Sleep(100);
+                }
+                adapter.AddEntry(entry);
+                var backupAdapter = GetLoadedMsbtAdapter(file.FullName);
+                SaveSpiritTitles(adapter, file, backupAdapter);
+            }
+        }
+
+        public static void SaveSpiritTitles(MsbtAdapter adapter, FileInfo file, MsbtAdapter backupAdapter = null)
+        {
+            var originalSize = file.Length;
+
+            adapter.Save();
+
+            // See if the file broke.  If so, write the old version back and throw exception.  
+            file.Refresh();
+            if (file.Length < originalSize / 2)
+            {
+                backupAdapter.Save();
+                throw new Exception("Error trying to save spirit titles.  Spirit Title changes unsaved.");
+            }
+
+        }
+
+        public static FileInfo GetOrCreateFile(string location)
+        {
+
+            if (!FileExists(location))
+            {
+                CreateFile(location);
+            }
+
+            return new FileInfo(location);
+        }
+        public static void CreateFile(string location)
+        {
+            using (new FileInfo(location).Create()) ;
         }
     }
 }

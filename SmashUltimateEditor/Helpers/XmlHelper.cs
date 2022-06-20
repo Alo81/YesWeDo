@@ -58,7 +58,7 @@ namespace YesweDo.Helpers
             }
         }
 
-        public static Stream GetStreamFromEncryptedFile(string fileName, string fileLocationLabels)
+        public static Stream GetStreamFromEncryptedFile(string fileName, string fileLocationLabels, string userLabelsFileLocation)
         {
             var stream = new MemoryStream();
 
@@ -66,7 +66,7 @@ namespace YesweDo.Helpers
             {
                 // Try opening again, and decrypting this time.
                 PrcCrypto encryptedSaver = new PrcCrypto();
-                XmlDocument doc = encryptedSaver.DisassembleEncrypted(fileName, fileLocationLabels);
+                XmlDocument doc = encryptedSaver.DisassembleEncrypted(fileName, fileLocationLabels, userLabelsFileLocation);
                 doc.Save(stream);
                 stream.Position = 0;
                 return stream;
@@ -92,7 +92,7 @@ namespace YesweDo.Helpers
             }
         }
 
-        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "", OrderedDictionary<ulong, string> hashes = null)
+        public static DataOptions ReadXML(string fileName, string fileLocationLabels = "", string userLabelsFileLocation = "", OrderedDictionary<ulong, string> hashes = null)
         {
             bool parseData = false;
             bool firstPass = false;
@@ -120,7 +120,7 @@ namespace YesweDo.Helpers
                 {
                     // Close and dispose reader and stream.
                     reader.Dispose();
-                    stream = GetStreamFromEncryptedFile(fileName, fileLocationLabels);
+                    stream = GetStreamFromEncryptedFile(fileName, fileLocationLabels, userLabelsFileLocation);
                     reader = GetXmlReaderFromStream(stream);
                     reader.Read();
                 }

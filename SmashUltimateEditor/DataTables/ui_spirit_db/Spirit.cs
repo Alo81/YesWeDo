@@ -26,6 +26,16 @@ namespace YesWeDo.DataTables
             }
             this.ui_spirit_id = spiritId;
         }
+        public Spirit Copy()
+        {
+            Spirit newCopy = new Spirit();
+            foreach (PropertyInfo property in GetType().GetProperties())
+            {
+                newCopy.SetValueFromName(property.Name, this.GetPropertyValueFromName(property.Name));
+            }
+
+            return newCopy;
+        }
 
         [Excluded(true)]
         public bool _0x11730b0c1d

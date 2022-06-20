@@ -249,6 +249,19 @@ namespace YesWeDo.DataTables
             return inText?.ToCharArray()?.Length ?? 0;
         }
 
+        public string PadSortString(string value)
+        {
+
+            StringBuilder newString = new StringBuilder();
+            newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
+            foreach (var ch in value)
+            {
+                newString.Append(ch);
+                newString.Append('\0');
+            }
+            return newString.ToString();
+        }
+
         public const string spiritTitleToolTip = "The name which displays for the Spirit Battle.";
         [Order][Page((int)Enums.Battle_Page.Basics)][Excluded(true)]
         public string spiritTitle
@@ -275,14 +288,7 @@ namespace YesWeDo.DataTables
             {
                 if (!spiritSortTitle?.Equals(value) ?? true)
                 {
-                    StringBuilder newString = new StringBuilder();
-                    newString.Append('\0');     //Start off with \0 character since Sort string is sandwiched on both ends.  
-                    foreach (var ch in value)
-                    {
-                        newString.Append(ch);
-                        newString.Append('\0');
-                    }
-                    msbtSort = newString.ToString();
+                    msbtSort = PadSortString(value);
                     msbtUpdated = true;
                 }
             }

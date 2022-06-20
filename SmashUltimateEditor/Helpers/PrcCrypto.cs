@@ -1,6 +1,7 @@
 ﻿using paracobNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -16,7 +17,7 @@ namespace YesweDo.Helpers
         static OrderedDictionary<ulong, string> hashToStringLabels { get; set; }
         static OrderedDictionary<string, ulong> stringToHashLabels { get; set; }
 
-        public XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "")
+        public XmlDocument DisassembleEncrypted(string fileLocation, string labelsFileLocation = "", string userLabelsFileLocation="")
         {
             labelName = labelsFileLocation;
 
@@ -36,6 +37,32 @@ namespace YesweDo.Helpers
                     return new XmlDocument();
                 }
             }
+            if (!string.IsNullOrEmpty(userLabelsFileLocation) && File.Exists(userLabelsFileLocation))
+            {
+                try
+                {
+                    var userLabels = LabelIO.GetHashStringDict(userLabelsFileLocation);
+                    if (hashToStringLabels != null)
+                    {
+                        foreach(var val in userLabels)
+                        {
+                            if (!hashToStringLabels.ContainsKey(val.Key))
+                            {
+                                hashToStringLabels.TryAdd(val.Key, val.Value);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        hashToStringLabels = userLabels;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return new XmlDocument();
+                }
+            }
 
             file = new ParamFile();
             file.Open(fileLocation);
@@ -47,7 +74,7 @@ namespace YesweDo.Helpers
             return xml;
         }
 
-        public void AssmebleEncrypted(XmlDocument doc, string fileLocation, string labelsFileLocation)
+        public void AssmebleEncrypted(XmlDocument doc, string fileLocation, string labelsFileLocation, string userLabelsFileLocation = "")
         {
             stringToHashLabels = new OrderedDictionary<string, ulong>();
             if (!string.IsNullOrEmpty(labelsFileLocation))
@@ -55,7 +82,33 @@ namespace YesweDo.Helpers
                 try
                 {
                     stringToHashLabels = LabelIO.GetStringHashDict(labelsFileLocation);
-                    stringToHashLabels.Add("", 0x07c9e447b6);
+                    //stringToHashLabels.TryAdd<string, ulong>("", 0x07c9e447b6);
+                }
+                catch (Exception ex)
+                {
+                    UiHelper.PopUpMessage(ex.Message);
+                    return;
+                }
+            }
+            if (!string.IsNullOrEmpty(userLabelsFileLocation) && File.Exists(userLabelsFileLocation))
+            {
+                try
+                {
+                    var userLabels = LabelIO.GetStringHashDict(userLabelsFileLocation);
+                    if (stringToHashLabels != null)
+                    {
+                        foreach (var val in userLabels)
+                        {
+                            if (!stringToHashLabels.ContainsKey(val.Key))
+                            {
+                                stringToHashLabels.TryAdd(val.Key, val.Value);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        stringToHashLabels = userLabels;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -159,10 +212,6 @@ namespace YesweDo.Helpers
         {
             Hash40Pairs<IParam> childParams = new Hash40Pairs<IParam>();
             foreach (XmlNode child in node.ChildNodes) {
-                if (child.Attributes["hash"].Value == "fighter_kind")
-                {
-                    var x = "";
-                }
                 childParams.Add(child.Attributes["hash"].Value, stringToHashLabels, Node2Param(child));
             }
             return new ParamStruct(childParams);
@@ -180,10 +229,6 @@ namespace YesweDo.Helpers
         ParamValue Node2ParamValue(XmlNode node, ParamType type)
         {
             ParamValue param = new ParamValue(type);
-            if(node.InnerText == "jeann")
-            {
-                var x = "";
-            }
             param.SetValue(node.InnerText, stringToHashLabels);
             return param;
         }

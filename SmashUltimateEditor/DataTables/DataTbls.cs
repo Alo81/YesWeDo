@@ -20,8 +20,8 @@ namespace YesweDo
     public partial class DataTbls
     {
         public List<Fighter> selectedFighters;
-        public Battle selectedBattle;
-        public Spirit selectedSpirit;
+        public Battle selectedBattle { get; set; }
+        public Spirit selectedSpirit { get; set; }
         public Stack<TabPage> tabStorage;
 
         public Config config;
@@ -174,7 +174,7 @@ namespace YesweDo
                 NetworkHelper.DownloadParamLabels(config.labels_file_location);
             }
 
-            var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location);
+            var results = XmlHelper.ReadXML(config.file_location, config.labels_file_location, config.labels_file_user_location);
 
             foreach(Type child in DataTbl.GetChildrenTypes())
             {

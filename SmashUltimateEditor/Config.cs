@@ -47,6 +47,7 @@ namespace YesweDo
         const string defaultPreload = @"Preload\";
         const string defaultSpiritImages = @"Spirit Images\";
         const string defaultParamLabels = Defs.paramLabelsName;
+        const string defaultParamLabelsUser = Defs.paramLabelsUserName;
         const int defaultChaosValue = 100;
         const int defaultRandomizerIterations = 3;
 
@@ -68,6 +69,7 @@ namespace YesweDo
         public bool check_for_updates;
 
         public string labels_file_location;
+        public string labels_file_user_location;
         public int chaos;
         public int randomizer_iterations;
         public int minimum_battle_time;
@@ -110,6 +112,7 @@ namespace YesweDo
             file_directory_preload = String.IsNullOrEmpty(file_directory_preload) ? file_directory + defaultPreload : file_directory_preload;
             file_directory_spirit_images = String.IsNullOrEmpty(file_directory_spirit_images) ? file_directory + defaultSpiritImages : file_directory_spirit_images;
             labels_file_location = String.IsNullOrEmpty(labels_file_location) ? file_directory + defaultParamLabels : labels_file_location;
+            labels_file_user_location = String.IsNullOrEmpty(labels_file_user_location) ? file_directory + defaultParamLabelsUser : labels_file_user_location;
 
             chaos = chaos == default(int) ? defaultChaosValue : chaos;
             randomizer_iterations = randomizer_iterations == default(int) ? defaultRandomizerIterations : randomizer_iterations;

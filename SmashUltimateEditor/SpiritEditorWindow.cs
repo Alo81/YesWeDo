@@ -140,20 +140,25 @@ namespace YesweDo
             Fighter newFighter = dataTbls.fighterData.GetFighterAtIndex(0).Copy();
             Spirit newSpirit = dataTbls.spiritData.GetSpiritAtIndex(0).Copy();
 
+            // Its a long one.... Should clean this up later. 
+            newBattle.SetSpiritTitleParameters("Sora \u000e\0\u0002\u0002P\0(KINGDOM HEARTS 3D [Dream Drop Distance])\u000e\0\u0002\u0002d\0\u000e\u0001\nJH\0s\0o\0r\0a\0k\0i\0n\0g\0d\0o\0m\0h\0e\0a\0r\0t\0s\03\0d\0d\0r\0e\0a\0m\0d\0r\0o\0p\0d\0i\0s\0t\0a\0n\0c\0e\0");
+
             newBattle.msbtTitle = battleId;
             battleId = battleId.ToLower();  // Keep caps for the title, rest can be lower.  
 
             newBattle.battle_id = battleId;
-            // Its a long one.... Should clean this up later. 
-            newBattle.SetSpiritTitleParameters("Sora \u000e\0\u0002\u0002P\0(KINGDOM HEARTS 3D [Dream Drop Distance])\u000e\0\u0002\u0002d\0\u000e\u0001\nJH\0s\0o\0r\0a\0k\0i\0n\0g\0d\0o\0m\0h\0e\0a\0r\0t\0s\03\0d\0d\0r\0e\0a\0m\0d\0r\0o\0p\0d\0i\0s\0t\0a\0n\0c\0e\0");
             newBattle.msbtSort = newBattle.PadSortString(battleId);
 
             newFighter.battle_id = battleId;
 
             newSpirit.ui_spirit_id = newSpirit.name_id = battleId;
+            newSpirit.type = "spirits_type_attack";
+            newSpirit.is_rematch_target = newSpirit.is_board_appear = true;
             newSpirit.save_no = (ushort)(dataTbls.spiritData.save_no.Max() + 1);
             newSpirit.directory_id = (ushort)(dataTbls.spiritData.directory_id.Max() + 1);
             newSpirit.fixed_no = (ushort)(dataTbls.spiritData.fixed_no.Max() + 1);
+
+            ConfigureDefaultSpiritImages(battleId);
 
             dataTbls.battleData.AddBattle(newBattle);
             dataTbls.fighterData.AddFighter(newFighter);
@@ -174,6 +179,20 @@ namespace YesweDo
                 using (StreamWriter sw = file.AppendText())
                 {
                     sw.WriteLine($"{hash},{userParam}");
+                }
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage(String.Format(String.Format("Couldn't save User Param Labels.  {0}", ex.Message)));
+            }
+        }
+        private void ConfigureDefaultSpiritImages(string battleId)
+        {
+            try
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FileHelper.LoadSpiritImageWithName(dataTbls.config.file_directory_spirit_images + $@"default\{i}.bntx", Defs.spiritUiLocations[(int)i].Item1, battleId);
                 }
             }
             catch (Exception ex)

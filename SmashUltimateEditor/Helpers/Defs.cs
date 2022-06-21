@@ -61,6 +61,7 @@ namespace YesweDo
         public static Color LABEL_TOOLTIP_TEXT_COLOR = Color.FromArgb(23, 96, 144);
         public const int TOOLTIP_DISPLAY_TIME_MS = 20000;
 
+        public const string DLC_BOARD_NAME = "dlcBoard";
         public const string REMOVE_FIGHTER_BUTTON_STRING = "Remove Fighter";
         public const string EDIT_SPIRIT_DETAILS_BUTTON_STRING = "Edit Spirit Details";
         public const string SPIRIT_IMAGE_BUTTON_STRING = "Load Spirit Image #";
@@ -72,6 +73,7 @@ namespace YesweDo
         public static string dbFileExtension = ".prc";
         public static string textFileExtension = ".msbt";
         public static string standaloneExportExtension= ".json";
+        public static string defaultSpiritImagesLocation = @"\Spirit Images\default";
 
         public static List<Tuple<string, string>> spiritUiLocations = new List<Tuple<string, string>>()
         {
@@ -109,7 +111,8 @@ namespace YesweDo
 
         public static List<string> dbFilesToSave = new List<string>()
         {
-            "ui_spirit_db.prc"
+            "ui_spirit_db.prc",
+            "spirits_board_special_param.prc"
         };
         #endregion
 

@@ -252,6 +252,40 @@ namespace YesweDo.Helpers
             return doc;
         }
 
+        public static XDocument BuildXml(SpiritBoardDataOptions dataList)
+        {
+            XDocument doc =
+                new XDocument(new XDeclaration("1.0", "utf-8", null),
+                    new XElement("struct",
+                        new XElement("uint",
+                        // <list hash="db_root">	// <*DataList.Type* hash="*DataTbl.Type*">
+                        new XElement("list",
+                        new XAttribute("hash", "0x1700f80264"),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            dataList.GetData().Select(data =>
+                            ((DataTbl)data).GetAsXElement(dataList.GetItemIndex(data))
+                            )
+                        )
+                        ),
+                        new XElement("list",
+                        new XAttribute("hash", "battle_reward_capacity_param"),
+                            //<struct index="0">	// <struct index="*DataListItem.GetIndex*">
+                            dataList.GetData().Select(data =>
+                            ((DataTbl)data).GetAsXElement(dataList.GetItemIndex(data))
+                            )
+                        ),
+                        new XElement("float",
+                        new XAttribute("hash", "0x140b172929")),
+                        new XElement("float",
+                        new XAttribute("hash", "0x1447eaf862")),
+                        new XElement("float",
+                        new XAttribute("hash", "0x131511c3d8"))
+                    )
+                );
+
+            return doc;
+        }
+
         public static void WriteXmlToFile(string fileName, XDocument xmlDoc)
         {
             using StreamWriter writer = new StreamWriter(fileName, false);

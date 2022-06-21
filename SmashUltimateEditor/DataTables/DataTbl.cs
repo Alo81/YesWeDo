@@ -586,6 +586,18 @@ namespace YesWeDo.DataTables
                     subPage.Controls.Add(b);
                 }
 
+                // Explicit false to disable this.  
+                if (dataTbls.spiritBoardData.HasData() && false)
+                {
+                    lb = new LabelBox();
+                    UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label);
+                    lb.SetLabel("DLC Spirit Board", UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Label));
+                    subPage.Controls.Add(lb.label);
+
+                    lb.SetComboBox(Defs.DLC_BOARD_NAME, dataTbls.GetOptionsFromTypeAndName(typeof(SpiritBoard), "label"), UiHelper.IncrementPoint(ref currentPos, page.Controls.Count + 1, Ui_Element.Box));
+                    subPage.Controls.Add(lb.combo);
+                }
+
                 for (int i = 0; i < Defs.spiritUiLocations.Count; i++)
                 {
                     Button b = UiHelper.GetEmptySpiritImageButton(UiHelper.IncrementPoint(ref currentPos, subPage.Controls.Count, Ui_Element.Button));

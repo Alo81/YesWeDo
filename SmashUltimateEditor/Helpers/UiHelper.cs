@@ -205,6 +205,32 @@ namespace YesweDo.Helpers
             return null;
         }
 
+        public static IEnumerable<ComboBox> GetComboBoxes(TabPage page)
+        {
+            return page.Controls.OfType<ComboBox>();
+        }
+
+        public static ComboBox GetComboBoxFromName(IEnumerable<ComboBox> boxes, string name)
+        {
+            return boxes.FirstOrDefault(x => x.Name.Equals(name) );
+        }
+
+        public static ComboBox GetBoxFromPage(TabPage page, string name)
+        {
+            var boxes = GetComboBoxes(page);
+            return GetComboBoxFromName(boxes, name);
+        }
+
+        public static string GetValueFromDLCBox(TabPage page)
+        {
+            return GetBoxFromPage(page, Defs.DLC_BOARD_NAME)?.SelectedValue?.ToString() ?? "";
+        }
+
+        public static void SetValueOfDLCBox(TabPage page, string value)
+        {
+            GetBoxFromPage(page, Defs.DLC_BOARD_NAME).SelectedText = value;
+        }
+
         public static IEnumerable<Button> GetButtons(TabPage page)
         {
             return page.Controls.OfType<Button>();

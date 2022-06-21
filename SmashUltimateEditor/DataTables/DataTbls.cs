@@ -238,7 +238,7 @@ namespace YesweDo
         public void Save(string fileLocation)
         {
             SaveLocal();    // Save immediately before sending battle and fighter data.  
-            FileHelper.Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation), spiritData : spiritData);
+            FileHelper.Save(battleData, fighterData, Path.GetDirectoryName(fileLocation), Path.GetFileName(fileLocation), spiritData : spiritData, spiritBoardData: spiritBoardData);
         }
 
         public void SetSaveTabChange(object sender, EventArgs e)
@@ -260,6 +260,7 @@ namespace YesweDo
             }
             // Update fields on page, then fields on subpages. 
             selectedBattle.UpdateTblValues(battlePage);
+
             foreach (TabPage subPage in battlePage.Controls.OfType<TabControl>().First().TabPages)
             {
                 // No battle?
@@ -337,6 +338,10 @@ namespace YesweDo
         {
             b.Click += new System.EventHandler(EditSpiritDetails);
         }
+        public void SetDlcBoardBoxMethod(ref ComboBox b)
+        {
+            b.SelectedValueChanged += new System.EventHandler(EditSpiritDetails);
+        }
 
         public void SetLoadSpiritImageButtonMethod(ref Button b)
         {
@@ -379,6 +384,27 @@ namespace YesweDo
                 UiHelper.PopUpMessage("Spirit does not have Spirit Db Entry.");
             }
         }
+        public void ChangeSpiritBoard(object sender, EventArgs e)
+        {
+            try
+            {
+                var box = (ComboBox)sender;
+                if (spiritBoardData.HasData())
+                {
+                    var selectedBoard = box.SelectedValue.ToString();
+
+                    spiritBoardData.SetSpiritToBoard(selectedBoard, selectedBattle.battle_id);
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception ex)
+            {
+                UiHelper.PopUpMessage("Spirit does not have Spirit Db Entry.");
+            }
+        }
 
         public void LoadSpiritImageFromButton(object sender, EventArgs e)
         {
@@ -389,16 +415,7 @@ namespace YesweDo
 
             if (!result.Equals(DialogResult.Cancel) && !String.IsNullOrWhiteSpace(openDialog?.FileName))
             {
-                var source = openDialog.FileName;
-                var fileDetails = Defs.spiritUiLocations[(int)index];
-
-                // If we know its a DLC spirit, mark it for placement in the replace_patch folder.  
-                var replacementText = @$"{selectedBattle.battle_id}{((selectedSpirit?.is_dlc ?? false) ? Defs.FILE_PATCH_PATTERN : "")}";
-                var name = fileDetails.Item1.Replace(Defs.FILE_WILDCARD_PATTERN, replacementText);
-
-                var dest = config.file_directory_spirit_images;
-
-                FileHelper.CopyFile(source, dest, name);
+                FileHelper.LoadSpiritImageWithName(openDialog.FileName, Defs.spiritUiLocations[(int)index].Item1, selectedBattle.battle_id, selectedSpirit?.is_dlc ?? false);
                 UiHelper.SetInformativeLabel(ref informativeLabel, $"Spirit Image {index} imported.");
             }
         }
@@ -438,6 +455,13 @@ namespace YesweDo
                                 UiHelper.SetSpiritDetailsButton(subPage, false);
                             else
                                 UiHelper.SetSpiritDetailsButton(subPage, true);
+                            var matchedBoard = spiritBoardData.GetBoardOfSpirit(selectedBattle.battle_id);
+
+                            // Explicit false to disable this for now.  
+                            if (!String.IsNullOrWhiteSpace(matchedBoard) && false)
+                            {
+                                UiHelper.SetValueOfDLCBox(subPage, matchedBoard);
+                            }
                         }
                     }
                 }
@@ -597,6 +621,10 @@ namespace YesweDo
                 if (type == typeof(Spirit))
                 {
                     return spiritData.GetOptionsFromName(name) ?? new List<string>();
+                }
+                if (type == typeof(SpiritBoard))
+                {
+                    return spiritBoardData.GetOptionsFromName(name) ?? new List<string>();
                 }
             }
             return new List<string>();

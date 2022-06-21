@@ -33,7 +33,7 @@ namespace YesweDo.Helpers
             CopySpiritImages(directory);
         }
 
-        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, SpiritDataOptions spiritData = null, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false, bool saveSpiritTitles = true)
+        public static void Save(BattleDataOptions battleData, FighterDataOptions fighterData, string fileLocation, string fileName, SpiritDataOptions spiritData = null, SpiritBoardDataOptions spiritBoardData = null, bool unencrypted = true, bool encrypted = true, bool useFolderStructure = false, bool saveSpiritTitles = true)
         {
             fileLocation += @"\";
 
@@ -45,10 +45,20 @@ namespace YesweDo.Helpers
             if (encrypted)
             {
                 SaveEncrypted(battleData, fighterData, fileLocation, fileName, useFolderStructure);
-                if (spiritData?.HasData() ?? false)
+                var locs = MiscDbsToSave();
+                foreach(var loc in locs)
                 {
-                    var loc = MiscDbsToSave();
-                    SaveEncrypted(spiritData, Path.GetDirectoryName(loc), Path.GetFileName(loc));
+                    // This is ugly.  Spirit data db file.  
+                    if (loc.Contains(Defs.dbFilesToSave[0]))
+                    {
+                        SaveEncrypted(spiritData, Path.GetDirectoryName(loc), Path.GetFileName(loc));
+                    }
+                    /*// This is ugly.  Spirit board db file.  
+                    if (loc.Contains(Defs.dbFilesToSave[1]))
+                    {
+                        SaveEncrypted(spiritBoardData, Path.GetDirectoryName(loc), Path.GetFileName(loc));
+                    }
+                    */
                 }
             }
 
@@ -97,6 +107,13 @@ namespace YesweDo.Helpers
             Directory.CreateDirectory(fileLocation);
             SaveToEncryptedFile(ConvertDataToXDocument(spiritData), fileLocation + fileName);
         }
+        public static void SaveEncrypted(SpiritBoardDataOptions spiritBoardData, string fileLocation, string fileName)
+        {
+            fileLocation = FixFolderEndPath(fileLocation);
+
+            Directory.CreateDirectory(fileLocation);
+            SaveToEncryptedFile(ConvertDataToXDocument(spiritBoardData), fileLocation + fileName);
+        }
 
         public static XDocument ConvertDataToXDocument(BattleDataOptions battleData, FighterDataOptions fighterData)
         {
@@ -105,6 +122,10 @@ namespace YesweDo.Helpers
         public static XDocument ConvertDataToXDocument(SpiritDataOptions spiritData)
         {
             return XmlHelper.BuildXml(spiritData);
+        }
+        public static XDocument ConvertDataToXDocument(SpiritBoardDataOptions spiritBoardData)
+        {
+            return XmlHelper.BuildXml(spiritBoardData);
         }
 
         public static void SaveToEncryptedFile(XDocument doc, string fileLocation)
@@ -341,7 +362,7 @@ namespace YesweDo.Helpers
                 FileHelper.ToDefaultBattleExportFolder(filename) + @"\" + selectedBattleId + "-" + DateTime.Now.ToString("yyyyMMddHHmmss") :
                 filename;
 
-            FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true, unencrypted : false, encrypted : true, spiritData: dataTbls.spiritData, saveSpiritTitles: true);
+            FileHelper.Save(dataTbls.battleData, dataTbls.fighterData, packPath, dataTbls.config.file_name_encr, useFolderStructure: true, unencrypted : false, encrypted : true, spiritData: dataTbls.spiritData, spiritBoardData: dataTbls.spiritBoardData, saveSpiritTitles: true);
             FileHelper.CopyPreloadFiles(packPath);
             FileHelper.CopySpiritImages(packPath);
         }
@@ -361,19 +382,31 @@ namespace YesweDo.Helpers
             return filePath;
         }
 
-        public static string MiscDbsToSave()
+        internal static void LoadSpiritImageWithName(string source, string fileDetails, string battleId, bool isDLC = false)
         {
+            // If we know its a DLC spirit, mark it for placement in the replace_patch folder.  
+            var replacementText = @$"{battleId}{((isDLC) ? Defs.FILE_PATCH_PATTERN : "")}";
+            var name = fileDetails.Replace(Defs.FILE_WILDCARD_PATTERN, replacementText);
+
+            var dest = config.file_directory_spirit_images;
+
+            CopyFile(source, dest, name);
+        }
+
+        public static List<string> MiscDbsToSave()
+        {
+            var files = new List<string>();
             foreach(var filesToSave in Defs.dbFilesToSave)
             {
                 foreach(var preloadFile in FileHelper.GetFiles(config.file_directory_preload))
                 {
                     if(preloadFile.Name == filesToSave)
                     {
-                        return preloadFile.FullName;
+                        files.Add(preloadFile.FullName);
                     }
                 }
             }
-            return null;
+            return files;
         }
 
 

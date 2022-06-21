@@ -29,6 +29,11 @@ namespace YesWeDo.DataTableCollections
         {
             return GetCount() > 0;
         }
+        public void SetSpiritToBoard(string label, string battle_id)
+        {
+            RemoveSpiritFromBoards(battle_id);
+            AddSpiritToBoard(label, battle_id);
+        }
 
         public void AddSpiritToBoard(string label, string battle_id)
         {
@@ -38,6 +43,26 @@ namespace YesWeDo.DataTableCollections
             {
                 result.spirit_list.Add(battle_id);
             }
+        }
+
+        public void RemoveSpiritFromBoards(string battle_id)
+        {
+            foreach(var board in _dataList)
+            {
+                board.spirit_list.Remove(battle_id);
+            }
+        }
+
+        public string GetBoardOfSpirit(string battleId)
+        {
+            foreach(var board in _dataList)
+            {
+                if (board.spirit_list.Contains(battleId))
+                {
+                    return board.label;
+                }
+            }
+            return default(string);
         }
 
         public List<string> spirit_name

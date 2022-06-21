@@ -64,5 +64,23 @@ namespace YesWeDo.DataTableCollections
         {
             _dataList.Add(spirit);
         }
+
+        public List<ushort> save_no
+        {
+            get
+            {
+                return _dataList.Select(x => x.save_no).Distinct().OrderBy(x => x).ToList();
+            }
+        }
+
+        public List<ushort> directory_id
+        {
+            get { return _dataList.Select(x => x.directory_id).Distinct().OrderBy(x => x).ToList(); }
+        }
+
+        public List<ushort> fixed_no
+        {
+            get { return _dataList.Select(x => x.fixed_no).Distinct().OrderBy(x => x).ToList(); }
+        }
     }
 }

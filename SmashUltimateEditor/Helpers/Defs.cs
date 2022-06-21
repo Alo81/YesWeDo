@@ -98,7 +98,8 @@ namespace YesweDo
             new Tuple<string, string>("ui_spirit_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_spirits_ability_db.prc", @"\ui\param\database\"),
             new Tuple<string, string>("ui_stage_db.prc", @"\ui\param\database\"),
-            new Tuple<string, string>("ui_bgm_db.prc", @"\ui\param\database\")
+            new Tuple<string, string>("ui_bgm_db.prc", @"\ui\param\database\"),
+            new Tuple<string, string>("ui_spirit_layout_db.prc", @"\ui\param\database\")
         };
 
         public static List<string> msbtFilesToSave = new List<string>()

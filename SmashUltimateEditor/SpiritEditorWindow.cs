@@ -132,43 +132,28 @@ namespace YesweDo
 
             while (String.IsNullOrWhiteSpace(battleId) || !dataTbls.battleData.NewBattleIdValid(battleId))
             {
-                battleId = UiHelper.PopUpTextPrompt(woopsieTrigger? $"Battle ID already in use.  {popupMessage}" : popupMessage, "Battle ID?").ToLower();
+                battleId = UiHelper.PopUpTextPrompt(woopsieTrigger? $"Battle ID already in use.  {popupMessage}" : popupMessage, "Battle ID?");
                 woopsieTrigger = true;
             }
-
-            // Set title with separators.  
-            /*
-            Battle newBattle = new Battle() { battle_id = battleId, msbtTitle = battleId, msbtSort = battleId, msbtSeparator = "\u000e\0\u0002\u0002d\0\u000e\u0001\nJH", msbtUpdated = true };
-            Fighter newFighter = new Fighter() { battle_id = battleId };
-            Spirit newSpirit = new Spirit() { ui_spirit_id = battleId };
-
-            newBattle.SetAllValuesToDefault();
-            newFighter.SetAllValuesToDefault();
-            newSpirit.SetAllValuesToDefault();
-            */
-
-            // /*
-              // Maybe copy Mario battle?
+            // Maybe copy Mario battle?
             Battle newBattle = dataTbls.battleData.GetBattleAtIndex(0).Copy();
             Fighter newFighter = dataTbls.fighterData.GetFighterAtIndex(0).Copy();
             Spirit newSpirit = dataTbls.spiritData.GetSpiritAtIndex(0).Copy();
 
-            newBattle.battle_id = battleId;
-            newBattle.SetSpiritTitleParameters("Sora \u000e\0\u0002\u0002P\0(KINGDOM HEARTS 3D [Dream Drop Distance])\u000e\0\u0002\u0002d\0\u000e\u0001\nJH\0s\0o\0r\0a\0k\0i\0n\0g\0d\0o\0m\0h\0e\0a\0r\0t\0s\03\0d\0d\0r\0e\0a\0m\0d\0r\0o\0p\0d\0i\0s\0t\0a\0n\0c\0e\0");
             newBattle.msbtTitle = battleId;
+            battleId = battleId.ToLower();  // Keep caps for the title, rest can be lower.  
+
+            newBattle.battle_id = battleId;
+            // Its a long one.... Should clean this up later. 
+            newBattle.SetSpiritTitleParameters("Sora \u000e\0\u0002\u0002P\0(KINGDOM HEARTS 3D [Dream Drop Distance])\u000e\0\u0002\u0002d\0\u000e\u0001\nJH\0s\0o\0r\0a\0k\0i\0n\0g\0d\0o\0m\0h\0e\0a\0r\0t\0s\03\0d\0d\0r\0e\0a\0m\0d\0r\0o\0p\0d\0i\0s\0t\0a\0n\0c\0e\0");
             newBattle.msbtSort = newBattle.PadSortString(battleId);
-            //PadSortString
-            // newBattle.msbtSeparator = "\u000e\0\u0002\u0002d\0\u000e\u0001\nJH";
-            // newBattle.msbtLength = newBattle.combinedMsbtTitle.Length;
-            // newBattle.msbtUpdated = true;
+
             newFighter.battle_id = battleId;
+
             newSpirit.ui_spirit_id = newSpirit.name_id = battleId;
-            // newSpirit.save_no = dataTbls.spiritData.
-            //*/
-
-            // Create or add to a ParamLabelsUser.csv file.  
-            // Convert.ToUInt64(value);
-
+            newSpirit.save_no = (ushort)(dataTbls.spiritData.save_no.Max() + 1);
+            newSpirit.directory_id = (ushort)(dataTbls.spiritData.directory_id.Max() + 1);
+            newSpirit.fixed_no = (ushort)(dataTbls.spiritData.fixed_no.Max() + 1);
 
             dataTbls.battleData.AddBattle(newBattle);
             dataTbls.fighterData.AddFighter(newFighter);
